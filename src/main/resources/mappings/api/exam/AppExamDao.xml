@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.exam.dao.AppExamDao">
+    
+	<sql id="appExamColumns">
+		a.exam_id AS "examId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_place_id AS "examPlaceId",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_start_time AS "examStartTime",
+		a.exam_end_time AS "examEndTime",
+		a.exam_signup_endtime AS "examSignupEndtime",
+		a.total_seats AS "totalSeats",
+		a.used_seats AS "usedSeats",
+		<include refid="appExamPlaceColumns"/> 
+	</sql> 
+	
+	<sql id="appExamPlaceColumns">
+		examPlace.exam_place_id AS "examPlace.examPlaceId",
+		examPlace.del_flag AS "examPlace.delFlag",
+		examPlace.exam_type AS "examPlace.examType",
+		examPlace.exam_city_id AS "examPlace.examCityId",
+		examPlace.exam_city_name AS "examPlace.examCityName",
+		examPlace.exam_detail_address AS "examPlace.examDetailAddress",
+		examPlace.exam_place_name AS "examPlace.examPlaceName",
+		examPlace.exam_place_sn AS "examPlace.examPlaceSn",
+		examPlace.exam_place_image_id AS "examPlaceImageId",
+		examPlace.lng AS "examPlace.lng",
+		examPlace.lat AS "examPlace.lat",
+		examPlace.exam_place_contant_name AS "examPlace.examPlaceContantName",
+		examPlace.exam_place_contant_phone AS "examPlaceContantPhone"
+	</sql>
+	
+	<sql id="appExamJoins"> 
+		LEFT JOIN tbl_exam_place examPlace ON examPlace.exam_place_id = a.exam_place_id 
+	</sql>
+    
+	<select id="get" resultType="AppExam">
+		SELECT 
+			<include refid="appExamColumns"/>
+		FROM tbl_exam a
+		<include refid="appExamJoins"/>
+		WHERE a.exam_id = #{exam_id}
+	</select>
+	
+	<select id="getExamInfoByExamId" resultType="AppExam">
+		SELECT 
+			<include refid="appExamColumns"/>
+		FROM tbl_exam a 
+		<include refid="appExamJoins"/>
+		WHERE 
+			a.del_flag = 0  
+		AND
+			a.exam_id = #{exam_id}
+	</select>
+	
+	
+	
+	
+	<select id="findList" resultType="AppExam">
+		SELECT 
+			<include refid="appExamColumns"/>
+		FROM tbl_exam a
+		<include refid="appExamJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+		AND 	
+			a.exam_type &amp; 1 = 1 
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<select id="findSelfExamListByCityAndTime" resultType="AppExam">
+		SELECT 
+			<include refid="appExamColumns"/>
+		FROM tbl_exam a
+		<include refid="appExamJoins"/>
+		<where>
+			a.del_flag = 0 
+		AND 	
+			a.exam_type &amp; 1 = 1 
+		AND 
+			a.exam_signup_endtime>now() 
+		<if test="examCityId!=-1">
+			AND a.exam_city_id = #{examCityId}
+		</if>
+		<if test="startTime!=null">
+            AND #{startTime} > a.exam_start_time
+        </if>		
+		</where>
+		ORDER BY a.exam_start_time ASC 
+	</select>
+	
+	<select id="findSelfExamListByCityAndTimeSpan" resultType="AppExam">
+		SELECT 
+			<include refid="appExamColumns"/>
+		FROM tbl_exam a
+		<include refid="appExamJoins"/>
+		<where>
+			a.del_flag = 0 
+		AND 	
+			a.exam_type &amp; 1 = 1 
+		AND 
+			a.exam_signup_endtime>now() 
+		<if test="examCityId!=-1">
+			AND a.exam_city_id = #{examCityId}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND a.exam_start_time >= #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			and #{endTime} >= a.exam_end_time
+		</if>
+		</where>
+		ORDER BY a.exam_start_time ASC 
+	</select>
+
+
+
+
+	 <resultMap type="com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfCityTiny" id="getSelfExamPlaceListMap">
+    	<result column="cityId" property="cityId" />
+		<result column="cityName" property="cityName" />
+    	<collection property="examPlaceList"  ofType="com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfPlaceTiny" javaType="ArrayList">
+    		<result column="examPlaceId" property="examPlaceId" />
+			<result column="examDetailAddress" property="examDetailAddress" />
+			<result column="examPlaceName" property="examPlaceName" />
+			<result column="examPlaceSn" property="examPlaceSn" />
+    	</collection>
+    </resultMap>
+    
+
+	<select id="getSelfExamPlaceList" resultMap="getSelfExamPlaceListMap">
+		Select 
+			examPlace.exam_city_id AS "cityId",
+			examPlace.exam_city_name AS "cityName",
+			examPlace.exam_place_name AS "examPlaceNam e",
+			examPlace.exam_place_sn AS "examPlaceSn",
+			examPlace.exam_detail_address AS "examDetailAddress",
+			examPlace.exam_place_id AS "examPlaceId" 
+		FROM 
+			tbl_exam exam 
+		LEFT JOIN tbl_exam_place examPlace ON exam.exam_place_id = examPlace.exam_place_id 
+		WHERE examPlace.del_flag = '0' AND exam.del_flag = '0'
+		AND exam.exam_signup_endtime>NOW()
+		AND 	
+			exam.exam_type &amp; 1 = 1 
+		ORDER BY  	convert(examPlace.exam_city_name using gbk) ASC
+	</select>
+	
+	
+	
+	
+	
+	<!-- 考试科目相关 -->
+	<sql id="appExamCourseColumns">
+		a.exam_course_id AS "examCourseId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.course AS "course",
+		a.course_name AS "courseName",
+		a.english_name AS "englishName",
+		a.english_short_name AS "englishShortName",
+		a.price AS "price",
+		a.student_price as studentPrice,
+		a.exam_type AS "examType",
+		relation.exam_version_json AS "examVersionJson" 
+	</sql>
+	
+	<select id="getExamCourseListByExamId" resultType="AppExamCourseSelf">
+		SELECT 
+			<include refid="appExamCourseColumns"/> 
+		FROM tbl_exam_course_relation relation 
+		LEFT JOIN tbl_exam_course a ON a.exam_course_id = relation.exam_course_id 
+		WHERE 
+			relation.exam_id = #{examId} 
+	</select>
+	
+	
+	<update id="updateUsedSeats">
+		UPDATE tbl_exam 
+		SET 	
+			used_seats=used_seats+1 
+		WHERE 
+			exam_id = #{examId} 
+	</update>
+	
+	
+</mapper>

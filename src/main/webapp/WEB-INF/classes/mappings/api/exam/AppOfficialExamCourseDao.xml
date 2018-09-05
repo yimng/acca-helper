@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.exam.dao.AppOfficialExamCourseDao">
+
+	<sql id="appOfficialExamCourseColumns">
+		a.exam_course_id AS "examCourseId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.course AS "course",
+		a.course_name AS "courseName",
+		a.english_name AS "englishName",
+		a.english_short_name AS "englishShortName",
+		a.price AS "price",
+		a.exam_type AS "examType"
+	</sql>
+
+	<sql id="appOfficialExamCourseJoins">
+	</sql>
+
+	<select id="get" resultType="AppOfficialExamCourse">
+		SELECT
+		<include refid="appOfficialExamCourseColumns"/>
+		FROM tbl_exam_course a
+		<include refid="appOfficialExamCourseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getOfficialExamCourse" resultType="AppOfficialExamCourse">
+		select <include refid="appOfficialExamCourseColumns"/>,b.exam_version_json examVersionJson,c.exam_id examId,c.exam_signup_endtime examSignupEndtime
+		from tbl_exam_course a left join tbl_exam_course_relation b on a.exam_course_id = b.exam_course_id
+		left join tbl_exam c on b.exam_id = c.exam_id
+		where a.del_flag = #{DEL_FLAG_NORMAL}
+		and a.exam_course_id = #{examCourseId}
+	</select>
+
+	<select id="getOfficialExamCourseList" resultType="AppOfficialExamCourse">
+		select <include refid="appOfficialExamCourseColumns"/>,b.exam_version_json examVersionJson
+		from tbl_exam_course a left join tbl_exam_course_relation b on a.exam_course_id = b.exam_course_id
+		WHERE
+		a.del_flag = '0'
+		AND a.exam_type &amp; #{examType} = #{examType}
+		AND EXISTS (
+		SELECT * FROM tbl_exam e
+		WHERE
+		b.exam_id = e.exam_id
+		AND e.del_flag = '0'
+		AND DATE_FORMAT(e.exam_start_time, '%Y-%m') = #{examStartTimeStr}
+		)
+		group by a.exam_course_id
+	</select>
+
+	<!-- <select id="getOfficialExamCourseList" resultType="AppOfficialExamCourse">
+		select <include refid="appOfficialExamCourseColumns"/>,b.exam_version_json examVersionJson,c.exam_id examId,c.exam_signup_endtime examSignupEndtime
+		from tbl_exam_course a left join tbl_exam_course_relation b on a.exam_course_id = b.exam_course_id 
+		left join tbl_exam c on b.exam_id = c.exam_id
+		where a.del_flag = #{DEL_FLAG_NORMAL}
+		and c.exam_type &amp; #{examType} = #{examType}
+		and date_format(c.exam_start_time, '%Y-%m') = #{examStartTimeStr}
+		and b.id = (select max(d.id) from tbl_exam_course_relation d 
+		left join tbl_exam e on d.exam_id = e.exam_id where a.exam_course_id=d.exam_course_id 
+		and e.exam_type &amp; #{examType} = #{examType})
+	</select> -->
+
+	<select id="findList" resultType="AppOfficialExamCourse">
+		SELECT
+		<include refid="appOfficialExamCourseColumns"/>
+		FROM tbl_exam_course a
+		<include refid="appOfficialExamCourseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="AppOfficialExamCourse">
+		SELECT
+		<include refid="appOfficialExamCourseColumns"/>
+		FROM tbl_exam_course a
+		<include refid="appOfficialExamCourseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO tbl_exam_course(
+			exam_course_id,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			course,
+			course_name,
+			english_name,
+			english_short_name,
+			price,
+			exam_type
+		) VALUES (
+			#{examCourseId},
+			#{delFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{course},
+			#{courseName},
+			#{englishName},
+			#{englishShortName},
+			#{price},
+			#{examType}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE tbl_exam_course SET 	
+			exam_course_id = #{examCourseId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			course = #{course},
+			course_name = #{courseName},
+			english_name = #{englishName},
+			english_short_name = #{englishShortName},
+			price = #{price},
+			exam_type = #{examType}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE tbl_exam_course SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

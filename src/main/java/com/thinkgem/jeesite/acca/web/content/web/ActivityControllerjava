@@ -1,0 +1,102 @@
+/**
+ * Copyright &copy; 2012-2016 <a href="https://github.com/thinkgem/jeesite">JeeSite</a> All rights reserved.
+ */
+package com.thinkgem.jeesite.acca.web.content.web;
+
+import com.thinkgem.jeesite.acca.web.content.entity.Activity;
+import com.thinkgem.jeesite.acca.web.content.service.ActivityService;
+import com.thinkgem.jeesite.common.config.Global;
+import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.web.BaseController;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * activity设置Controller
+ * @author Young
+ * @version 2016-08-22
+ */
+@Controller
+@RequestMapping(value = "${adminPath}/activity")
+public class ActivityController extends BaseController {
+
+	@Autowired
+	private ActivityService activityService;
+
+	@ModelAttribute
+	public Activity get(@RequestParam(required=false) String id) {
+		Activity entity = null;
+		if (StringUtils.isNotBlank(id)){
+			entity = activityService.get(id);
+		}
+		if (entity == null){
+			entity = new Activity();
+		}
+		return entity;
+	}
+	
+	@RequiresPermissions("activity:activity:view")
+	@RequestMapping(value = {"list", ""})
+	public String list(Activity activity, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<Activity> page = activityService.findPage(new Page<Activity>(request, response), activity); 
+		model.addAttribute("page", page);
+		return "web/content/activity/activityList";
+	}
+
+	@RequiresPermissions("activity:activity:view")
+	@RequestMapping(value = "form")
+	public String form(Activity activity, Model model) {
+		//获取分类列表
+		if (activity.getActivityId() != null){
+			activity = activityService.get(activity);			
+		}
+		model.addAttribute("activity", activity);
+		return "web/content/activity/activityForm";
+	}
+
+	/**
+	 * 保存或更新activity信息
+	 * @param activity
+	 * @param model
+	 * @param redirectAttributes
+     * @return
+     */
+	@RequiresPermissions("activity:activity:edit")
+	@RequestMapping(value = "save")
+	public String save(Activity activity, Model model, RedirectAttributes redirectAttributes) {
+		if (!beanValidator(model, activity)){
+			return form(activity, model);
+		}
+		activity.setStatus(0);
+		String message = activityService.saveOrUpdate(activity);
+		addMessage(redirectAttributes, message);
+		return "redirect:"+Global.getAdminPath()+"/activity/list?status=0";
+	}
+
+	/**
+	 * 删除activity
+	 * @param activity
+	 * @param redirectAttributes
+     * @return
+     */
+	@RequiresPermissions("activity:activity:edit")
+	@RequestMapping(value = "delete")
+	public String delete(Activity activity, RedirectAttributes redirectAttributes) {
+		activityService.delete(activity);
+		addMessage(redirectAttributes, "删除activity设置成功");
+		return "redirect:"+Global.getAdminPath()+"/activity/?repage";
+	}
+
+
+
+}

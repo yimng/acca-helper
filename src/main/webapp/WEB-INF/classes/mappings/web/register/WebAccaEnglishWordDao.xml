@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.WebAccaEnglishWordDao">
+    
+	<sql id="webAccaEnglishWordColumns">
+		a.id AS "id",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.name AS "name",
+		a.chinese_name AS "chineseName",
+		a.description AS "description",	
+		a.link_url AS "linkUrl",
+		a.yinbiao AS "yinbiao",
+		a.en_description AS "endescription",
+		a.jiyifangfa AS "jiyifangfa",
+		a.name_url AS "nameurl",
+		a.description_url AS "descriptionurl",	
+		a.yinbiao_url AS "yinbiaourl",
+		a.en_description_url AS "endescriptionurl",
+		a.jiyifangfa_url AS "jiyifangfaurl",
+		a.certificate AS "certificate",
+		a.subject AS "subject"
+	</sql>
+	
+	<sql id="webAccaEnglishWordJoins">
+	</sql>
+    
+	<select id="get" resultType="WebAccaEnglishWord">
+		SELECT 
+			<include refid="webAccaEnglishWordColumns"/>
+		FROM tbl_acca_english_word a
+		<include refid="webAccaEnglishWordJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WebAccaEnglishWord">
+		SELECT 
+			<include refid="webAccaEnglishWordColumns"/>
+		FROM tbl_acca_english_word a
+		<include refid="webAccaEnglishWordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="chineseName != null and chineseName != ''">
+				AND a.chinese_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{chineseName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{chineseName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{chineseName},'%')</if>
+			</if>
+			<if test="certificate != null and certificate != ''">
+				AND a.certificate LIKE 
+					<if test="dbName == 'oracle'">'%'||#{certificate}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{certificate}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{certificate},'%')</if>
+			</if>
+		</where>
+		order by a.name
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				,${page.orderBy}
+			</when>
+			<otherwise>
+				,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebAccaEnglishWord">
+		SELECT 
+			<include refid="webAccaEnglishWordColumns"/>
+		FROM tbl_acca_english_word a
+		<include refid="webAccaEnglishWordJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tbl_acca_english_word(
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			name,
+			chinese_name,
+			description,
+			link_url,
+			yinbiao,
+			en_description,
+			jiyifangfa,
+			name_url,
+			description_url,	
+			yinbiao_url,
+			en_description_url,
+			jiyifangfa_url,
+			certificate,
+			subject
+		) VALUES (
+			#{delFlag},
+			#{createBy.id},
+			now(),
+			#{updateBy.id},
+			now(),
+			#{name},
+			#{chineseName},
+			#{description},
+			#{linkUrl},
+			#{yinbiao},
+			#{endescription},
+			#{jiyifangfa},
+			#{nameurl},
+			#{descriptionurl},
+			#{yinbiaourl},
+			#{endescriptionurl},
+			#{jiyifangfaurl},
+			#{certificate},
+			#{subject}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_acca_english_word SET 	
+			update_by = #{updateBy.id},
+			update_date = now(),
+			name = #{name},
+			chinese_name = #{chineseName},
+			description = #{description},
+			link_url = #{linkUrl},
+			yinbiao = #{yinbiao},
+			en_description = #{endescription},
+			jiyifangfa = #{jiyifangfa},			
+			name_url = #{nameurl},
+			description_url = #{descriptionurl},
+			yinbiao_url = #{yinbiaourl},
+			en_description_url = #{endescriptionurl},
+			jiyifangfa_url = #{jiyifangfaurl},
+			certificate = #{certificate},
+			subject = #{subject}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_acca_english_word SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

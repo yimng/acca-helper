@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="RegisterImgMapper">
+
+	<sql id="whiteColorImg">
+		whiteColorImg.file_id as "whiteColorImg.id", 
+		whiteColorImg.file_original_name as  "whiteColorImg.originalName",
+		whiteColorImg.file_new_name as "whiteColorImg.newName",
+		whiteColorImg.file_base_path as "whiteColorImg.basePath",
+		whiteColorImg.file_relative_path as "whiteColorImg.relativePath",
+		whiteColorImg.file_relative_url as "whiteColorImg.relativeUrl",
+		whiteColorImg.file_mime_type as "whiteColorImg.mimeType",
+		whiteColorImg.file_create_time as "whiteColorImg.createTime",
+		whiteColorImg.file_update_time as "whiteColorImg.updateTime"   
+	</sql>
+	
+	
+	<sql id="identityCardOgImg">
+		identityCardOgImg.file_id as "identityCardOgImg.id", 
+		identityCardOgImg.file_original_name as "identityCardOgImg.originalName",
+		identityCardOgImg.file_new_name as "identityCardOgImg.newName",
+		identityCardOgImg.file_base_path as "identityCardOgImg.basePath",
+		identityCardOgImg.file_relative_path as "identityCardOgImg.relativePath",
+		identityCardOgImg.file_relative_url as "identityCardOgImg.relativeUrl",
+		identityCardOgImg.file_mime_type as "identityCardOgImg.mimeType",
+		identityCardOgImg.file_create_time as "identityCardOgImg.createTime",
+		identityCardOgImg.file_update_time as "identityCardOgImg.updateTime"   
+	</sql>
+	
+	
+	<sql id="identityCardTrImg">
+		identityCardTrImg.file_id as "identityCardTrImg.id", 
+		identityCardTrImg.file_original_name as "identityCardTrImg.originalName",
+		identityCardTrImg.file_new_name as "identityCardTrImg.newName",
+		identityCardTrImg.file_base_path as "identityCardTrImg.basePath",
+		identityCardTrImg.file_relative_path as "identityCardTrImg.relativePath",
+		identityCardTrImg.file_relative_url as "identityCardTrImg.relativeUrl",
+		identityCardTrImg.file_mime_type as "identityCardTrImg.mimeType",
+		identityCardTrImg.file_create_time as "identityCardTrImg.createTime",
+		identityCardTrImg.file_update_time as "identityCardTrImg.updateTime"    
+	</sql>
+	
+	<sql id="readingCertificateImg">
+		readingCertificateImg.file_id as "readingCertificateImg.id", 
+		readingCertificateImg.file_original_name as "readingCertificateImg.originalName",
+		readingCertificateImg.file_new_name as "readingCertificateImg.newName",
+		readingCertificateImg.file_base_path as "readingCertificateImg.basePath",
+		readingCertificateImg.file_relative_path as "readingCertificateImg.relativePath",
+		readingCertificateImg.file_relative_url as "readingCertificateImg.relativeUrl",
+		readingCertificateImg.file_mime_type as "readingCertificateImg.mimeType",
+		readingCertificateImg.file_create_time as "readingCertificateImg.createTime",
+		readingCertificateImg.file_update_time as "readingCertificateImg.updateTime"    
+	</sql>
+
+	<sql id="readingCertificateTrImg">
+		readingCertificateTrImg.file_id as "readingCertificateTrImg.id",
+		readingCertificateTrImg.file_original_name as "readingCertificateTrImg.originalName",
+		readingCertificateTrImg.file_new_name as "readingCertificateTrImg.newName",
+		readingCertificateTrImg.file_base_path as "readingCertificateTrImg.basePath",
+		readingCertificateTrImg.file_relative_path as "readingCertificateTrImg.relativePath",
+		readingCertificateTrImg.file_relative_url as "readingCertificateTrImg.relativeUrl",
+		readingCertificateTrImg.file_mime_type as "readingCertificateTrImg.mimeType",
+		readingCertificateTrImg.file_create_time as "readingCertificateTrImg.createTime",
+		readingCertificateTrImg.file_update_time as "readingCertificateTrImg.updateTime"
+	</sql>
+
+	<sql id="examsResultOgImg">
+		examsResultOgImg.file_id as "examsResultOgImg.id",
+		examsResultOgImg.file_original_name as "examsResultOgImg.originalName",
+		examsResultOgImg.file_new_name as "examsResultOgImg.newName",
+		examsResultOgImg.file_base_path as "examsResultOgImg.basePath",
+		examsResultOgImg.file_relative_path as "examsResultOgImg.relativePath",
+		examsResultOgImg.file_relative_url as "examsResultOgImg.relativeUrl",
+		examsResultOgImg.file_mime_type as "examsResultOgImg.mimeType",
+		examsResultOgImg.file_create_time as "examsResultOgImg.createTime",
+		examsResultOgImg.file_update_time as "examsResultOgImg.updateTime"
+	</sql>
+
+	<sql id="examsResultTrImg">
+		examsResultTrImg.file_id as "examsResultTrImg.id",
+		examsResultTrImg.file_original_name as "examsResultTrImg.originalName",
+		examsResultTrImg.file_new_name as "examsResultTrImg.newName",
+		examsResultTrImg.file_base_path as "examsResultTrImg.basePath",
+		examsResultTrImg.file_relative_path as "examsResultTrImg.relativePath",
+		examsResultTrImg.file_relative_url as "examsResultTrImg.relativeUrl",
+		examsResultTrImg.file_mime_type as "examsResultTrImg.mimeType",
+		examsResultTrImg.file_create_time as "examsResultTrImg.createTime",
+		examsResultTrImg.file_update_time as "examsResultTrImg.updateTime"
+	</sql>
+
+	<sql id="graduateCertifcateOgImg">
+		graduateCertifcateOgImg.file_id as "graduateCertifcateOgImg.id",
+		graduateCertifcateOgImg.file_original_name as "graduateCertifcateOgImg.originalName",
+		graduateCertifcateOgImg.file_new_name as "graduateCertifcateOgImg.newName",
+		graduateCertifcateOgImg.file_base_path as "graduateCertifcateOgImg.basePath",
+		graduateCertifcateOgImg.file_relative_path as "graduateCertifcateOgImg.relativePath",
+		graduateCertifcateOgImg.file_relative_url as "graduateCertifcateOgImg.relativeUrl",
+		graduateCertifcateOgImg.file_mime_type as "graduateCertifcateOgImg.mimeType",
+		graduateCertifcateOgImg.file_create_time as "graduateCertifcateOgImg.createTime",
+		graduateCertifcateOgImg.file_update_time as "graduateCertifcateOgImg.updateTime"
+	</sql>
+
+	<sql id="graduateCertifcateTrImg">
+		graduateCertifcateTrImg.file_id as "graduateCertifcateTrImg.id",
+		graduateCertifcateTrImg.file_original_name as "graduateCertifcateTrImg.originalName",
+		graduateCertifcateTrImg.file_new_name as "graduateCertifcateTrImg.newName",
+		graduateCertifcateTrImg.file_base_path as "graduateCertifcateTrImg.basePath",
+		graduateCertifcateTrImg.file_relative_path as "graduateCertifcateTrImg.relativePath",
+		graduateCertifcateTrImg.file_relative_url as "graduateCertifcateTrImg.relativeUrl",
+		graduateCertifcateTrImg.file_mime_type as "graduateCertifcateTrImg.mimeType",
+		graduateCertifcateTrImg.file_create_time as "graduateCertifcateTrImg.createTime",
+		graduateCertifcateTrImg.file_update_time as "graduateCertifcateTrImg.updateTime"
+	</sql>
+
+	<sql id="payImg">
+		payImg.file_id as "payImg.id",
+		payImg.file_original_name as "payImg.originalName",
+		payImg.file_new_name as "payImg.newName",
+		payImg.file_base_path as "payImg.basePath",
+		payImg.file_relative_path as "payImg.relativePath",
+		payImg.file_relative_url as "payImg.relativeUrl",
+		payImg.file_mime_type as "payImg.mimeType",
+		payImg.file_create_time as "payImg.createTime",
+		payImg.file_update_time as "payImg.updateTime"
+	</sql>
+	
+	
+</mapper>

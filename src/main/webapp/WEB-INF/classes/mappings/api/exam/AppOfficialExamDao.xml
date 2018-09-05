@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.exam.dao.AppOfficialExamDao">
+    
+	<sql id="appOfficialExamColumns">
+		a.exam_id AS "examId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_place_id AS "examPlaceId",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_start_time AS "examStartTime",
+		a.exam_end_time AS "examEndTime",
+		a.exam_signup_endtime AS "examSignupEndtime",
+		a.total_seats AS "totalSeats",
+		a.used_seats AS "usedSeats",
+		c.course examCourse,
+		c.course_name examCourseName,
+		c.price price,
+		c.english_name englishName,
+		c.english_short_name englishShortName,
+		d.exam_detail_address examDetailAddress,
+		d.exam_place_sn examPlaceSn,
+		d.exam_place_image_id examPlaceImageId,
+		d.exam_place_contant_name examPlaceContantName,
+		d.exam_place_contant_phone examPlaceContantPhone
+	</sql>
+	
+	<sql id="appOfficialExamJoins">
+		left join tbl_exam_course_relation b on a.exam_id = b.exam_id
+		left join tbl_exam_course c on b.exam_course_id = c.exam_course_id
+		left join tbl_exam_place d on a.exam_place_id = d.exam_place_id
+	</sql>
+	<select id="getExamByCourseAndPlace" resultType="AppOfficialExam">
+		select <include refid="appOfficialExamColumns" /> from tbl_exam a <include refid="appOfficialExamJoins" />
+		<where>
+			and a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.exam_type &amp; #{examType} = #{examType}
+			and date_format(a.exam_start_time, '%Y-%m') = #{examStartTimeStr}
+			and a.exam_place_id = #{examPlaceId}
+			and b.exam_course_id = #{courseId}
+		</where>
+		
+	</select>
+	
+	<select id="getExamMonth" resultType="AppOfficialExamMonth">
+		select distinct date_format(a.exam_start_time, '%Y-%m') monthSend, date_format(a.exam_start_time, '%Y年%m月') monthShow from tbl_exam a
+		where a.del_flag = #{DEL_FLAG_NORMAL} and a.exam_signup_endtime > now()
+		and (a.exam_type &amp; #{offiExamMac} = #{offiExamMac} or a.exam_type &amp; #{offiExamWri} = #{offiExamWri})
+		order by a.exam_start_time
+	</select>
+	
+</mapper>

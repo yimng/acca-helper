@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.sysconf.dao.WebConfExamTipsDao">
+    
+	<sql id="webConfExamTipsColumns">
+		a.id AS "id",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.official_exam_process AS "officialExamProcess",
+		a.name AS "name" 
+ 	</sql>
+	
+	<sql id="webConfExamTipsJoins">
+	</sql>
+    
+	<select id="get" resultType="WebConfExamTips">
+		SELECT 
+			<include refid="webConfExamTipsColumns"/>
+		FROM tbl_conf_exam_tips a
+		<include refid="webConfExamTipsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WebConfExamTips">
+		SELECT 
+			<include refid="webConfExamTipsColumns"/>
+		FROM tbl_conf_exam_tips a
+		<include refid="webConfExamTipsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebConfExamTips">
+		SELECT 
+			<include refid="webConfExamTipsColumns"/>
+		FROM tbl_conf_exam_tips a
+		<include refid="webConfExamTipsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.id ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<update id="update">
+		UPDATE tbl_conf_exam_tips SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			official_exam_process = #{officialExamProcess}
+		WHERE id = #{id}
+	</update>
+	
+	
+	
+</mapper>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.exam.dao.WebExamDao">
+
+	<sql id="columns">
+		a.exam_id AS "examId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_place_id AS "examPlaceId",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_start_time AS "examStartTime",
+		a.exam_end_time AS "examEndTime",
+		a.exam_signup_endtime AS "examSignupEndtime",
+		a.total_seats AS "totalSeats",
+		a.used_seats AS "usedSeats"
+	</sql>	
+	
+	<sql id="joins">
+		left join tbl_exam_place b on a.exam_place_id = b.exam_place_id
+	</sql>
+	
+	<select id="getById" resultType="WebExam">
+		select <include refid="columns"/> from tbl_exam a
+		<where>
+			a.exam_id = #{id}
+		</where>
+	</select>
+	
+	<select id="get" resultType="WebExam">
+		select <include refid="columns"/> from tbl_exam a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.exam_id = #{examId}
+		</where>
+	</select>
+	
+	<select id="selectCoursesByExamId" resultType="SmallCourse">
+		select a.exam_course_id examCourseId,b.course course,a.exam_version_json examVersionJson
+		from tbl_exam_course_relation a 
+		left join tbl_exam_course b on a.exam_course_id = b.exam_course_id and b.del_flag = #{DEL_FLAG_NORMAL}
+		<where>
+			a.exam_id = #{examId}
+		</where>
+	</select>
+	
+	<select id="findList" resultType="WebExam">
+		SELECT 
+			<include refid="columns"/>
+		FROM tbl_exam a
+		<include refid="joins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="examFlag != null and examFlag == old">
+				and now() > a.exam_end_time
+			</if>
+			<if test="examFlag != null and examFlag == now">
+				and a.exam_end_time > now()
+			</if>
+			<if test="examType != null and examType != 0">
+				and a.exam_type &amp; #{examType} = #{examType}
+			</if>
+			<if test="start != null and start != ''">
+				and date_format(a.exam_start_time, '%Y-%m-%d') >= #{start}
+			</if>
+			<if test="end != null and end != ''">
+				and #{end} >= date_format(a.exam_start_time, '%Y-%m-%d')
+			</if>
+			<if test="examPlaceId != null and examPlaceId != ''">
+				AND a.exam_place_id = #{examPlaceId}
+			</if>
+			<if test="places != null">
+				AND a.exam_place_id IN
+				<foreach collection="places" item="examPlace" open="(" close=")" separator=",">
+					#{examPlace.examPlaceId}
+				</foreach>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY convert(a.exam_city_name USING gbk),convert(a.exam_place_name USING gbk),a.exam_start_time desc
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="countSignups" parameterType="Map" resultType="WebExam">
+		select count(a.exam_signup_id) signupNum, a.exam_id examId from tbl_exam_signup a
+		<where>
+			a.del_flag = #{delFlag}
+			<if test="list != null">
+				and a.exam_id in 
+				<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+					${item.examId}
+				</foreach>
+			</if>
+		</where>
+		group by a.exam_id
+	</select>
+	
+	
+	<resultMap type="WebExam" id="courseResult">
+		<id column="examId" property="examId" />
+		<collection property="courses" ofType="SmallCourse">
+			<id column="examCourseId" property="examCourseId" />
+			<result column="course" property="course" />
+			<result column="examVersionJson" property="examVersionJson" />
+		</collection>
+	</resultMap>
+	
+	<select id="findCourseByIds" parameterType="List" resultMap="courseResult">
+		select a.exam_id examId,a.exam_version_json examVersionJson,b.exam_course_id examCourseId,b.course course
+		from tbl_exam_course_relation a left join tbl_exam_course b on a.exam_course_id = b.exam_course_id
+		<where>
+			a.exam_id in
+			<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+				${item.examId}
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="selectCitysByType" resultType="WebSmallCity">
+		select a.id openCityId,a.city_id examCityId, a.exam_type examType, b.area_name cityName 
+		from tbl_exam_open_city a left join tbl_area b on a.city_id = b.id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.exam_type &amp; #{examType} = #{examType}
+			<if test="places != null">
+				AND a.city_id IN
+				<foreach collection="places" item="place" open="(" close=")" separator=",">
+					#{place.examCityId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectPlaceByType" resultType="WebExamPlace">
+		select a.exam_place_id examPlaceId, a.exam_place_name examPlaceName, a.exam_city_id examCityId from tbl_exam_place a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and (a.exam_type &amp; #{examType} = #{examType}
+			<if test="examType2 != null">
+				or a.exam_type &amp; #{examType2} = #{examType2}
+			</if>)
+			<if test="sqlMap.sysUserId != null and sqlMap.sysUserId != ''">
+				and a.sys_user_id = #{sqlMap.sysUserId}
+			</if>
+		</where>
+	</select>
+
+	<resultMap type="SmallCourse" id="smallCourseResult">
+		<id column="examCourseId" property="examCourseId" />
+		<result column="course" property="course" />
+		<collection property="examVersions" ofType="WebExamVersion">
+			<id column="examVersionId" property="examVersionId" />
+			<result column="examVersionName" property="examVersionName" />
+		</collection>
+	</resultMap>
+	
+	<select id="selectCoursesByType" resultMap="smallCourseResult">
+		select 
+		a.exam_course_id examCourseId, a.course course, 
+		c.exam_version_id examVersionId, c.name examVersionName 
+		from tbl_exam_course a 
+		left join tbl_exam_course_version b on a.exam_course_id = b.exam_course_id
+		left join tbl_exam_version c on b.exam_version_id = c.exam_version_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and (a.exam_type &amp; #{examType} = #{examType}
+			<if test="examType2 != null">
+				or a.exam_type &amp; #{examType2} = #{examType2}
+			</if>
+			)
+		</where>
+		order by a.exam_course_id asc
+	</select>
+	
+	<select id="countSignupNum" resultType="WebExam">
+		select count(a.exam_signup_id) signupNum, a.exam_signup_status examSignupStatus from tbl_exam_signup a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.exam_id = #{examId}
+		</where>
+		group by a.exam_signup_status
+		order by a.exam_signup_status
+	</select>
+	
+	<select id="getDayList" parameterType="Map" resultType="WebExam">
+		select count(b.exam_signup_id) signupNum, <include refid="columns"/> from tbl_exam a 
+		left join tbl_exam_signup b on a.exam_id = b.exam_id 
+		<where>
+			a.del_flag = #{delFlag}
+			AND b.exam_signup_status = #{examSignupStatus}
+			AND date_format(a.exam_start_time, '%Y-%m-%d') = date_format(#{examStartTime}, '%Y-%m-%d')
+			<if test="examPlaceId != null and examPlaceId != ''">
+				AND a.exam_place_id = #{examPlaceId}
+			</if>
+			<if test="places != null">
+				AND a.exam_place_id IN
+				<foreach collection="places" item="examPlace" open="(" close=")" separator=",">
+					#{examPlace.examPlaceId}
+				</foreach>
+			</if>
+		</where>
+		group by a.exam_id
+	</select>
+	
+	
+	<select id="selectExamByTypeAndSeason" resultType="WebExam">
+		select <include refid="columns" />, b.exam_course_id examCourseId from tbl_exam a 
+		left join tbl_exam_course_relation b on a.exam_id = b.exam_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+				and (a.exam_type &amp; 2 = 2 OR a.exam_type &amp; 4 = 4)
+			<if test="examStartTime != null">
+				and date_format(a.exam_start_time, '%Y-%m') = date_format(#{examStartTime}, '%Y-%m')
+			</if>
+			<if test="examPlaceId != null">
+				and a.exam_place_id = #{examPlaceId}
+			</if>
+			<if test="sqlMap.seasonStr != null and sqlMap.seasonStr != ''">
+				AND date_format(a.exam_start_time, '%Y-%m') = #{sqlMap.seasonStr}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectSeasons" resultType="WebExam">
+		select distinct a.exam_season_str from tbl_exam_season a
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="examId">
+		INSERT INTO tbl_exam(
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			exam_type,
+			exam_city_id,
+			exam_city_name,
+			exam_place_id,
+			exam_place_name,
+			exam_start_time,
+			exam_end_time,
+			exam_signup_endtime,
+			total_seats,
+			used_seats
+		) VALUES (
+			#{delFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{examType},
+			#{examCityId},
+			#{examCityName},
+			#{examPlaceId},
+			#{examPlaceName},
+			#{examStartTime},
+			#{examEndTime},
+			#{examSignupEndtime},
+			#{totalSeats},
+			#{usedSeats}
+		)
+	</insert>
+	
+	<insert id="insertVersion">
+		insert into tbl_exam_course_relation (
+			exam_id,exam_course_id,exam_version_json
+		)values(
+			#{examId},#{examCourseId},#{examVersionJson}
+		)
+	</insert>
+	
+	<delete id="deleteVersion">
+		delete from tbl_exam_course_relation where exam_id = #{examId}
+	</delete>
+	
+	<delete id="deleteVersionByIds" parameterType="List">
+		delete from tbl_exam_course_relation where exam_id in
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			${item.examId}
+		</foreach>
+	</delete>
+	
+	<update id="update">
+		UPDATE tbl_exam SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+			<if test="examType != null and examType !=''">
+				,exam_type = #{examType}
+			</if>
+			,exam_city_id = #{examCityId},
+			exam_city_name = #{examCityName},
+			exam_place_id = #{examPlaceId},
+			exam_place_name = #{examPlaceName},
+			exam_start_time = #{examStartTime},
+			exam_end_time = #{examEndTime},
+			exam_signup_endtime = #{examSignupEndtime}<!-- ,
+			total_seats = #{totalSeats} -->
+			<if test="usedSeats != null and usedSeats !=''">
+				,used_seats = #{usedSeats}
+			</if>
+		WHERE exam_id = #{examId}
+	</update>
+	
+	<update id="updateSeat">
+		UPDATE tbl_exam SET total_seats = #{totalSeats} where exam_id = #{examId}
+	</update>
+	
+	<update id="delete">
+		update tbl_exam set del_flag = #{DEL_FLAG_DELETE} where exam_id = #{examId}
+	</update>
+	
+</mapper>

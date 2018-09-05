@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.user.dao.AppAccaClubDao">
+    
+	<sql id="appAccaClubColumns">
+		a.acca_club_id AS "accaClubId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.name AS "name",
+		a.qq_no AS "qqNo"
+	</sql>
+	
+	<sql id="appAccaClubJoins">
+	</sql>
+    
+	<select id="get" resultType="AppAccaClub">
+		SELECT 
+			<include refid="appAccaClubColumns"/>
+		FROM tbl_acca_club a
+		<include refid="appAccaClubJoins"/>
+		WHERE a.acca_club_id = #{accaClubId}
+	</select>
+	
+	<select id="findList" resultType="AppAccaClub">
+		SELECT 
+			<include refid="appAccaClubColumns"/>
+		FROM tbl_acca_club a
+		<include refid="appAccaClubJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL} 
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppAccaClub">
+		SELECT 
+			<include refid="appAccaClubColumns"/>
+		FROM tbl_acca_club a
+		<include refid="appAccaClubJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+</mapper>

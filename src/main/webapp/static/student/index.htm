@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html><head lang="en">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>中博教育学员认证</title>
+    <link rel="stylesheet" type="text/css" href="files/style-videotemplate.css">
+<meta name="wxm:timeline_title" content="中博教育学员认证">
+<meta name="wxm:appmessage_title" content="中博&amp;中博教育学员认证">
+<meta name="wxm:appmessage_desc" content="ACCA小助手，随身而行的中文ACCA学习工具">
+<meta name="wxm:img_url" content="">
+<meta name="wxm:link" content="">
+<script type="text/javascript">
+		$(document).ready(function() {
+			//$("#name").focus();
+			$("#btn-submit").onClick({
+				//var examId = $("#signup"+val+" #examId").val();
+				//var courseId= $("#signup"+val+" input[name=examCourseIds]:checked").val();
+	         	//var versionStr= $("#signup"+val+" input[name=examVersionStrs]:checked").val();	
+	         	var accaUserId = $("#accaUserId").cal();
+	         	var accaUserId = $("#registerName").cal();
+	         	var accaUserId = $("#registerPhone").cal();
+	         	var accaUserId = $("#cardType").cal();
+	         	var accaUserId = $("#grade").cal();
+	         	alert("accaUserId:"+ accaUserId);
+	         	alert("registerName:"+ registerName);
+	         	alert("registerPhone:"+ registerPhone);
+	         	alert("cardType:"+ cardType);
+	         	alert("grade:"+ grade); 
+			});			
+		});
+		
+		function submitAuthor（）{
+			var examId = $("#signup"+val+" #examId").val();
+			var courseId= $("#signup"+val+" input[name=examCourseIds]:checked").val();
+         	var versionStr= $("#signup"+val+" input[name=examVersionStrs]:checked").val();	
+			if(val == null || val == "" || val == "undefined"){
+				alert("您还没有选择更新哪一场考试。");
+				return false;
+			}
+			if(examId == null || examId == "" || examId == "undefined"){
+				alert("您还没有选择更新哪一场考试。");
+				return false;
+			}
+			if(courseId == null || courseId == "" || courseId == "undefined"){
+				alert("您还没有选择考试科目。");
+				return false;
+			}
+			if((versionStr == null || versionStr == "" || versionStr == "undefined")&&courseId!=4){
+				alert("请选择对应的考试版本。");
+				return false;
+			}
+			if(window.confirm("您确定要修改本次考试信息吗？")){
+					$.ajax({
+						url : "${ctx}/web/order/changeExam",
+						data : {
+							examSignupId:val,
+							targetexamId:examId,
+							courseId:courseId,
+							versionStr:versionStr							
+						},
+						type: "post",
+						success: function (msg) {
+							//alert("考试延期或修改更新成功");
+							alert(msg);
+							window.location.href = "${ctx}/web/order/detail?orderId=${webOrder.orderId}";
+						}
+					});
+			}else{	                 
+	                 return false;
+	        }
+		}
+	</script>
+</head>
+<body class="template" style="opacity: 1; visibility: visible;">
+<div id="container" style="height:100%;"><img src="files/0596da8c7dc279862733b71de41abbcd.jpg" class="source-img" crossorigin="anonymous">
+<div class="back-bg" style="background: rgba(40, 40, 40, 0.2) none repeat scroll 0% 0%;">
+    <!-- source-canvas 用以 从banner图中 getImageData -->
+    <!-- blur-canvas 用以 绘制背景, putImageData -->
+    <canvas class="source-canvas" width="522" height="471"></canvas>
+    <canvas class="blur-canvas blur-canvas_show" width="522" height="471"></canvas>
+
+    <div class="intro" style="padding-top: 0px;">
+        <!-- 类.intro__below为下方深色背景内容-->
+        <div class="intro__below intro__below_form">
+            <div class="intro__below-header">中博&amp;财萃网学员认证</div>
+            	<input id="accaUserId" name="accaUserId"  type="hidden" value="${accaUser.accaUserId}" />
+            <div class="intro__form">
+                <div class="intro__form-name">
+                    <input id="registerName" name="registerName" placeholder="姓名"  value="${accaUser.registerName} class="intro__form-input" type="text">
+                </div> 
+                <input id="registerPhone" name="registerPhone"  placeholder="手机"  value="${accaUser.registerPhone} class="intro__form-input" maxlength="11" type="tel" />
+                <input id="org" name="org" class="intro__form-input" placeholder="学校/单位"  value="${accaUser.org} type="text" />
+                <div class="intro__form-region">
+                    <div class="intro__select-cover" id="cardType_div">证件类型</div>
+                   	<select name="cardType" id="cardType">
+							<option value="" selected="selected">证件类型</option>
+							<option value="1" >身份证</option>
+							<option value="2" >护照</option>	
+					</select>
+                </div> 
+                <input id="" name="registerCardNumber" id="registerCardNumber" value="${accaUser.registerCardNumber}"  class="intro__form-input" placeholder="身份证号" type="text" />
+                
+                <div class="intro__form-region"id="class_style_div">
+                    <div class="intro__select-cover">班型</div>
+                   	<select name="class_style" id="class_style">
+							<option value=""  selected="">班型</option>
+							<option value="面授精英班" >面授精英班</option>
+							<option value="面授标准版" >面授标准版</option>
+							<option value="网络保过班" >网络保过班</option>
+							<option value="网络标准班" >网络标准班</option>
+					</select>
+                </div> 		
+                
+                <div class="intro__form-region" id="grade">
+                    <div class="intro__select-cover">年级</div>
+                   	<select name=grade id="grade">
+							<option value=""  selected>年级</option>
+							<option value="2013级" selected="selected">2013级</option>
+							<option value="2014级" >2014级</option>
+							<option value="2015级" >2015级</option>
+							<option value="2016级" >2016级</option>
+							<option value="2017级" >2017级</option>
+							<option value="已毕业" >已毕业</option>
+							
+					</select> 
+                </div> 
+
+                <div class="intro__form-checkbox">
+                    <input checked="checked" id="agree" type="checkbox">
+                    <label for="agree">认证提交后分部老师会进行审核，审核通过后报名机考自动显示学员价格。</label>
+                </div>
+                <div class="intro__btn" style="margin: 30px 0 70px;" id="btn-submit">
+                    立即认证
+                </div>
+                <!--<div id="box-tip" class="mod-submit-form__result ui-d-n">
+                    <div id="box-tip-text" class="mod-submit-form__result-text">
+                        您的资料已成功提交！
+                    </div>
+                    <div class="mod-submit-form__footer">
+                        <div id="btn-close" class="mod-submit-form__btn-cancel mod-submit-form__btn-cancel_single">关闭</div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+	@-webkit-keyframes rotation {
+	    10% {
+	        transform: rotate(90deg);
+	        -webkit-transform: rotate(90deg)
+	    }
+	    50%, 60% {
+	        transform: rotate(0deg);
+	        -webkit-transform: rotate(0deg)
+	    }
+	    90% {
+	        transform: rotate(90deg);
+	        -webkit-transform: rotate(90deg)
+	    }
+	    100% {
+	        transform: rotate(90deg);
+	        -webkit-transform: rotate(90deg)
+	    }
+	}
+	
+	@keyframes rotation {
+	    10% {
+	        transform: rotate(90deg);
+	        -webkit-transform: rotate(90deg)
+	    }
+	    50%, 60% {
+	        transform: rotate(0deg);
+	        -webkit-transform: rotate(0deg)
+	    }
+	    90% {
+	        transform: rotate(90deg);
+	        -webkit-transform: rotate(90deg)
+	    }
+	    100% {
+	        transform: rotate(90deg);
+	        -webkit-transform: rotate(90deg)
+	    }
+	}
+	
+	@media only screen
+	    and (min-width : 1023px){
+	        html{
+	            width:414px;
+	            margin: 0 auto;
+	            background-color: #333!important;
+	            position: absolute;
+	            left: 50%;
+	            margin-left: -207px;
+	            max-height: 672px;
+	            height: 100%;
+	        }
+	 
+	    }
+</style>
+</div>
+</body>
+</html>

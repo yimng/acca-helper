@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.WebArticleSubjectRelationDao">
+    
+	<sql id="webArticleSubjectRelationColumns">
+		a.id AS "id",
+		a.article_id AS "articleId",
+		a.subject_id AS "subjectId",
+		<include refid="examCourseColumns"/>
+	</sql>
+
+	<sql id="examCourseColumns">
+		course.exam_course_id AS "course.examCourseId",
+		course.del_flag AS "course.delFlag",
+		course.create_by AS "course.createBy.id",
+		course.create_date AS "course.createDate",
+		course.update_by AS "course.updateBy.id",
+		course.update_date AS "course.updateDate",
+		course.course AS "course.course",
+		course.course_name AS "course.courseName",
+		course.english_name AS "course.englishName",
+		course.english_short_name AS "course.englishShortName",
+		course.price AS "course.price",
+		course.exam_type AS "course.examType"
+	</sql>
+	
+	<sql id="webArticleSubjectRelationJoins">
+		LEFT JOIN tbl_exam_course course ON course.exam_course_id = a.subject_id
+	</sql>
+    
+	<select id="get" resultType="WebArticleSubjectRelation">
+		SELECT 
+			<include refid="webArticleSubjectRelationColumns"/>
+		FROM tbl_article_subject_relation a
+		<include refid="webArticleSubjectRelationJoins"/>
+		WHERE a.article_id = #{articleId}
+	</select>
+
+	<!-- 通过文章id串获取文章关联科目列表 -->
+	<select id="findListByArticleIds" resultType="WebArticleSubjectRelation">
+		SELECT
+		<include refid="webArticleSubjectRelationColumns"/>
+		FROM tbl_article_subject_relation a
+		<include refid="webArticleSubjectRelationJoins"/>
+		WHERE a.article_id IN
+		<foreach collection="articleIds" item="articleId" separator="," open="(" close=")">
+			#{articleId}
+		</foreach>
+	</select>
+	
+	<select id="findList" resultType="WebArticleSubjectRelation">
+		SELECT 
+			<include refid="webArticleSubjectRelationColumns"/>
+		FROM tbl_article_subject_relation a
+		<include refid="webArticleSubjectRelationJoins"/>
+		<where>
+			<if test="subjectId != null">
+				a.subject_id = #{subjectId}
+			</if>
+			<if test="articleId != null">
+				a.article_id = #{articleId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebArticleSubjectRelation">
+		SELECT 
+			<include refid="webArticleSubjectRelationColumns"/>
+		FROM tbl_article_subject_relation a
+		<include refid="webArticleSubjectRelationJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_article_subject_relation(
+			id,
+			article_id,
+			subject_id
+		) VALUES (
+			#{id},
+			#{articleId},
+			#{subjectId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_article_subject_relation SET 	
+			subject_id = #{subjectId}
+		WHERE article_id = #{articleId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tbl_article_subject_relation
+		WHERE 1=1
+		<if test="articleId != null">
+			AND article_id = #{articleId}
+		</if>
+		<if test="subjectId != null">
+			AND subject_id = #{subjectId}
+		</if>
+	</update>
+	
+</mapper>

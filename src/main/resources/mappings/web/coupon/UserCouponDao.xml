@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.coupon.dao.UserCouponDao">
+
+    <sql id="userCouponColumns">
+		a.user_coupon_id AS "userCouponId",
+		a.user_id AS "userId",
+		a.coupon_id AS "couponId"
+	</sql>
+
+    <sql id="userCouponJoins">
+    </sql>
+
+    <select id="get" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.UserCoupon">
+        SELECT
+        <include refid="userCouponColumns"/>
+        FROM tbl_user_coupon a
+        <include refid="userCouponJoins"/>
+        WHERE a.user_coupon_id = #{userCouponId}
+    </select>
+
+    <select id="findList" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.UserCoupon">
+        SELECT
+        <include refid="userCouponColumns"/>
+        FROM tbl_user_coupon a
+        <include refid="userCouponJoins"/>
+        <where>
+
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.UserCoupon">
+        SELECT
+        <include refid="userCouponColumns"/>
+        FROM tbl_user_coupon a
+        <include refid="userCouponJoins"/>
+        <where>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO tbl_user_coupon(
+			user_coupon_id,
+			user_id,
+			coupon_id
+		) VALUES (
+			#{userCouponId},
+			#{userId},
+			#{couponId}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE tbl_user_coupon SET
+			user_id =           #{userId},
+			coupon_id =         #{couponId}
+		WHERE user_coupon_id =	  #{userCouponId}
+	</update>
+
+    <update id="delete">
+		UPDATE tbl_coupon SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE coupon_id = #{couponId}
+	</update>
+
+</mapper>

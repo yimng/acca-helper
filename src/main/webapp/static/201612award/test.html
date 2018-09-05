@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title></title>
+
+  <link rel="stylesheet" href="">
+
+</head>
+
+<body>
+
+<script src="./lib/jquery.js"></script>
+
+<script>
+
+$(document).ready(function(){
+
+
+
+$.ajax({
+
+  url: 'http://app.china-ife.com/acca/api/article/getUserAwardNum.do',
+
+  type: "POST",
+
+  data: {
+
+          phone: '13366278134'
+
+        },
+
+        success: function(response, status, xhr) {
+
+
+
+        },
+
+        error: function(response, status, xhr) {
+
+
+
+  }
+
+});
+
+
+
+});
+
+</script>
+
+</body>
+
+
+
+</html>
+

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.plan.dao.AppUserLearningPlanDao">
+    
+	<sql id="appUserLearningPlanColumns">
+		a.learning_plan_id AS "learningPlanId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.acca_user_id AS "accaUserId",
+		a.course_id AS "courseId",
+		a.course_name AS "courseName",
+		a.start_date AS "startDate",
+		a.end_date AS "endDate"
+	</sql>
+	
+	<sql id="appUserLearningPlanJoins">
+	</sql>
+    
+	<select id="getByCondition" resultType="AppUserLearningPlan">
+		SELECT 
+			<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		WHERE a.del_flag = '0'
+		<if test="accaUserId != null">
+			AND a.acca_user_id = #{accaUserId}
+		</if>
+		<if test="courseId != null">
+			AND a.course_id = #{courseId}
+		</if>
+	</select>
+
+	<select id="get" resultType="AppUserLearningPlan">
+		SELECT
+		<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		<include refid="appUserLearningPlanJoins"/>
+		WHERE a.learning_plan_id = #{learningPlanId}
+	</select>
+
+	<!-- 首页获取学习提醒接口,获取学习计划列表 -->
+	<select id="findTipsList" resultType="AppUserLearningPlan">
+		SELECT
+			<include refid="appUserLearningPlanColumns"/>
+		FROM
+			tbl_user_learning_plan a
+		WHERE
+			a.del_flag = '0'
+		AND a.acca_user_id = #{accaUserId}
+		AND a.end_date > NOW()
+		<if test="courseId != null">
+			AND a.course_id != #{courseId}
+		</if>
+		ORDER BY a.end_date
+		LIMIT 2;
+	</select>
+
+	<!--获取学习列表,通过时间排序-->
+	<select id="findList" resultType="AppUserLearningPlan">
+		SELECT 
+			<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		<include refid="appUserLearningPlanJoins"/>
+		<where>
+			a.del_flag = "0"
+		</where>
+		<if test="accaUserId != null">
+			AND a.acca_user_id = #{accaUserId}
+		</if>
+		ORDER BY a.start_date, a.course_id
+	</select>
+
+	<!--获取被删除的规划数量-->
+	<select id="getDelPlanCount" resultType="Long">
+		SELECT
+			count(1)
+		FROM tbl_user_learning_plan a
+		<where>
+			a.del_flag = "1"
+			AND a.acca_user_id = #{accaUserId}
+		</where>
+	</select>
+
+	<!--获取某月某用户的除当前科目外的规划科目数-->
+	<select id="findMonthList" resultType="int">
+		SELECT
+			count(1)
+		FROM tbl_user_learning_plan a
+		<where>
+			a.del_flag = "0"
+			<if test="accaUserId != null">
+				AND a.acca_user_id = #{accaUserId}
+			</if>
+			<if test="courseId != null">
+				AND a.course_id != #{courseId}
+			</if>
+			AND DATE_FORMAT(start_date, '%Y-%m') &lt;= #{examDateStr}
+			AND DATE_FORMAT(end_date, '%Y-%m') &gt;= #{examDateStr}
+		</where>
+	</select>
+
+	<!--获取时间之间的学习列表-->
+	<select id="getPlanListBetweenDays" resultType="AppUserLearningPlan">
+		SELECT
+		<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		<include refid="appUserLearningPlanJoins"/>
+		<where>
+			a.del_flag = "0"
+			AND ((a.start_date &lt;= #{startDate} AND a.end_date &gt;= #{startDate})
+			OR (a.start_date &lt;= #{endDate} AND a.end_date &gt;= #{endDate}))
+			<if test="accaUserId != null">
+				AND a.acca_user_id = #{accaUserId}
+			</if>
+
+		</where>
+		ORDER BY a.start_date, a.course_id
+	</select>
+	
+	
+	<!--获取当前时间用户正在学习的学习计划-->
+	<select id="getLearningPlanListByNow" resultType="AppUserLearningPlan">
+		SELECT
+		<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		<include refid="appUserLearningPlanJoins"/>
+		<where>
+			a.del_flag = "0"
+		AND 
+			a.start_date &lt;=now()
+		AND 
+			a.end_date &gt;=now() 
+		AND a.acca_user_id = #{accaUserId}
+		</where>
+		ORDER BY a.start_date, a.course_id
+	</select>
+
+	<!--获取学习列表,通过id排序-->
+	<select id="getPlanListOrderById" resultType="AppUserLearningPlan">
+		SELECT
+		<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		<include refid="appUserLearningPlanJoins"/>
+		<where>
+			a.del_flag = "0"
+			<if test="accaUserId != null">
+				AND a.acca_user_id = #{accaUserId}
+			</if>
+		</where>
+		ORDER BY a.course_id,a.start_date
+	</select>
+	
+	<select id="findAllList" resultType="AppUserLearningPlan">
+		SELECT 
+			<include refid="appUserLearningPlanColumns"/>
+		FROM tbl_user_learning_plan a
+		<include refid="appUserLearningPlanJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_user_learning_plan(
+			learning_plan_id,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			acca_user_id,
+			course_id,
+			course_name,
+			start_date,
+			end_date
+		) VALUES (
+			#{learningPlanId},
+			#{delFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{accaUserId},
+			#{courseId},
+			#{courseName},
+			#{startDate},
+			#{endDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_user_learning_plan SET 	
+			learning_plan_id = #{learningPlanId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			acca_user_id = #{accaUserId},
+			course_id = #{courseId},
+			course_name = #{courseName},
+			start_date = #{startDate},
+			end_date = #{endDate}
+		WHERE learning_plan_id = #{learningPlanId}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_user_learning_plan SET 
+			del_flag = "1"
+		WHERE learning_plan_id = #{learningPlanId}
+	</update>
+
+	<!--获取以前规划过的用户信息-->
+	<select id="getPreUsers" resultType="Long">
+		select distinct a.acca_user_id from tbl_user_learning_plan a
+	</select>
+	
+</mapper>

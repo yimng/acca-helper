@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.home.dao.AppMsgPushLogDao">
+    
+	<sql id="appMsgPushLogColumns">
+		a.msg_id AS "msgId",
+		a.receive_id AS "receiveId",
+		a.msg_title AS "msgTitle",
+		a.msg_content AS "msgContent",
+		a.msg_type AS "msgType",
+		a.msg_group AS "msgGroup",
+		a.push_time AS "pushTime",
+		a.push_status AS "pushStatus",
+		a.read_status AS "readStatus",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+		a.extra AS "extra"
+	</sql>
+	
+	<sql id="appMsgPushLogJoins">
+	</sql>
+
+	<!-- 客户端获取消息列表 -->
+	<select id="getMsgList" resultType="AppMsgPushLog">
+		SELECT
+		<include refid="appMsgPushLogColumns"/>
+		FROM tbl_msg_push_log a
+		<include refid="appMsgPushLogJoins"/>
+		<where>
+			a.del_flag = '0'
+			<if test="receiveId != null and receiveId != ''">
+				AND a.receive_id = #{receiveId}
+			</if>
+		</where>
+		ORDER BY a.read_status,a.msg_id DESC
+		<include refid="public.pageSql"/>
+	</select>
+
+	<!-- 获取未读消息数,用来判断是否有小红点 -->
+	<select id="getUnReadMsgCount" resultType="Long">
+		SELECT
+		COUNT(1)
+		FROM
+		tbl_msg_push_log a
+		WHERE
+		a.del_flag = '0'
+		AND
+		(a.receive_id = #{receiveId} AND a.read_status = 0 AND a.msg_type = 0)
+	</select>
+
+	<!-- 修改消息状态,如果传过来的参数不为-1,则修改对应的id数据;否则,全部修改为已读状态 -->
+	<update id="updateMsgReadStatus">
+		UPDATE tbl_msg_push_log SET
+		read_status = 1,
+		update_date = now()
+		WHERE receive_id = #{accaUserId}
+		<if test="msgId != null and msgId != -1">
+			AND msg_id = #{msgId}
+		</if>
+	</update>
+
+	<!-- 批量删除消息 -->
+	<update id="delBatchMsg">
+		UPDATE tbl_msg_push_log SET
+		del_flag = '1',
+		update_date = now()
+		WHERE msg_id IN
+		<foreach collection="list" item="item" index="index"  open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+</mapper>

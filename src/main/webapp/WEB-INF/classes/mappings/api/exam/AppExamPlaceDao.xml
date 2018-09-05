@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.exam.dao.AppExamPlaceDao">
+    
+    <!-- <resultMap type="com.thinkgem.jeesite.acca.api.exam.entity.AppExamPlace" id="appExamPlaceMap" autoMapping="true">
+    	<association property="examPlaceImage"  columnPrefix="examPlaceImage" javaType="com.thinkgem.jeesite.freetek.file.entity.FileInfo" />
+    	<collection property="examList" autoMapping="true" columnPrefix="examList."  ofType="AppExam">
+    		<collection property="examCourseList"  autoMapping="true" columnPrefix="examCourseList."  ofType="AppExamCourse" />
+    	</collection>
+    </resultMap> -->
+    
+    <resultMap type="com.thinkgem.jeesite.acca.api.exam.entity.AppExamPlace" id="appExamPlaceMap">
+    	<result column="examPlaceId" property="examPlaceId" />
+		<result column="examType" property="examType" />
+		<result column="examCityId" property="examCityId" />
+		<result column="examCityName" property="examCityName" />
+		<result column="examDetailAddress" property="examDetailAddress" />
+		<result column="examPlaceName" property="examPlaceName" />
+		<result column="examPlaceSn" property="examPlaceSn" />
+		<result column="examPlaceImageId" property="examPlaceImageId" />
+		<result column="lng" property="lng" />
+		<result column="lat" property="lat" />
+		<result column="examPlaceContantName" property="examPlaceContantName" />
+		<result column="examPlaceContantPhone" property="examPlaceContantPhone" />
+    
+    	<association property="examPlaceImage" autoMapping="true"  columnPrefix="examPlaceImage." javaType="com.thinkgem.jeesite.freetek.file.entity.FileInfo" />
+    	
+    	<collection property="examList"  ofType="AppExam" javaType="ArrayList">
+    		<result column="examList.examId" property="examId" />
+    		<result column="examList.examType" property="examType" />
+    		<result column="examList.examCityId" property="examCityId" />
+    		<result column="examList.examCityName" property="examCityName" />
+    		<result column="examList.examPlaceId" property="examPlaceId" />
+    		<result column="examList.examPlaceName" property="examPlaceName" />
+    		<result column="examList.examStartTime" property="examStartTime" />
+    		<result column="examList.examEndTime" property="examEndTime" />
+    		<result column="examList.examSignupEndtime" property="examSignupEndtime" />
+    		<result column="examList.totalSeats" property="totalSeats" />
+    		<result column="examList.usedSeats" property="usedSeats" />
+    		<collection property="examCourseList"   ofType="AppExamCourseSelf" >
+    			<result column="examCourseList.examCourseId" property="examCourseId" />
+    			<result column="examCourseList.course" property="course" />
+    			<result column="examCourseList.courseName" property="courseName" />
+    			<result column="examCourseList.englishName" property="englishName" />
+    			<result column="examCourseList.englishShortName" property="englishShortName" />
+    			<result column="examCourseList.price" property="price" />
+    			<result column="examCourseList.examType" property="examType" />
+    			<result column="examCourseList.examVersionJson" property="examVersionJson" /> 
+    		</collection>
+    	</collection>
+    </resultMap>
+    
+    
+	<sql id="appExamPlaceColumns">
+		a.exam_place_id AS "examPlaceId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_detail_address AS "examDetailAddress",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_place_sn AS "examPlaceSn",
+		a.exam_place_image_id AS "examPlaceImageId",
+		a.lng AS "lng",
+		a.lat AS "lat",
+		a.exam_place_contant_name AS "examPlaceContantName",
+		a.exam_place_contant_phone AS "examPlaceContantPhone" ,
+		<include refid="examPlaceImageColumns"/> ,
+		<include refid="appExamColumns"/> ,
+		<include refid="appExamCourseColumns"/> 
+	</sql>
+	
+	
+	<sql id="appExamCourseColumns">
+		examCourseList.exam_course_id AS "examCourseList.examCourseId",
+		examCourseList.course AS "examCourseList.course",
+		examCourseList.course_name AS "examCourseList.courseName",
+		examCourseList.english_name AS "examCourseList.englishName",
+		examCourseList.english_short_name AS "examCourseList.englishShortName",
+		examCourseList.price AS "examCourseList.price",
+		examCourseList.exam_type AS "examCourseList.examType",
+		examCourseRelation.exam_version_json AS "examCourseList.examVersionJson"
+	</sql>
+	
+	
+	<sql id="examPlaceImageColumns">
+		examPlaceImage.file_id as "examPlaceImage.id", 
+		examPlaceImage.file_original_name as  "examPlaceImage.originalName",
+		examPlaceImage.file_new_name as "examPlaceImage.newName",
+		examPlaceImage.file_base_path as "examPlaceImage.basePath",
+		examPlaceImage.file_relative_path as "examPlaceImage.relativePath",
+		examPlaceImage.file_relative_url as "examPlaceImage.relativeUrl",
+		examPlaceImage.file_mime_type as "examPlaceImage.mimeType",
+		examPlaceImage.file_create_time as "examPlaceImage.createTime",
+		examPlaceImage.file_update_time as "examPlaceImage.updateTime"   
+	</sql>
+	
+	
+	<sql id="appExamColumns">
+		appExam.exam_id AS "examList.examId",
+		appExam.exam_type AS "examList.examType",
+		appExam.exam_city_id AS "examList.examCityId",
+		appExam.exam_city_name AS "examList.examCityName",
+		appExam.exam_place_id AS "examList.examPlaceId",
+		appExam.exam_place_name AS "examList.examPlaceName",
+		appExam.exam_start_time AS "examList.examStartTime",
+		appExam.exam_end_time AS "examList.examEndTime",
+		appExam.exam_signup_endtime AS "examList.examSignupEndtime",
+		appExam.total_seats AS "examList.totalSeats",
+		appExam.used_seats AS "examList.usedSeats" 
+	</sql> 
+	
+	<sql id="appExamPlaceJoins">
+		LEFT JOIN tbl_attachment_file examPlaceImage ON examPlaceImage.file_id=a.exam_place_image_id 
+		LEFT JOIN tbl_exam appExam ON appExam.exam_place_id = a.exam_place_id 
+		LEFT JOIN tbl_exam_course_relation examCourseRelation ON examCourseRelation.exam_id = appExam.exam_id
+		LEFT JOIN tbl_exam_course examCourseList ON examCourseList.exam_course_id = examCourseRelation.exam_course_id 
+	</sql>
+    
+	<select id="getSelfExamByExamPlaceId" resultMap="appExamPlaceMap">
+		SELECT 
+			<include refid="appExamPlaceColumns"/>
+		FROM tbl_exam_place a 
+		<include refid="appExamPlaceJoins"/>
+		WHERE a.exam_place_id = #{examPlaceId} 
+		AND 	
+			a.exam_type &amp; 1 = 1 
+		AND a.del_flag = 0 
+		AND appExam.del_flag = 0 
+		AND appExam.exam_signup_endtime>now() 
+		ORDER BY appExam.exam_start_time ASC , examCourseList.exam_course_id ASC 
+	</select>
+	
+	
+	
+	
+	<select id="findList" resultType="AppExamPlace">
+		SELECT 
+			<include refid="appExamPlaceColumns"/>
+		FROM tbl_exam_place a
+		<include refid="appExamPlaceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+</mapper>

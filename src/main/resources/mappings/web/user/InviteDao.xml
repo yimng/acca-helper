@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.user.dao.InviteDao">
+
+    <sql id="inviteColumns">
+      a.id AS "id",
+      a.inviter_phone AS "inviterPhone",
+      a.invitee_phone AS "inviteePhone",
+      a.invite_time AS "inviteTime",
+      a.success_time AS "successTime"
+	</sql>
+
+    <sql id="inviteJoins">
+    </sql>
+
+    <select id="get" resultType="com.thinkgem.jeesite.acca.web.user.entity.Invite">
+        SELECT
+        <include refid="inviteColumns"/>
+        FROM tbl_invite a
+        <include refid="inviteJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="com.thinkgem.jeesite.acca.web.user.entity.Invite">
+        SELECT
+        <include refid="inviteColumns"/>
+        FROM tbl_invite a
+        <include refid="inviteJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="inviterPhone != null and inviterPhone != ''">
+                AND a.inviter_phone = ${inviterPhone}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+        </choose>
+    </select>
+
+    <select id="findListByTimeAndPhone" resultType="com.thinkgem.jeesite.acca.web.user.entity.Invite">
+        SELECT
+        <include refid="inviteColumns"/>
+        FROM tbl_invite a
+        <include refid="inviteJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="phone != null and phone != ''">
+                AND a.inviter_phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{phone}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{phone},'%')</if>
+            </if>
+            <if test="start != null and start != ''">
+                AND a.invite_time > ${start}
+            </if>
+            <if test="end != null and end != ''">
+                AND ${end} > a.invite_time
+            </if>
+        </where>
+    </select>
+
+    <select id="findInviteRank" resultType="com.thinkgem.jeesite.acca.web.user.entity.InviteRank">
+        SELECT inviter_phone as phone,
+                count(distinct (invitee_phone)) as successCount
+        FROM tbl_invite a
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="start != null and start != ''">
+                AND a.invite_time > ${start}
+            </if>
+            <if test="end != null and end != ''">
+                AND ${end} > a.invite_time
+            </if>
+            AND a.success_time IS NOT NULL
+        </where>
+
+    </select>
+
+    <select id="findAllList" resultType="com.thinkgem.jeesite.acca.web.user.entity.Invite">
+        SELECT
+        <include refid="inviteColumns"/>
+        FROM tbl_invite a
+        <include refid="inviteJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO tbl_invite(
+			id,
+			inviter_phone,
+			invitee_phone,
+			invite_time,
+			success_time
+		) VALUES (
+			#{id},
+			#{inviterPhone},
+			#{inviteePhone},
+			#{inviteTime},
+			#{successTime}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE tbl_invite SET
+			id = #{id},
+			inviter_phone = #{inviterPhone},
+			invitee_phone = #{inviteePhone},
+			invite_time = #{inviteTime},
+			success_time = #{successTime}
+		WHERE id = #{id}
+	</update>
+
+    <update id="delete">
+		UPDATE tbl_invite SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

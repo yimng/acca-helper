@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.ActivityDao">
+    
+	<sql id="activityColumns">
+		a.activity_id AS "activityId},
+		a.activity_name AS "activityName},
+		a.activity_type AS "activityType},
+		a.activity_desc AS "activityDesc},
+		a.beginTime AS "beginTime},
+		a.end_time AS "endTime},
+		a.status AS "status},
+		a.del_flag AS "delFlag},
+		a.create_by AS "createBy.id},
+		a.create_date AS "createDate},
+		a.update_by AS "updateBy.id},
+		a.update_date AS "updateDate},
+		<include refid="lottery"/>
+	</sql>
+	<sql id="activityJoins">
+		LEFT JOIN tbl_Lottery lottery ON lottery.activity_id = a.activity_id
+	</sql>
+	
+	<sql id="lottery">
+			
+	</sql>
+	<select id="get" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM tbl_app_activity a
+		<!--  include refid="activityJoins"/-->
+		WHERE a.activity_id = #{activityId}
+	</select>
+	
+	<select id="findList" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM tbl_app_activity a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="status != null and status == 0">
+				and a.begin_time &lt;=  now() and a.end_time &gt;= now()
+			</if>
+			<if test="status != null and status == 2">
+				and a.begin_time &gt;  now()
+			</if>
+			<if test="status != null and status == 1">
+				and a.end_time &lt;= now()
+			</if>
+		</where>
+		order by a.sort,a.begin_time
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				, ${page.orderBy}
+			</when>
+			<otherwise>
+				, a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Activity">
+		SELECT 
+			<include refid="activityColumns"/>
+		FROM tbl_app_activity a
+		<include refid="activityJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="activityId">
+		INSERT INTO tbl_activity(
+			activity_name,
+			activity_type,
+			activity_desc,
+			beginTime,
+			end_time,
+			status,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date
+		) VALUES (
+			#{activityName},
+			#{activityType},
+			#{activityDesc},
+			#{beginTime},
+			#{endTime},
+			#{status},
+			#{delFlag},
+			#{createBy.id},
+			now(),
+			#{updateBy.id},
+			now()
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_activity SET 	
+			activity_name = #{activityName},
+			activity_type = #{activityType},
+			activity_desc = #{activityDesc},
+			beginTime = #{beginTime},
+			end_time = #{endTime},
+			status = #{status},
+			del_flag = #{delFlag},
+			create_by = #{createBy.id},
+			create_date = #{createDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE activity_id = #{activityId}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_activity SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE activity_id = #{activityId}
+	</update>
+	
+</mapper>

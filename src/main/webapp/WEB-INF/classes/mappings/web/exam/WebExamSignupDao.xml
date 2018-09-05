@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.exam.dao.WebExamSignupDao">
+    
+	<sql id="appExamSignupColumns">
+		a.exam_signup_id AS "examSignupId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.exam_id AS "examId",
+		a.exam_course_id AS "examCourseId",
+		a.exam_version_json AS "examVersionJson",
+		a.acca_user_id AS "accaUserId",
+		a.register_name AS "registerName",
+		a.register_card_number AS "registerCardNumber",
+		a.register_phone AS "registerPhone",
+		a.register_email AS "registerEmail",
+		a.register_white_color_img_id AS "registerWhiteColorImgId",
+		a.acca_register_name AS "accaRegisterName",
+		a.acca_register_password AS "accaRegisterPassword",
+		a.org AS "org",
+		a.exam_course AS "examCourse",
+		a.exam_course_name AS "examCourseName",
+		a.exam_signup_time AS "examSignupTime",
+		a.exam_signup_status AS "examSignupStatus",
+		a.price AS "price",
+		a.order_id AS "orderId",
+		a.card_type AS "cardType",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_start_time AS "examStartTime",
+		a.exam_end_time AS "examEndTime",
+		a.exam_signup_endtime AS "examSignupEndtime",
+		a.exam_detail_address AS "examDetailAddress",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_place_sn AS "examPlaceSn",
+		a.exam_place_image_id AS "examPlaceImageId",
+		a.exam_place_contant_name AS "examPlaceContantName",
+		a.exam_place_contant_phone AS "examPlaceContantPhone",
+		a.english_name AS "englishName",
+		a.english_short_name AS "englishShortName",
+		a.exam_place_id AS "examPlaceId",
+		<include refid="FileMapper.image" />
+	</sql>
+
+	<sql id="webSignupColumns">
+		a.exam_signup_id AS "examSignupId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.exam_id AS "examId",
+		a.exam_course_id AS "examCourseId",
+		a.exam_version_json AS "examVersionJson",
+		a.acca_user_id AS "accaUserId",
+		a.register_name AS "registerName",
+		a.register_card_number AS "registerCardNumber",
+		a.register_phone AS "registerPhone",
+		a.register_email AS "registerEmail",
+		a.register_white_color_img_id AS "registerWhiteColorImgId",
+		a.acca_register_name AS "accaRegisterName",
+		a.acca_register_password AS "accaRegisterPassword",
+		a.exam_course AS "examCourse",
+		a.exam_course_name AS "examCourseName",
+		a.exam_signup_time AS "examSignupTime",
+		a.exam_signup_status AS "examSignupStatus",
+		a.price AS "price",
+		a.order_id AS "orderId",
+		a.card_type AS "cardType",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_start_time AS "examStartTime",
+		a.exam_end_time AS "examEndTime",
+		a.exam_signup_endtime AS "examSignupEndtime",
+		a.exam_detail_address AS "examDetailAddress",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_place_sn AS "examPlaceSn",
+		a.exam_place_image_id AS "examPlaceImageId",
+		a.exam_place_contant_name AS "examPlaceContantName",
+		a.exam_place_contant_phone AS "examPlaceContantPhone",
+		a.english_name AS "englishName",
+		a.english_short_name AS "englishShortName",
+		a.exam_place_id AS "examPlaceId"
+	</sql>
+	
+	<sql id="appExamSignupJoins">
+		left join tbl_attachment_file image on a.register_white_color_img_id = image.file_id
+	</sql>
+	
+	<sql id="userSignupJoins">
+		left join tbl_acca_user u on a.acca_user_id = u.acca_user_id 
+	</sql>
+	
+    
+	<select id="get" resultType="WebExamSignup">
+		SELECT 
+			<include refid="appExamSignupColumns"/>
+		FROM tbl_exam_signup a
+		<include refid="appExamSignupJoins"/>
+		WHERE a.exam_signup_id = #{id}
+	</select>
+
+	<!-- 通过选取的科目,获取考试关联的用户的id列表 -->
+	<select id="findListByCourseIds" resultType="Long">
+		SELECT DISTINCT a.acca_user_id
+		FROM tbl_exam_signup a
+		WHERE a.del_flag = '0' AND
+		a.exam_course_id IN (${examCourse})
+	</select>
+	
+	<!-- 通过orderid获取用户对应的报考信息 -->
+	<select id="findListByOrder" resultType="WebExamSignup">
+		SELECT 
+			<include refid="appExamSignupColumns"/>
+		FROM tbl_exam_signup a
+		<include refid="appExamSignupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and a.order_id = #{orderId}
+		</where>
+		ORDER BY a.exam_start_time
+	</select>
+	
+	<select id="findList" resultType="WebExamSignup">
+		SELECT 
+			<include refid="appExamSignupColumns"/>
+		FROM tbl_exam_signup a
+		<include refid="appExamSignupJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="examSignupStatus != null">
+				and a.exam_signup_status = #{examSignupStatus}
+			</if>
+			and exam_id = #{examId}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 获取在当前时间之后的,用户的报考通过的列表 -->
+	<select id="findMyList" resultType="WebSignup">
+		SELECT
+		<include refid="webSignupColumns"/>
+		FROM tbl_exam_signup a
+		<include refid="appExamSignupJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND a.acca_user_id = #{accaUserId}
+			AND exam_signup_status = #{examSignupStatus}
+			AND a.exam_start_time > NOW()
+		</where>
+		ORDER BY a.exam_start_time
+	</select>
+
+	<!-- 获取某天的审核通过的报考列表 -->
+	<select id="getWillExams" resultType="WebExamSignup">
+		SELECT
+		<include refid="appExamSignupColumns"/>
+		FROM tbl_exam_signup a
+		<include refid="appExamSignupJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND a.exam_start_time &gt;= #{dayStart}
+			AND a.exam_end_time &lt;= #{dayEnd}
+			AND a.exam_signup_status = 30
+		</where>
+	</select>
+	
+	<select id="findDayList" resultType="WebExamSignup">
+		SELECT
+		<include refid="webSignupColumns"/> ,u.org AS "org", u.iszbg AS "iszbg"
+		FROM tbl_exam_signup a
+		<include refid="userSignupJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND a.exam_id = #{examId}
+			AND a.exam_signup_status = 30
+		</where>
+	</select>
+	
+	
+	<update id="changeExam">
+		UPDATE tbl_exam_signup SET  
+			update_date = #{updateDate} ,
+			exam_id = #{examId} ,
+			exam_course_id = #{examCourseId} ,
+			exam_version_json = #{examVersionJson} ,
+			exam_course = #{examCourse} ,
+			exam_course_name = #{examCourseName} ,
+			exam_signup_time = #{examSignupTime} ,
+			price = #{price} ,
+			exam_city_id = #{examCityId} ,
+			exam_city_name = #{examCityName} ,
+			exam_start_time = #{examStartTime} ,
+			exam_end_time = #{examEndTime} ,
+			exam_signup_endtime = #{examSignupEndtime} ,
+			exam_detail_address = #{examDetailAddress} ,
+			exam_place_name = #{examPlaceName} ,
+			exam_place_sn = #{examPlaceSn} ,
+			exam_place_image_id = #{examPlaceImageId} ,
+			exam_place_contant_name = #{examPlaceContantName} ,
+			exam_place_contant_phone = #{examPlaceContantPhone} ,
+			english_name = #{englishName} ,
+			english_short_name = #{englishShortName} ,
+			exam_place_id = #{examPlaceId}  
+		WHERE 
+			exam_signup_id = #{examSignupId} 
+	</update>
+</mapper>

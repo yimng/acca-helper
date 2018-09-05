@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="FileMapper">
+
+	<sql id="file">
+		file.file_id as "file.id", 
+		file.file_original_name as  "file.originalName",
+		file.file_new_name as "file.newName",
+		file.file_base_path as "file.basePath",
+		file.file_relative_path as "file.relativePath",
+		file.file_relative_url as "file.relativeUrl",
+		file.file_mime_type as "file.mimeType",
+		file.file_create_time as "file.createTime",
+		file.file_update_time as "file.updateTime"   
+	</sql>
+	
+	
+	<sql id="headImg">
+		headImg.file_id as "headImg.id", 
+		headImg.file_original_name as "headImg.originalName",
+		headImg.file_new_name as "headImg.newName",
+		headImg.file_base_path as "headImg.basePath",
+		headImg.file_relative_path as "headImg.relativePath",
+		headImg.file_relative_url as "headImg.relativeUrl",
+		headImg.file_mime_type as "headImg.mimeType",
+		headImg.file_create_time as "headImg.createTime",
+		headImg.file_update_time as "headImg.updateTime"   
+	</sql>
+	
+	
+	<sql id="images">
+		images.file_id as "images.id", 
+		images.file_original_name as "images.originalName",
+		images.file_new_name as "images.newName",
+		images.file_base_path as "images.basePath",
+		images.file_relative_path as "images.relativePath",
+		images.file_relative_url as "images.relativeUrl",
+		images.file_mime_type as "images.mimeType",
+		images.file_create_time as "images.createTime",
+		images.file_update_time as "images.updateTime"    
+	</sql>
+	
+	<sql id="image">
+		image.file_id as "image.id", 
+		image.file_original_name as "image.originalName",
+		image.file_new_name as "image.newName",
+		image.file_base_path as "image.basePath",
+		image.file_relative_path as "image.relativePath",
+		image.file_relative_url as "image.relativeUrl",
+		image.file_mime_type as "image.mimeType",
+		image.file_create_time as "image.createTime",
+		image.file_update_time as "image.updateTime"    
+	</sql>
+	
+	<!-- <sql id="imageResultMap">
+		<result column="image.id" property="image.id" />
+		<result column="image.originalName" property="image.originalName" />
+		<result column="image.newName" property="image.newName" />
+		<result column="image.basePath" property="image.basePath" />
+		<result column="image.relativePath" property="image.relativePath" />
+		<result column="image.relativeUrl" property="image.relativeUrl" />
+		<result column="image.mimeType" property="image.mimeType" />
+		<result column="image.createTime" property="image.createTime" />
+		<result column="image.updateTime" property="image.updateTime" />
+	</sql>
+	
+	<sql id="fileResultMap">
+		<result column="file.id" property="file.id" />
+		<result column="file.originalName" property="file.originalName" />
+		<result column="file.newName" property="file.newName" />
+		<result column="file.basePath" property="file.basePath" />
+		<result column="file.relativePath" property="file.relativePath" />
+		<result column="file.relativeUrl" property="file.relativeUrl" />
+		<result column="file.mimeType" property="file.mimeType" />
+		<result column="file.createTime" property="file.createTime" />
+		<result column="file.updateTime" property="file.updateTime" />
+	</sql> -->
+	
+	
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.article.dao.AppArticleCommentDao">
+    
+	<sql id="appArticleCommentColumns">
+		a.article_comment_id AS "articleCommentId",
+		a.create_date AS "createDate",
+		a.article_id AS "articleId",
+		a.acca_user_id AS "accaUserId",
+		a.content AS "content",
+		a.parent_id AS "parentId",
+		parent.article_comment_id AS "pComment.articleCommentId",
+		parent.create_date AS "pComment.createDate",
+		parent.article_id AS "pComment.articleId",
+		parent.acca_user_id AS "pComment.accaUserId",
+		parent.content AS "pComment.content",
+		parent.parent_id AS "pComment.parentId" ,
+		<include refid="appAccaUserColumns"/>,
+		<include refid="appAccaUserParentCommentColumns"/> 
+	</sql>
+	
+	<sql id="appAccaUserColumns">
+		user.acca_user_id AS "user.accaUserId",
+		user.phone AS "user.phone",
+		user.nickname AS "user.nickname" ,
+		<include refid="appAccaUserHeadImgColumns"/> 
+	</sql>
+	
+	<sql id="appAccaUserHeadImgColumns">
+		userHeadImg.file_id as "user.headImg.id", 
+		userHeadImg.file_original_name as  "user.headImg.originalName",
+		userHeadImg.file_new_name as "user.headImg.newName",
+		userHeadImg.file_base_path as "user.headImg.basePath",
+		userHeadImg.file_relative_path as "user.headImg.relativePath",
+		userHeadImg.file_relative_url as "user.headImg.relativeUrl",
+		userHeadImg.file_mime_type as "user.headImg.mimeType",
+		userHeadImg.file_create_time as "user.headImg.createTime",
+		userHeadImg.file_update_time as "user.headImg.updateTime"   
+	</sql>
+	
+	
+	<sql id="appAccaUserParentCommentColumns">
+		parentUser.acca_user_id AS "pComment.user.accaUserId",
+		parentUser.phone AS "pComment.user.phone",
+		parentUser.nickname AS "pComment.user.nickname" ,
+		<include refid="appAccaUserParentCommentHeadImgColumns"/> 
+	</sql>
+	
+	<sql id="appAccaUserParentCommentHeadImgColumns">
+		parentUserHeadImg.file_id as "pComment.user.headImg.id", 
+		parentUserHeadImg.file_original_name as  "pComment.user.headImg.originalName",
+		parentUserHeadImg.file_new_name as "pComment.user.headImg.newName",
+		parentUserHeadImg.file_base_path as "pComment.user.headImg.basePath",
+		parentUserHeadImg.file_relative_path as "pComment.user.headImg.relativePath",
+		parentUserHeadImg.file_relative_url as "pComment.user.headImg.relativeUrl",
+		parentUserHeadImg.file_mime_type as "pComment.user.headImg.mimeType",
+		parentUserHeadImg.file_create_time as "pComment.user.headImg.createTime",
+		parentUserHeadImg.file_update_time as "pComment.user.headImg.updateTime"   
+	</sql>
+	
+	
+	<sql id="appArticleCommentJoins">
+		LEFT JOIN tbl_article_comment parent ON a.parent_id = parent.article_comment_id 
+		LEFT JOIN tbl_acca_user user ON a.acca_user_id = user.acca_user_id 
+		LEFT JOIN tbl_attachment_file userHeadImg ON userHeadImg.file_id = user.head_id
+		LEFT JOIN tbl_acca_user parentUser ON parentUser.acca_user_id = parent.acca_user_id 
+		LEFT JOIN tbl_attachment_file parentUserHeadImg ON parentUserHeadImg.file_id = parentUser.head_id 
+	</sql>
+	
+	<select id="getCommentNumByArticleId" resultType="Long">
+		SELECT COUNT(*) FROM tbl_article_comment a 
+		WHERE a.article_id = #{articleId} 
+	</select>
+	
+	
+	<select id="getListByArticleId" resultType="AppArticleComment">
+		SELECT 
+			<include refid="appArticleCommentColumns"/>
+		FROM tbl_article_comment a
+		<include refid="appArticleCommentJoins"/>
+		WHERE a.article_id = #{articleId} 
+		ORDER BY a.article_comment_id DESC  
+		<include refid="public.pageSql"/>
+	</select>
+	
+	
+	<select id="getByArticleCommentId" resultType="AppArticleComment">
+		SELECT 
+			<include refid="appArticleCommentColumns"/>
+		FROM tbl_article_comment a
+		<include refid="appArticleCommentJoins"/>
+		WHERE a.article_comment_id = #{articleCommentId} 
+	</select>
+	
+	
+	<insert id="insert" useGeneratedKeys="true" keyColumn="article_comment_id" keyProperty="articleCommentId" >
+		INSERT INTO tbl_article_comment(
+			create_date,
+			article_id,
+			acca_user_id,
+			content,
+			parent_id 
+		) VALUES (
+			#{createDate},
+			#{articleId},
+			#{accaUserId},
+			#{content},
+			#{parentId}
+		)
+	</insert>
+    
+	<!-- <select id="get" resultType="AppArticleComment">
+		SELECT 
+			<include refid="appArticleCommentColumns"/>
+		FROM tbl_article_comment a
+		<include refid="appArticleCommentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppArticleComment">
+		SELECT 
+			<include refid="appArticleCommentColumns"/>
+		FROM tbl_article_comment a
+		<include refid="appArticleCommentJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppArticleComment">
+		SELECT 
+			<include refid="appArticleCommentColumns"/>
+		FROM tbl_article_comment a
+		<include refid="appArticleCommentJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<update id="update">
+		UPDATE tbl_article_comment SET 	
+			article_comment_id = #{articleCommentId},
+			article_id = #{articleId},
+			acca_user_id = #{accaUserId},
+			content = #{content},
+			parent_id = #{parent.id}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tbl_article_comment
+		WHERE id = #{id}
+	</update> -->
+	
+</mapper>

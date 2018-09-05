@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.WebArticleFileDao">
+    
+	<sql id="webArticleFileColumns">
+		a.article_file_id AS "articleFileId",
+		a.create_date AS "createDate",
+		a.article_id AS "articleId",
+		a.file_id AS "fileId"
+	</sql>
+	
+	<sql id="webArticleFileJoins">
+	</sql>
+    
+	<select id="get" resultType="WebArticleFile">
+		SELECT 
+			<include refid="webArticleFileColumns"/>
+		FROM tbl_article_file a
+		<include refid="webArticleFileJoins"/>
+		WHERE a.article_file_id = #{articleFileId}
+	</select>
+	
+	<select id="findList" resultType="WebArticleFile">
+		SELECT 
+			<include refid="webArticleFileColumns"/>
+		FROM tbl_article_file a
+		<include refid="webArticleFileJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebArticleFile">
+		SELECT 
+			<include refid="webArticleFileColumns"/>
+		FROM tbl_article_file a
+		<include refid="webArticleFileJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_article_file(
+			article_file_id,
+			create_date,
+			article_id,
+			file_id
+		) VALUES (
+			#{articleFileId},
+			#{createDate},
+			#{articleId},
+			#{fileId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_article_file SET 	
+			article_id = #{articleId},
+			file_id = #{fileId}
+		WHERE article_file_id = #{articleFileId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tbl_article_file
+		WHERE article_file_id = #{articleFileId}
+	</update>
+	
+</mapper>

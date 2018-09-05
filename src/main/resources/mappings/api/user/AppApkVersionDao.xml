@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.user.dao.AppApkVersionDao">
+    
+	<sql id="appApkVersionColumns">
+		a.id AS "id",
+		a.version AS "version",
+		a.build_number AS "buildNumber",
+		a.package_name AS "packageName",
+		a.description AS "description",
+		a.download_id AS "downloadId",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		<include refid="FileMapper.file"/>
+	</sql>
+	
+	<sql id="appApkVersionJoins">
+		LEFT JOIN tbl_attachment_file file ON a.download_id = file.file_id 
+	</sql>
+    
+	<select id="get" resultType="AppApkVersion">
+		SELECT 
+			<include refid="appApkVersionColumns"/>
+		FROM tbl_apk_version a
+		<include refid="appApkVersionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="getApkVersionInfo" resultType="AppApkVersion">
+		SELECT 
+			<include refid="appApkVersionColumns"/>
+		FROM tbl_apk_version a 
+		<include refid="appApkVersionJoins"/>
+		WHERE 
+			a.id = 1 
+	</select>
+	
+</mapper>

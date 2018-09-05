@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.exam.dao.WebExamSeasonDao">
+    
+    <resultMap type="WebExamSeason" id="webExamSeasonMap">
+		<result column="examSeasonStr" property="examSeasonStr" />
+		<collection property="examCourselist" ofType="com.thinkgem.jeesite.acca.web.exam.entity.WebExamCourseForSeason">
+			<result column="examCourseId" property="examCourseId" />
+			<result column="examCourse" property="examCourse" />
+			<result column="examVersionJson" property="examVersionJson" />
+		</collection>
+	</resultMap>
+    
+    
+	<sql id="webExamSeasonColumns">
+		a.exam_season_id AS "examSeasonId",
+		a.exam_course_id AS "examCourseId",
+		b.course AS "examCourse",
+		a.exam_version_json AS "examVersionJson",
+		a.exam_season_str AS "examSeasonStr"
+	</sql>
+	
+	<sql id="webExamSeasonJoins">
+		left join tbl_exam_course b on a.exam_course_id = b.exam_course_id
+	</sql>
+	
+	
+	
+    
+	<select id="get" resultType="WebExamSeason">
+		SELECT 
+			<include refid="webExamSeasonColumns"/>
+		FROM tbl_exam_season a
+		<include refid="webExamSeasonJoins"/>
+		WHERE a.exam_season_id = #{examSeasonId}
+	</select>
+	
+	<select id="findList" resultMap="webExamSeasonMap">
+		SELECT 
+			<include refid="webExamSeasonColumns"/>
+		FROM tbl_exam_season a
+		<include refid="webExamSeasonJoins"/>
+		<where>
+			<if test="examSeasonStr!=null">
+				AND a.exam_season_str = #{examSeasonStr} 				
+			</if>
+		</where>
+		ORDER BY a.exam_season_str DESC 
+	</select>
+	
+	<select id="findAllList" resultMap="webExamSeasonMap">
+		SELECT 
+			<include refid="webExamSeasonColumns"/>
+		FROM tbl_exam_season a
+		<include refid="webExamSeasonJoins"/>
+		<where>
+			<if test="examSeasonStr!=null">
+				AND a.exam_season_str = #{examSeasonStr} 				
+			</if>
+		</where>		
+		ORDER BY a.exam_season_str DESC 
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_exam_season(
+			exam_course_id,
+			exam_version_json,
+			exam_season_str
+		) VALUES (
+			#{examCourseId},
+			#{examVersionJson},
+			#{examSeasonStr}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_exam_season SET 	
+			exam_season_id = #{examSeasonId},
+			exam_course_id = #{examCourseId},
+			exam_version_json = #{examVersionJson},
+			exam_season_str = #{examSeasonStr}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM tbl_exam_season
+		WHERE exam_season_str = #{examSeasonStr}
+	</delete>
+	
+</mapper>

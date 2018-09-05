@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AttachmentFileMapper">
+
+	<sql id="image">
+		image.file_id as "image.id",
+		image.file_original_name as  "image.originalName",
+		image.file_new_name as "image.newName",
+		image.file_base_path as "image.basePath",
+		image.file_relative_path as "image.relativePath",
+		image.file_relative_url as "image.relativeUrl",
+		image.file_mime_type as "image.mimeType",
+		image.file_create_time as "image.createTime",
+		image.file_update_time as "image.updateTime"
+	</sql>
+
+
+
+
+</mapper>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.article.dao.AppArticleDao">
+    
+	<sql id="appArticleColumns">
+		a.article_id AS "articleId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.type AS "type",
+		a.title AS "title",
+		a.sort_num AS "sortNum",
+		a.publish AS "publish",
+		a.page_title AS "pageTitle",
+		a.link_url AS "linkUrl",
+		a.article_category_id AS "articleCategoryId",
+		a.html_image_id AS "htmlImageId",
+		a.html_content AS "htmlContent",
+		a.course_teacher AS "courseTeacher",
+		a.course_teacher_position AS "courseTeacherPosition",
+		a.course_address AS "courseAddress",
+		a.course_start_time AS "courseStartTime",
+		a.course_end_time AS "courseEndTime",
+		a.course_price AS "coursePrice",
+		a.course_type AS "courseType",
+		a.course_link_url AS "courseLinkUrl",
+		a.course_image_id AS "courseImageId",
+		a.course_content AS "courseContent",
+		a.learn_share_user_id AS "learnShareUserId",
+		a.teacher_id AS "teacherId",
+		a.view_num AS "viewNum",
+		<include refid="htmlImage"/>,
+		<include refid="courseImage"/> ,
+		<include refid="appArticleCategoryColumns"/>,
+		<include refid="appAccaUserColumns"/>,
+		<include refid="appTeacherColumns"/>, 
+		<include refid="articlePraiseColumn"/> 
+	</sql>
+	
+	<sql id="learningUserHeadImgColumns">
+		learningUserHeadImg.file_id as "learningUser.headImg.id", 
+		learningUserHeadImg.file_original_name as  "learningUser.headImg.originalName",
+		learningUserHeadImg.file_new_name as "learningUser.headImg.newName",
+		learningUserHeadImg.file_base_path as "learningUser.headImg.basePath",
+		learningUserHeadImg.file_relative_path as "learningUser.headImg.relativePath",
+		learningUserHeadImg.file_relative_url as "learningUser.headImg.relativeUrl",
+		learningUserHeadImg.file_mime_type as "learningUser.headImg.mimeType",
+		learningUserHeadImg.file_create_time as "learningUser.headImg.createTime",
+		learningUserHeadImg.file_update_time as "learningUser.headImg.updateTime"   
+	</sql>
+	
+	<sql id="appTeacherColumns">
+		teacher.teacher_id AS "teacher.teacherId",
+		teacher.ch_name AS "teacher.chName",
+		teacher.en_name AS "teacher.enName",
+		teacher.phone AS "teacher.phone",
+		teacher.head_id AS "teacher.headId",
+		teacher.position AS "teacher.position",
+		teacher.acca_level AS "teacher.accaLevel",
+		teacher.description AS "teacher.description" ,
+		<include refid="teacherHeadImgColumns"/>
+	</sql>
+	
+	<sql id="teacherHeadImgColumns">
+		teacherHeadImg.file_id as "teacher.headImg.id", 
+		teacherHeadImg.file_original_name as  "teacher.headImg.originalName",
+		teacherHeadImg.file_new_name as "teacher.headImg.newName",
+		teacherHeadImg.file_base_path as "teacher.headImg.basePath",
+		teacherHeadImg.file_relative_path as "teacher.headImg.relativePath",
+		teacherHeadImg.file_relative_url as "teacher.headImg.relativeUrl",
+		teacherHeadImg.file_mime_type as "teacher.headImg.mimeType",
+		teacherHeadImg.file_create_time as "teacher.headImg.createTime",
+		teacherHeadImg.file_update_time as "teacher.headImg.updateTime"   
+	</sql>
+	
+	
+	<sql id="appAccaUserColumns">
+		learningUser.acca_user_id AS "learningUser.accaUserId",
+		learningUser.phone AS "learningUser.phone",
+		learningUser.nickname AS "learningUser.nickname" ,
+		<include refid="learningUserHeadImgColumns"/> 
+	</sql>
+	
+	<sql id="appArticleCategoryColumns">
+		articleCategory.article_category_id AS "articleCategory.articleCategoryId",
+		articleCategory.del_flag AS "articleCategory.delFlag",
+		articleCategory.name AS "articleCategory.name",
+		articleCategory.sort_num AS "articleCategory.sortNum",
+		articleCategory.type AS "articleCategory.type",
+		articleCategory.sys_data AS "articleCategory.sysData" 
+	</sql>
+	
+	<sql id="htmlImage">
+		htmlImage.file_id as "htmlImage.id", 
+		htmlImage.file_original_name as  "htmlImage.originalName",
+		htmlImage.file_new_name as "htmlImage.newName",
+		htmlImage.file_base_path as "htmlImage.basePath",
+		htmlImage.file_relative_path as "htmlImage.relativePath",
+		htmlImage.file_relative_url as "htmlImage.relativeUrl",
+		htmlImage.file_mime_type as "htmlImage.mimeType",
+		htmlImage.file_create_time as "htmlImage.createTime",
+		htmlImage.file_update_time as "htmlImage.updateTime"   
+	</sql>
+	
+	<sql id="courseImage">
+		courseImage.file_id as "courseImage.id", 
+		courseImage.file_original_name as  "courseImage.originalName",
+		courseImage.file_new_name as "courseImage.newName",
+		courseImage.file_base_path as "courseImage.basePath",
+		courseImage.file_relative_path as "courseImage.relativePath",
+		courseImage.file_relative_url as "courseImage.relativeUrl",
+		courseImage.file_mime_type as "courseImage.mimeType",
+		courseImage.file_create_time as "courseImage.createTime",
+		courseImage.file_update_time as "courseImage.updateTime"   
+	</sql>
+	
+	<sql id="articlePraiseColumn">
+		IFNULL( articlePraise.praise_num,0) AS "praiseNum" 
+	</sql>
+	
+	<sql id="appArticleJoins">
+		LEFT JOIN tbl_attachment_file htmlImage ON htmlImage.file_id = a.html_image_id 
+		LEFT JOIN tbl_attachment_file courseImage ON courseImage.file_id = a.course_image_id 
+		LEFT JOIN tbl_article_category articleCategory ON articleCategory.article_category_id = a.article_category_id 
+		LEFT JOIN tbl_acca_user learningUser ON learningUser.acca_user_id = a.learn_share_user_id 
+		LEFT JOIN tbl_attachment_file learningUserHeadImg on learningUserHeadImg.file_id = learningUser.head_id
+		
+		LEFT JOIN tbl_teacher teacher ON teacher.teacher_id = a.teacher_id 
+		LEFT JOIN tbl_attachment_file teacherHeadImg on teacherHeadImg.file_id = teacher.head_id 
+		LEFT JOIN ( select article_id, count(*) as praise_num from tbl_article_praise group by article_id ) articlePraise  ON articlePraise.article_id = a.article_id 
+	</sql>
+	
+	
+    
+	<select id="get" resultType="AppArticle">
+		SELECT 
+			<include refid="appArticleColumns"/>
+		FROM tbl_article a 
+		<include refid="appArticleJoins"/>
+		WHERE a.article_id = #{articleId}
+	</select>
+	
+	
+	<select id="getListByArticleCategoryId" parameterType="Long" resultType="AppArticle">
+		SELECT 
+			<include refid="appArticleColumns"/>
+		FROM tbl_article a
+		<include refid="appArticleJoins"/> 
+		<where>
+			a.del_flag = 0 
+		AND 	
+			a.publish = 1 
+		AND 
+			a.article_category_id = #{articleCategoryId} 
+		</where>
+		ORDER BY a.sort_num ASC ,a.article_id DESC  
+		<include refid="public.pageSql"/>
+	</select>
+	
+	
+	<select id="getCollectArticleList" resultType="AppArticle">
+		SELECT 
+			<include refid="appArticleColumns"/>
+		FROM tbl_article a
+		<include refid="appArticleJoins"/> 
+		inner join tbl_article_collect collect ON collect.article_id = a.article_id 
+		<where>
+				collect.acca_user_id = #{accaUserId} 
+			AND 	
+				a.del_flag = 0 
+			AND 	
+				a.publish = 1 
+		</where>
+		ORDER BY collect.article_collect_id DESC   
+		<include refid="public.pageSql"/>
+	</select>
+	
+	
+		
+	<select id="getListByExamCourseList"  resultType="AppArticle">
+		SELECT 
+			<include refid="appArticleColumns"/>
+		FROM tbl_article a
+		<include refid="appArticleJoins"/> 
+		<where>
+			a.article_id IN 
+		(
+			SELECT b.article_id FROM 
+			(
+				SELECT distinct(temp.article_id) 
+				FROM tbl_article temp 
+				LEFT JOIN tbl_article_subject_relation relation ON relation.article_id=temp.article_id 	
+				<where>
+					temp.del_flag = 0 
+					AND 	
+						temp.publish = 1 
+					AND 
+						temp.type = 1  
+					AND 
+					<foreach collection="list" item="item" index="index" separator="OR" open="(" close=")">
+						relation.subject_id = #{item}   
+					</foreach> 
+				</where>
+				ORDER BY temp.sort_num ASC ,temp.article_id DESC  
+				<include refid="public.pageSql"/> 
+			) b 
+		)
+		</where>
+		ORDER BY a.sort_num ASC ,a.article_id DESC  
+	</select>
+	
+	<select id="getListByLearningAndTearcher" parameterType="Integer" resultType="AppArticle">
+		SELECT 
+			<include refid="appArticleColumns"/>
+		FROM tbl_article a
+		<include refid="appArticleJoins"/> 
+		<where>
+			a.del_flag = 0 
+		AND 	
+			a.publish = 1 
+		AND 
+			a.type=#{type} 
+		<if test="type==4 and teacherId!=null and teacherId!=0">
+		AND 	
+			a.teacher_id = #{teacherId} 
+		</if>
+		</where>
+		ORDER BY a.sort_num ASC ,a.article_id DESC  
+		<include refid="public.pageSql"/>
+	</select>
+	
+	<select id="getListByTitleAndCategoryId" resultType="AppArticle">
+		SELECT 
+			<include refid="appArticleColumns"/>
+		FROM tbl_article a 
+		<include refid="appArticleJoins"/>
+		<where>
+			a.del_flag = 0
+			AND 	
+				a.publish = 1 
+			<if test="title != null and title != ''">
+				AND a.title LIKE
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="articleCategoryId != null">
+				AND a.article_category_id = #{articleCategoryId}
+			</if>
+			/*注:因为有资有料的文章和公开课是在一块显示的,所以,传过来的是其中一个分类,都查两个的*/
+			<if test="type != null and (type ==1 || type == 2)">
+				AND a.type IN (1,2)
+			</if>
+			<if test="type != null and (type ==3 || type == 4)">
+				AND a.type = #{type}
+			</if>
+		</where>
+		order by a.sort_num
+		<include refid="public.pageSql"/>
+	</select>
+	
+	<update id="updateViewNum" parameterType="AppArticle">
+		UPDATE tbl_article SET 
+			view_num = #{viewNum} 
+		WHERE 
+			article_id = #{articleId} 
+	</update>
+	
+	
+</mapper>

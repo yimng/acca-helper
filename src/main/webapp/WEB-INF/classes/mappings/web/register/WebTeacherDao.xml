@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.WebTeacherDao">
+    
+	<sql id="webTeacherColumns">
+		a.teacher_id AS "teacherId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.ch_name AS "chName",
+		a.en_name AS "enName",
+		a.phone AS "phone",
+		a.head_id AS "headId",
+		a.position AS "position",
+		a.acca_level AS "accaLevel",
+		a.description AS "description",
+		<include refid="head"/>
+	</sql>
+
+	<sql id="head">
+		head.file_id as "head.id",
+		head.file_original_name as  "head.originalName",
+		head.file_new_name as "head.newName",
+		head.file_base_path as "head.basePath",
+		head.file_relative_path as "head.relativePath",
+		head.file_relative_url as "head.relativeUrl",
+		head.file_mime_type as "head.mimeType",
+		head.file_create_time as "head.createTime",
+		head.file_update_time as "head.updateTime"
+	</sql>
+	
+	<sql id="webTeacherJoins">
+		LEFT JOIN tbl_attachment_file head ON head.file_id = a.head_id
+	</sql>
+    
+	<select id="get" resultType="WebTeacher">
+		SELECT 
+			<include refid="webTeacherColumns"/>
+		FROM tbl_teacher a
+		<include refid="webTeacherJoins"/>
+		WHERE a.teacher_id = #{teacherId}
+	</select>
+	
+	<select id="findList" resultType="WebTeacher">
+		SELECT 
+			<include refid="webTeacherColumns"/>
+		FROM tbl_teacher a
+		<include refid="webTeacherJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="chName != null and chName != ''">
+				AND a.ch_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{chName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{chName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{chName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebTeacher">
+		SELECT 
+			<include refid="webTeacherColumns"/>
+		FROM tbl_teacher a
+		<include refid="webTeacherJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_teacher(
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			ch_name,
+			en_name,
+			phone,
+			head_id,
+			position,
+			acca_level,
+			description
+		) VALUES (
+			#{createBy.id},
+			now(),
+			#{updateBy.id},
+			#{updateDate},
+			#{chName},
+			#{enName},
+			#{phone},
+			#{headId},
+			#{position},
+			#{accaLevel},
+			#{description}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_teacher SET 	
+			update_by = #{updateBy.id},
+			update_date = now(),
+			ch_name = #{chName},
+			en_name = #{enName},
+			phone = #{phone},
+			head_id = #{headId},
+			position = #{position},
+			acca_level = #{accaLevel},
+			description = #{description}
+		WHERE teacher_id = #{teacherId}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_teacher SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE teacher_id = #{teacherId}
+	</update>
+	
+</mapper>

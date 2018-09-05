@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.register.dao.WebAccaRegisterDao">
+    
+	<sql id="webAccaRegisterColumns">
+		a.acca_register_id AS "accaRegisterId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.acca_user_id AS "accaUserId",
+		a.register_type AS "registerType",
+		a.name AS "name",
+		a.sex AS "sex",
+		a.card_type AS "cardType",
+		a.card_number AS "cardNumber",
+		a.phone AS "phone",
+		a.email AS "email",
+		a.city_id AS "cityId",
+		a.identity_type AS "identityType",
+		a.white_color_img_id AS "whiteColorImgId",
+		a.identity_card_og_img_id AS "identityCardOgImgId",
+		a.identity_card_tr_img_id AS "identityCardTrImgId",
+		a.reading_certificate_img_id AS "readingCertificateImgId",
+		a.reading_certificate_tr_img_id AS "readingCertificateTrImgId",
+		a.exams_result_og_img_id AS "examsResultOgImgId",
+		a.exams_result_tr_img_id AS "examsResultTrImgId",
+		a.graduate_certifcate_og_img_id AS "graduateCertifcateOgImgId",
+		a.graduate_certifcate_tr_img_id AS "graduateCertifcateTrImgId",
+		a.status AS "status",
+		a.pay_amout AS "payAmout",
+		a.pay_img_id AS "payImgId",
+		a.acca_register_name AS "accaRegisterName",
+		a.acca_register_password AS "accaRegisterPassword",
+		a.check_person_id AS "checkPersonId",
+		a.check_person_name AS "checkPersonName",
+		a.check_time AS "checkTime",
+		a.check_reason AS "checkReason",
+		a.reading_school AS "readingSchool",
+		a.reading_major AS "readingMajor",
+		a.reading_grade AS "readingGrade",
+		area.area_name AS "cityName",
+		<include refid="RegisterFileMapper.whiteColorImg"/>,
+		<include refid="RegisterFileMapper.identityCardOgImg"/>,
+		<include refid="RegisterFileMapper.identityCardTrImg"/>,
+		<include refid="RegisterFileMapper.readingCertificateImg"/>,
+		<include refid="RegisterFileMapper.readingCertificateTrImg"/>,
+		<include refid="RegisterFileMapper.examsResultOgImg"/>,
+		<include refid="RegisterFileMapper.examsResultTrImg"/>,
+		<include refid="RegisterFileMapper.graduateCertifcateOgImg"/>,
+		<include refid="RegisterFileMapper.graduateCertifcateTrImg"/>,
+		<include refid="RegisterFileMapper.payImg"/>
+	</sql>
+	
+	<sql id="webAccaRegisterJoins">
+		LEFT JOIN tbl_area area ON area.id = a.city_id
+		LEFT JOIN tbl_attachment_file whiteColorImg ON whiteColorImg.file_id = a.white_color_img_id
+		LEFT JOIN tbl_attachment_file identityCardOgImg ON identityCardOgImg.file_id = a.identity_card_og_img_id
+		LEFT JOIN tbl_attachment_file identityCardTrImg ON identityCardTrImg.file_id = a.identity_card_tr_img_id
+		LEFT JOIN tbl_attachment_file readingCertificateImg ON readingCertificateImg.file_id = a.reading_certificate_img_id
+		LEFT JOIN tbl_attachment_file readingCertificateTrImg ON readingCertificateTrImg.file_id = a.reading_certificate_tr_img_id
+		LEFT JOIN tbl_attachment_file examsResultOgImg ON examsResultOgImg.file_id = a.exams_result_og_img_id
+		LEFT JOIN tbl_attachment_file examsResultTrImg ON examsResultTrImg.file_id = a.exams_result_tr_img_id
+		LEFT JOIN tbl_attachment_file graduateCertifcateOgImg ON graduateCertifcateOgImg.file_id = a.graduate_certifcate_og_img_id
+		LEFT JOIN tbl_attachment_file graduateCertifcateTrImg ON graduateCertifcateTrImg.file_id = a.graduate_certifcate_tr_img_id
+		LEFT JOIN tbl_attachment_file payImg ON payImg.file_id = a.pay_img_id
+	</sql>
+
+	<resultMap id="statusCount" type="java.util.HashMap">
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="num" property="num" jdbcType="INTEGER"/>
+	</resultMap>
+    
+	<select id="get" resultType="WebAccaRegister">
+		SELECT 
+			<include refid="webAccaRegisterColumns"/>
+		FROM tbl_acca_register a
+		<include refid="webAccaRegisterJoins"/>
+		<where>
+			a.del_flag = '0'
+		<if test="accaRegisterId != null"> 
+			AND a.acca_register_id = #{accaRegisterId}
+		</if>
+		<if test="accaUserId != null"> 
+		 	AND a.acca_user_id = #{accaUserId}
+		</if>
+		<if test="accaRegisterName != null">
+			AND a.acca_register_name = #{accaRegisterName}
+		</if>
+		</where>
+	</select>
+	
+	<select id="getStatusCount" resultMap="statusCount">
+		SELECT
+			count(1) as 'num',a.status
+		FROM tbl_acca_register a
+		<include refid="webAccaRegisterJoins" />
+		WHERE a.register_type = #{registerType}
+			and a.del_flag = '0'
+		<if test="sqlMap.citiesId != null and sqlMap.citiesId != ''">
+			AND a.city_id in (${sqlMap.citiesId}) 
+		</if>
+		GROUP BY a.status
+	</select>
+	<select id="findList" resultType="WebAccaRegister">
+		SELECT 
+			<include refid="webAccaRegisterColumns"/>
+		FROM tbl_acca_register a
+		<include refid="webAccaRegisterJoins"/>
+		<where>
+			a.del_flag = '0'
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="registerType != null">
+				and a.register_type = #{registerType}
+			</if>
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+			<if test="sqlMap.citiesId != null and sqlMap.citiesId != ''">
+				AND a.city_id  in (${sqlMap.citiesId}) 
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebAccaRegister">
+		SELECT 
+			<include refid="webAccaRegisterColumns"/>
+		FROM tbl_acca_register a
+		<include refid="webAccaRegisterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 获取各种状态的数量 -->
+	
+
+	<!-- 审核通过后,填写学员号和密码 -->
+	<update id="updateRegisterPass">
+		UPDATE tbl_acca_register SET
+			<if test="updateBy != null">
+				update_by = #{updateBy.id},
+			</if>
+			update_date = now(),
+			status = #{status},
+			acca_register_name = #{accaRegisterName},
+			acca_register_password = #{accaRegisterPassword}
+		WHERE acca_register_id = #{accaRegisterId}
+	</update>
+
+	<!-- 审核 -->
+	<update id="updateRegisterAudit">
+		UPDATE tbl_acca_register SET
+		<if test="updateBy != null">
+			update_by = #{updateBy.id},
+		</if>
+		update_date = now(),
+		status = #{status},
+		check_person_id = #{checkPersonId},
+		check_person_name = #{checkPersonName},
+		check_time = now(),
+		check_reason = #{checkReason}
+		WHERE acca_register_id = #{accaRegisterId}
+	</update>
+	
+	<insert id="insert">
+		INSERT INTO tbl_acca_register(
+			acca_register_id,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			acca_user_id,
+			register_type,
+			name,
+			sex,
+			card_type,
+			card_number,
+			phone,
+			email,
+			city_id,
+			identity_type,
+			white_color_img_id,
+			identity_card_og_img_id,
+			identity_card_tr_img_id,
+			reading_certificate_img_id,
+			reading_certificate_tr_img_id,
+			exams_result_og_img_id,
+			exams_result_tr_img_id,
+			graduate_certifcate_og_img_id,
+			graduate_certifcate_tr_img_id,
+			status,
+			pay_amout,
+			pay_img_id,
+			acca_register_name,
+			acca_register_password,
+			check_person_id,
+			check_person_name,
+			check_time,
+			check_reason,
+			reading_school,
+			reading_major,
+			reading_grade
+		) VALUES (
+			#{accaRegisterId},
+			#{delFlag},
+			#{createBy.id},
+			now(),
+			#{updateBy.id},
+			now(),
+			#{accaUserId},
+			#{registerType},
+			#{name},
+			#{sex},
+			#{cardType},
+			#{cardNumber},
+			#{phone},
+			#{email},
+			#{cityId},
+			#{identityType},
+			#{whiteColorImgId},
+			#{identityCardOgImgId},
+			#{identityCardTrImgId},
+			#{readingCertificateImgId},
+			#{readingCertificateTrImgId},
+			#{examsResultOgImgId},
+			#{examsResultTrImgId},
+			#{graduateCertifcateOgImgId},
+			#{graduateCertifcateTrImgId},
+			#{status},
+			#{payAmout},
+			#{payImgId},
+			#{accaRegisterName},
+			#{accaRegisterPassword},
+			#{checkPersonId},
+			#{checkPersonName},
+			#{checkTime},
+			#{checkReason},
+			#{readingSchool},
+			#{readingMajor},
+			#{readingGrade}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_acca_register SET 	
+			<if test="updateBy != null">
+				update_by = #{updateBy.id},
+			</if>
+			update_date = now(),
+			<if test="accaUserId != null">
+				acca_user_id = #{accaUserId},
+			</if>
+			<if test="registerType != null">
+				register_type = #{registerType},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="sex != null">
+				sex = #{sex},
+			</if>
+			<if test="cardType != null">
+				card_type = #{cardType},
+			</if>
+			<if test="cardNumber != null">
+				card_number = #{cardNumber},
+			</if>
+			<if test="phone != null">
+				phone = #{phone},
+			</if>
+			<if test="email != null">
+				email = #{email},
+			</if>
+			<if test="cityId != null">
+				city_id = #{cityId},
+			</if>
+			<if test="identityType != null">
+				identity_type = #{identityType},
+			</if>
+			<if test="whiteColorImgId != null">
+				white_color_img_id = #{whiteColorImgId},
+			</if>
+			<if test="identityCardOgImgId != null">
+				identity_card_og_img_id = #{identityCardOgImgId},
+			</if>
+			<if test="identityCardTrImgId != null">
+				identity_card_tr_img_id = #{identityCardTrImgId},
+			</if>
+			<if test="readingCertificateImgId != null">
+				reading_certificate_img_id = #{readingCertificateImgId},
+			</if>
+			<if test="readingCertificateTrImgId != null">
+				,reading_certificate_tr_img_id = #{readingCertificateTrImgId}
+			</if>
+			<if test="examsResultOgImgId != null">
+				exams_result_og_img_id = #{examsResultOgImgId},
+			</if>
+			<if test="examsResultTrImgId != null">
+				exams_result_tr_img_id = #{examsResultTrImgId},
+			</if>
+			<if test="graduateCertifcateOgImgId != null">
+				graduate_certifcate_og_img_id = #{graduateCertifcateOgImgId},
+			</if>
+			<if test="graduateCertifcateTrImgId != null">
+				graduate_certifcate_tr_img_id = #{graduateCertifcateTrImgId},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="payAmout != null">
+				pay_amout = #{payAmout},
+			</if>
+			<if test="payImgId != null">
+				pay_img_id = #{payImgId},
+			</if>
+			<if test="accaRegisterName != null">
+				acca_register_name = #{accaRegisterName},
+			</if>
+			<if test="accaRegisterPassword != null">
+				acca_register_password = #{accaRegisterPassword},
+			</if>
+			<if test="checkPersonId != null">
+				check_person_id = #{checkPersonId},
+			</if>
+			<if test="checkPersonName != null">
+				check_person_name = #{checkPersonName},
+			</if>
+			<if test="checkTime != null">
+				check_time = now(),
+			</if>
+			<if test="readingSchool != null">
+				reading_school = #{readingSchool},
+			</if>
+			<if test="readingMajor != null">
+				reading_major = #{readingMajor},
+			</if>
+			<if test="readingGrade != null">
+				reading_grade = #{readingGrade},
+			</if>
+			<if test="checkReason != null">
+				check_reason = #{checkReason}
+			</if>
+		WHERE acca_register_id = #{accaRegisterId}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_acca_register SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE acca_register_id = #{accaRegisterId}
+	</update>
+	
+</mapper>

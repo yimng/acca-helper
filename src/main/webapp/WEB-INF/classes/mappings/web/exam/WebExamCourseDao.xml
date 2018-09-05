@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.exam.dao.WebExamCourseDao">
+
+	<sql id="webExamCourseColumns">
+		a.exam_course_id AS "examCourseId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.course AS "course",
+		a.course_name AS "courseName",
+		a.english_name AS "englishName",
+		a.english_short_name AS "englishShortName",
+		a.price AS "price",
+		a.exam_type AS "examType"
+	</sql>
+
+	<sql id="webExamCourseJoins">
+	</sql>
+
+	<select id="get" resultType="WebExamCourse">
+		SELECT
+			<include refid="webExamCourseColumns"/>
+		FROM tbl_exam_course a
+		<include refid="webExamCourseJoins"/>
+		WHERE a.exam_course_id = #{examCourseId}
+	</select>
+
+	<select id="findList" resultType="WebExamCourse">
+		SELECT
+			<include refid="webExamCourseColumns"/>
+		FROM tbl_exam_course a
+		<include refid="webExamCourseJoins"/>
+		<where>
+			a.del_flag = 0
+		</where>
+		order by a.exam_course_id
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				,${page.orderBy}
+			</when>
+			<otherwise>
+				,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findMyList" resultType="WebExamCourse">
+		SELECT
+			<include refid="webExamCourseColumns"/>
+		FROM tbl_exam_course a
+		LEFT JOIN tbl_exam_signup b ON a.exam_course_id = b.exam_course_id AND b.exam_signup_status = 30 AND b.exam_end_time > now()
+		<!-- LEFT JOIN tbl_exam c ON b.exam_id=c.exam_id -->
+		<where>
+			a.del_flag = 0
+			AND b.acca_user_id=#{accaUserId}
+			<!-- AND b.exam_signup_status = 30
+			AND c.exam_end_time > now() -->
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="WebExamCourse">
+		SELECT
+			<include refid="webExamCourseColumns"/>
+		FROM tbl_exam_course a
+		<include refid="webExamCourseJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO tbl_exam_course(
+			exam_course_id,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			course,
+			course_name,
+			english_name,
+			english_short_name,
+			price,
+			exam_type
+		) VALUES (
+			#{examCourseId},
+			#{delFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{course},
+			#{courseName},
+			#{englishName},
+			#{englishShortName},
+			#{price},
+			#{examType}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE tbl_exam_course SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			<if test="course != null">
+				course = #{course},
+			</if>
+			course_name = #{courseName},
+			english_name = #{englishName},
+			english_short_name = #{englishShortName},
+			price = #{price},
+			exam_type = #{examType}
+		WHERE exam_course_id = #{examCourseId}
+	</update>
+
+	<update id="delete">
+		UPDATE tbl_exam_course SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE exam_course_id = #{examCourseId}
+	</update>
+
+</mapper>

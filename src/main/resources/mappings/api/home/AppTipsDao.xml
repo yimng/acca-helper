@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.home.dao.AppTipsDao">
+    
+	<sql id="appTipsColumns">
+		a.id AS "id",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.acca_user_id AS "accaUserId",
+		a.push_time AS "pushTime",
+		a.tip_time AS "tipTime",
+		a.tip_title AS "tipTitle",
+		a.tip_content AS "tipContent",
+		a.push_content AS "pushContent",
+		a.tip_set AS "tipSet",
+		a.is_sys AS "isSys",
+		a.tip_type AS "tipType",
+		a.course AS "course"
+	</sql>
+	
+	<sql id="appTipsJoins">
+	</sql>
+
+	<!-- 获取提醒 -->
+	<select id="get" resultType="AppTips">
+		SELECT 
+			<include refid="appTipsColumns"/>
+		FROM tbl_tips a
+		<include refid="appTipsJoins"/>
+		WHERE a.del_flag = '0'
+		<if test="id != null and id != 0">
+			and a.id = #{id}
+		</if>
+		<if test="accaUserId != null and accaUserId != 0">
+			and a.acca_user_id = #{accaUserId}
+		</if>
+		<if test="course != null and course != ''">
+			and a.course = #{course}
+		</if>
+		<if test="tipType != null and tipType != 0">
+			and a.tip_type = #{tipType}
+		</if>
+		<if test="tipTime != null">
+			and a.tip_time = #{tipTime}
+		</if>
+	</select>
+
+	<!-- 获取提醒列表 -->
+	<select id="findList" resultType="AppTips">
+		SELECT 
+			<include refid="appTipsColumns"/>
+		FROM tbl_tips a
+		<include refid="appTipsJoins"/>
+		<where>
+			a.del_flag = '0'
+			<if test="accaUserId != null and accaUserId != 0">
+				and a.acca_user_id = #{accaUserId}
+			</if>
+			AND a.tip_time > now()
+		</where>
+		ORDER BY a.tip_time
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				,${page.orderBy}
+			</when>
+			<otherwise>
+				,a.update_date
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 获取某天的提醒列表 -->
+	<select id="findListByDay" resultType="AppTips">
+		SELECT
+		<include refid="appTipsColumns"/>
+		FROM tbl_tips a
+		<include refid="appTipsJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND date_format(a.push_time,'%Y-%m-%d') = #{pushTime}
+		</where>
+		ORDER BY a.push_time
+	</select>
+
+	<!-- 获取某月的提醒列表 -->
+	<select id="findByMonth" resultType="AppTips">
+		SELECT
+		<include refid="appTipsColumns"/>
+		FROM tbl_tips a
+		<include refid="appTipsJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND acca_user_id = #{appUserId}
+			AND date_format(tip_time,'%Y-%m') = #{tipMonth}
+		</where>
+			ORDER BY a.tip_time
+	</select>
+
+	<!-- 获取某月的自定义提醒数量 -->
+	<select id="findMyListByMonth" resultType="Long">
+		SELECT
+			count(1)
+		FROM tbl_tips a
+		<include refid="appTipsJoins"/>
+		<where>
+			a.del_flag = '0'
+			AND a.acca_user_id = #{appUserId}
+			AND date_format(a.tip_time,'%Y-%m') = #{tipMonth}
+			AND a.is_sys = 0
+		</where>
+		ORDER BY a.tip_time
+	</select>
+
+	<!-- 保存个人日历提醒 -->
+	<insert id="insert">
+		INSERT INTO tbl_tips(
+			id,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			acca_user_id,
+			push_time,
+			tip_time,
+			tip_title,
+			tip_content,
+			push_content,
+			tip_set,
+			is_sys,
+			tip_type,
+			course
+		) VALUES (
+			#{id},
+			#{delFlag},
+			#{createBy.id},
+			now(),
+			#{updateBy.id},
+			now(),
+			#{accaUserId},
+			#{pushTime},
+			#{tipTime},
+			#{tipTitle},
+			#{tipContent},
+			#{pushContent},
+			#{tipSet},
+			#{isSys},
+			#{tipType},
+			#{course}
+		)
+	</insert>
+
+	<!-- 修改日历提醒 -->
+	<update id="update">
+		UPDATE tbl_tips SET
+			update_date = now(),
+			push_time = #{pushTime},
+			tip_time = #{tipTime},
+			tip_title = #{tipTitle},
+			tip_content = #{tipContent},
+			push_content = #{pushContent},
+			tip_set = #{tipSet}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 删除个人提醒 -->
+	<update id="delete">
+		UPDATE tbl_tips a SET
+			del_flag = '1'
+		WHERE 1=1
+		<if test="id != null and id != 0">
+			and a.id = #{id}
+		</if>
+		<if test="course != null and course != ''">
+			and a.course = #{course}
+		</if>
+		<if test="tipType != null and tipType != 0">
+			and a.tip_type = #{tipType}
+		</if>
+		<if test="accaUserId != null and accaUserId != 0">
+			and a.acca_user_id = #{accaUserId}
+		</if>
+	</update>
+	
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.WebArticlePraiseDao">
+    
+	<sql id="webArticlePraiseColumns">
+		a.article_praise_id AS "articlePraiseId",
+		a.create_date AS "createDate",
+		a.article_id AS "articleId",
+		a.user_id AS "userId"
+	</sql>
+	
+	<sql id="webArticlePraiseJoins">
+		LEFT JOIN sys_user u4 ON u4.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="WebArticlePraise">
+		SELECT 
+			<include refid="webArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="webArticlePraiseJoins"/>
+		WHERE a.article_praise_id = #{articlePraiseId}
+	</select>
+	
+	<select id="findList" resultType="WebArticlePraise">
+		SELECT 
+			<include refid="webArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="webArticlePraiseJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebArticlePraise">
+		SELECT 
+			<include refid="webArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="webArticlePraiseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_article_praise(
+			article_praise_id,
+			create_date,
+			article_id,
+			user_id
+		) VALUES (
+			#{articlePraiseId},
+			#{createDate},
+			#{articleId},
+			#{userId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_article_praise SET 	
+			article_id = #{articleId},
+			user_id = #{userId}
+		WHERE article_praise_id = #{articlePraiseId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tbl_article_praise
+		WHERE article_praise_id = #{articlePraiseId}
+	</update>
+	
+</mapper>

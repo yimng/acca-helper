@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.article.dao.AppArticlePraiseDao">
+    
+	<sql id="appArticlePraiseColumns">
+		a.article_praise_id AS "articlePraiseId",
+		a.create_date AS "createDate",
+		a.article_id AS "articleId",
+		a.acca_user_id AS "accaUserId"
+	</sql>
+	
+	<sql id="appArticlePraiseJoins">
+	</sql>
+    
+    <select id="getByUserIdAndArticleId" resultType="AppArticlePraise">
+    	SELECT 
+			<include refid="appArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="appArticlePraiseJoins"/>
+		WHERE 
+			a.acca_user_id = #{accaUserId} 
+		AND 
+			a.article_id = #{articleId} 
+    </select>
+    
+    <delete id="deleteByAccaUserIdAndArticleId">
+    	DELETE FROM tbl_article_praise 
+    	WHERE 
+    		acca_user_id =#{accaUserId} 
+    	AND 
+    		article_id = #{articleId} 
+    </delete> 
+    
+    <select id="getPraiseCountByArticleId" resultType="Long">
+    	SELECT COUNT(*) FROM tbl_article_praise a 
+    	WHERE 
+    		a.article_id = #{articleId} 
+    </select>
+    
+ 	<insert id="insert">
+		INSERT INTO tbl_article_praise(
+			create_date,
+			article_id,
+			acca_user_id
+		) VALUES (
+			#{createDate},
+			#{articleId},
+			#{accaUserId}
+		)
+	</insert>
+    
+    
+    
+	<!-- <select id="get" resultType="AppArticlePraise">
+		SELECT 
+			<include refid="appArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="appArticlePraiseJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="AppArticlePraise">
+		SELECT 
+			<include refid="appArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="appArticlePraiseJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppArticlePraise">
+		SELECT 
+			<include refid="appArticlePraiseColumns"/>
+		FROM tbl_article_praise a
+		<include refid="appArticlePraiseJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<update id="update">
+		UPDATE tbl_article_praise SET 	
+			article_praise_id = #{articlePraiseId},
+			article_id = #{articleId},
+			acca_user_id = #{accaUserId}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tbl_article_praise
+		WHERE id = #{id}
+	</update> -->
+	
+</mapper>

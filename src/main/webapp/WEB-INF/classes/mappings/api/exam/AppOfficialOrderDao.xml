@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.api.exam.dao.AppOfficialOrderDao">
+    
+	<sql id="appOfficialOrderColumns">
+		a.order_id AS "orderId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_type AS "examType",
+		a.acca_user_id AS "accaUserId",
+		a.phone AS "phone",
+		a.register_name AS "registerName",
+		a.register_card_number AS "registerCardNumber",
+		a.register_phone AS "registerPhone",
+		a.register_email AS "registerEmail",
+		a.register_white_color_img_id AS "registerWhiteColorImgId",
+		a.acca_register_name AS "accaRegisterName",
+		a.acca_register_password AS "accaRegisterPassword",
+		a.exam_signup_time AS "examSignupTime",
+		a.order_status AS "orderStatus",
+		a.amount AS "amount",
+		a.order_pay_img_id AS "orderPayImgId",
+		a.check_person_id AS "checkPersonId",
+		a.check_person_name AS "checkPersonName",
+		a.check_time AS "checkTime",
+		a.check_reason AS "checkReason",
+		a.exam_time_str AS "examTimeStr",
+		a.org AS "org"
+	</sql>
+	
+	<sql id="appOfficialOrderJoins">
+	</sql>
+    
+	<select id="get" resultType="AppOfficialOrder">
+		SELECT 
+			<include refid="appOfficialOrderColumns"/>
+		FROM tbl_order a
+		<include refid="appOfficialOrderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderId != null and orderId != ''">
+				and a.order_id = #{orderId}
+			</if>
+			<if test="examTimeStr != null and examTimeStr != ''">
+				and a.exam_time_str = #{examTimeStr}
+			</if>
+			<if test="appUserId != null and appUserId != ''">
+				and a.acca_user_id = #{appUserId}
+			</if>
+			limit 0,1
+		</where>
+	</select>
+	
+	<select id="findList" resultType="AppOfficialOrder">
+		SELECT 
+			<include refid="appOfficialOrderColumns"/>
+		FROM tbl_order a
+		<include refid="appOfficialOrderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="AppOfficialOrder">
+		SELECT 
+			<include refid="appOfficialOrderColumns"/>
+		FROM tbl_order a
+		<include refid="appOfficialOrderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="orderId">
+		INSERT INTO tbl_order(
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			exam_type,
+			acca_user_id,
+			phone,
+			register_name,
+			register_card_number,
+			register_phone,
+			register_email,
+			register_white_color_img_id,
+			acca_register_name,
+			acca_register_password,
+			exam_signup_time,
+			order_status,
+			amount,
+			order_pay_img_id,
+			check_person_id,
+			check_person_name,
+			check_time,
+			check_reason,
+			card_type,
+			exam_time_str,
+			org
+		) VALUES (
+			#{delFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{examType},
+			#{accaUserId},
+			#{phone},
+			#{registerName},
+			#{registerCardNumber},
+			#{registerPhone},
+			#{registerEmail},
+			#{registerWhiteColorImgId},
+			#{accaRegisterName},
+			#{accaRegisterPassword},
+			#{examSignupTime},
+			#{orderStatus},
+			#{amount},
+			#{orderPayImgId},
+			#{checkPersonId},
+			#{checkPersonName},
+			#{checkTime},
+			#{checkReason},
+			#{cardType},
+			#{examTimeStr},
+			#{org}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_order SET 
+			<if test="updateDate != null and updateDate != ''">
+				update_date = #{updateDate}
+			</if>	
+			<!-- <if test="updateBy.id != null and updateBy.id != ''">
+				,update_by = #{updateBy.id}
+			</if> -->
+			<if test="examType != null and examType != ''">
+				,exam_type = #{examType}
+			</if>
+			<if test="accaUserId != null and accaUserId != ''">
+				,acca_user_id = #{accaUserId}
+			</if>
+			<if test="phone != null and phone != ''">
+				,phone = #{phone}
+			</if>
+			<if test="registerName != null and registerName != ''">
+				,register_name = #{registerName}
+			</if>
+			<if test="registerCardNumber != null and registerCardNumber != ''">
+				,register_card_number = #{registerCardNumber}
+			</if>
+			<if test="registerPhone != null and registerPhone != ''">
+				,register_phone = #{registerPhone}
+			</if>
+			<if test="registerEmail != null and registerEmail != ''">
+				,register_email = #{registerEmail}
+			</if>
+			<if test="registerWhiteColorImgId != null and registerWhiteColorImgId != 0">
+				,register_white_color_img_id = #{registerWhiteColorImgId}
+			</if>
+			<if test="accaRegisterName != null and accaRegisterName != ''">
+				,acca_register_name = #{accaRegisterName}
+			</if>
+			<if test="accaRegisterPassword != null and accaRegisterPassword != ''">
+				,acca_register_password = #{accaRegisterPassword}
+			</if>
+			<if test="examSignupTime != null and examSignupTime != ''">
+				,exam_signup_time = #{examSignupTime}
+			</if>
+			<if test="orderStatus != null and orderStatus != 0">
+				,order_status = #{orderStatus}
+			</if>
+			<if test="amount != null and amount != ''">
+				,amount = #{amount}
+			</if>
+			<if test="orderPayImgId != null and orderPayImgId != 0">
+				,order_pay_img_id = #{orderPayImgId}
+			</if>
+			<if test="checkPersonId != null and checkPersonId != ''">
+				,check_person_id = #{checkPersonId}
+			</if>
+			<if test="checkPersonName != null and checkPersonName != ''">
+				,check_person_name = #{checkPersonName}
+			</if>
+			<if test="checkTime != null and checkTime != ''">
+				,check_time = #{checkTime}
+			</if>
+			<if test="checkReason != null and checkReason != ''">
+				,check_reason = #{checkReason}
+			</if>
+			<if test="cardType != null and cardType != ''">
+				,card_type = #{cardType}
+			</if>
+			<if test="examTimeStr != null and examTimeStr != ''">
+				,exam_time_str = #{examTimeStr}
+			</if>
+			<if test="org != null and org != ''">
+				,org = #{org}
+			</if>
+		WHERE order_id = #{orderId}
+	</update>
+	
+	<update id="delete">
+		UPDATE tbl_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

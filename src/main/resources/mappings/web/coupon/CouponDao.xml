@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.coupon.dao.CouponDao">
+
+    <sql id="couponColumns">
+		a.id AS "id",
+		a.activity_name AS "activityName",
+		a.price AS "price",
+		a.validity_start AS "validityStart",
+		a.validity_end AS "validityEnd",
+		a.cnt AS "cnt",
+		a.description AS "description",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.create_by AS "createBy.id",
+		u.name as "createBy.name",
+		a.received AS "received",
+		a.consumed AS "consumed",
+		a.assign as "assign",
+		a.coupon_type as "couponType"
+	</sql>
+
+    <sql id="couponJoins">
+        LEFT JOIN sys_user u on u.id = a.create_by
+    </sql>
+
+    <select id="get" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+        SELECT
+        <include refid="couponColumns"/>
+        FROM tbl_coupon a
+        <include refid="couponJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+        SELECT
+        <include refid="couponColumns"/>
+        FROM tbl_coupon a
+        <include refid="couponJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="activityName != null and activityName != ''">
+                AND a.activity_name LIKE
+                <if test="dbName == 'oracle'">'%'||#{activityName}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{activityName}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{activityName},'%')</if>
+            </if>
+            <if test="startTime != null and startTime !=''">
+				AND a.start_time > #{startTime}
+			</if>
+			<if test="endTime != null and endTime !=''">
+				AND #{endTime} > a.end_time
+			</if>
+        </where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+    </select>
+
+    <select id="findListByName" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+        SELECT
+        <include refid="couponColumns"/>
+        FROM tbl_coupon a
+        <include refid="couponJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="activityName != null and activityName != ''">
+                AND u.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+        SELECT
+        <include refid="couponColumns"/>
+        FROM tbl_coupon a
+        <include refid="couponJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="couponId">
+		INSERT INTO tbl_coupon(
+			id,
+			activity_name,
+			price,
+			validity_start,
+			validity_end,
+			cnt,
+			description,
+			start_time,
+			end_time,
+			create_by,
+			received,
+			consumed,
+			del_flag,
+			create_date,
+			assign,
+			coupon_type
+		) VALUES (
+			#{id},
+			#{activityName},
+			#{price},
+			#{validityStart},
+			#{validityEnd},
+			#{cnt},
+			#{description},
+			#{startTime},
+			#{endTime},
+			#{createBy.id},
+			#{received},
+			#{consumed},
+			#{delFlag},
+			now(),
+			#{assign},
+			#{couponType}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE tbl_coupon SET
+			activity_name =   #{activityName},
+			price =           #{price},
+			validity_start =  #{validityStart},
+			validity_end =    #{validityEnd},
+			cnt =             #{cnt},
+			description =     #{description},
+			start_time =      #{startTime},
+			end_time =        #{endTime},
+			received =        #{received},
+			consumed =        #{consumed},
+			del_flag =        #{delFlag},
+			assign =		  #{assign},
+			coupon_type =	  #{couponType}
+		WHERE id = 	  #{id}
+	</update>
+
+
+
+</mapper>

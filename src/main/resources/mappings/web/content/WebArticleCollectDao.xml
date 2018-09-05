@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.content.dao.WebArticleCollectDao">
+    
+	<sql id="webArticleCollectColumns">
+		a.article_collect_id AS "articleCollectId",
+		a.acca_user_id AS "accaUserId",
+		a.article_id AS "articleId"
+	</sql>
+	
+	<sql id="webArticleCollectJoins">
+	</sql>
+    
+	<select id="get" resultType="WebArticleCollect">
+		SELECT 
+			<include refid="webArticleCollectColumns"/>
+		FROM tbl_article_collect a
+		<include refid="webArticleCollectJoins"/>
+		WHERE a.article_collect_id = #{articleCollectId}
+	</select>
+	
+	<select id="findList" resultType="WebArticleCollect">
+		SELECT 
+			<include refid="webArticleCollectColumns"/>
+		FROM tbl_article_collect a
+		<include refid="webArticleCollectJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WebArticleCollect">
+		SELECT 
+			<include refid="webArticleCollectColumns"/>
+		FROM tbl_article_collect a
+		<include refid="webArticleCollectJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tbl_article_collect(
+			article_collect_id,
+			acca_user_id,
+			article_id
+		) VALUES (
+			#{articleCollectId},
+			#{accaUserId},
+			#{articleId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE tbl_article_collect SET 	
+			acca_user_id = #{accaUserId},
+			article_id = #{articleId}
+		WHERE article_collect_id = #{articleCollectId}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM tbl_article_collect
+		WHERE article_collect_id = #{articleCollectId}
+	</update>
+	
+</mapper>
