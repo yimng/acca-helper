@@ -16,8 +16,6 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class InviteService extends CrudService<InviteDao, Invite> {
-    @Autowired
-    private InviteDao inviteDao;
 
     @Override
     public Invite get(String id) {
@@ -47,10 +45,10 @@ public class InviteService extends CrudService<InviteDao, Invite> {
     }
 
     public List<Invite> findListByTimeAndPhone(Date start, Date end, String phone) {
-        return inviteDao.findListByTimeAndPhone(start, end, phone);
+        return dao.findListByTimeAndPhone(start, end, phone);
     }
 
     public List<InviteRank> findInviteRank(Date start, Date end) {
-        return inviteDao.findInviteRank(start, end);
+        return dao.findInviteRank(start, end);
     }
 }

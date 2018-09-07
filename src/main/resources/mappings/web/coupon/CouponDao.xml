@@ -94,7 +94,7 @@
         </where>
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="couponId">
+    <insert id="insert">
 		INSERT INTO tbl_coupon(
 			id,
 			activity_name,

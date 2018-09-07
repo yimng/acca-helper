@@ -3,7 +3,7 @@
 <mapper namespace="com.thinkgem.jeesite.acca.web.coupon.dao.UserCouponDao">
 
     <sql id="userCouponColumns">
-		a.user_coupon_id AS "userCouponId",
+		a.id AS "id",
 		a.user_id AS "userId",
 		a.coupon_id AS "couponId"
 	</sql>
@@ -16,7 +16,7 @@
         <include refid="userCouponColumns"/>
         FROM tbl_user_coupon a
         <include refid="userCouponJoins"/>
-        WHERE a.user_coupon_id = #{userCouponId}
+        WHERE a.id = #{id}
     </select>
 
     <select id="findList" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.UserCoupon">
@@ -52,13 +52,15 @@
         </choose>
     </select>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert">
 		INSERT INTO tbl_user_coupon(
-			user_coupon_id,
+			id,
+			del_flag,
 			user_id,
 			coupon_id
 		) VALUES (
 			#{userCouponId},
+			#{delFlag}
 			#{userId},
 			#{couponId}
 		)
@@ -66,9 +68,11 @@
 
     <update id="update">
 		UPDATE tbl_user_coupon SET
+		    id =                #{id},
+		    del_flag =          #{delFlag},
 			user_id =           #{userId},
 			coupon_id =         #{couponId}
-		WHERE user_coupon_id =	  #{userCouponId}
+		WHERE id =	  #{id}
 	</update>
 
     <update id="delete">

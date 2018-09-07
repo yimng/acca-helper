@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserCoupon extends DataEntity<UserCoupon> {
-    private Long userCouponId;
     private Long userId;
     private Long couponId;
 }

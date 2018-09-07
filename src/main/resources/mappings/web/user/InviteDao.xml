@@ -75,7 +75,7 @@
             </if>
             AND a.success_time IS NOT NULL
         </where>
-
+        GROUP BY a.inviter_phone
     </select>
 
     <select id="findAllList" resultType="com.thinkgem.jeesite.acca.web.user.entity.Invite">

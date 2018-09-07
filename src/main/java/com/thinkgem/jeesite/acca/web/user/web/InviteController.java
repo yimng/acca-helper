@@ -32,14 +32,15 @@ public class InviteController extends BaseController {
         Page<Invite> page = inviteService.findPage(new Page<Invite>(request, response), invite);
 
         model.addAttribute("page", page);
-        return "web/user/inviteList";
+        return "web/user/webInviteList";
     }
 
+    @RequiresPermissions("user:invite:view")
     @RequestMapping(value = {"listrank", ""})
     public String listRank(Date start, Date end, Model model) {
         List<InviteRank> inviteRank = inviteService.findInviteRank(start, end);
         model.addAllAttributes(inviteRank);
-        return "web/user/inviteRankList";
+        return "web/user/webInviteRankList";
     }
 
 
