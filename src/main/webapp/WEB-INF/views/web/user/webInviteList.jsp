@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-    <title>优惠券列表</title>
+    <title>邀请记录</title>
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -18,24 +18,28 @@
 </head>
 <body>
 
-<form:form id="searchForm" modelAttribute="coupon" action="${ctx}/web/coupon/" method="post" class="breadcrumb form-search">
+<form:form id="searchForm" modelAttribute="invite" action="${ctx}/user/invite/list" method="post" class="breadcrumb form-search">
     <input id="type" name="type" type="hidden" value="1"/>
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <ul class="ul-form">
-        <li><label>发布时间：</label>
-            <input id="start" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${coupon.startTime}"
+        <li><label>发起时间：</label>
+            <input id="start" name="inviteStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
             -
-            <input id="end" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${coupon.endTime}"
+            <input id="end" name="inviteEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
         </li>
-        <li><label>活动名称：</label>
-            <form:input path="activityName" htmlEscape="false" maxlength="200" class="input-medium"/>
+        <li><label>邀请状态：</label>
+            <form:select path="inviteStatus" class="input-medium">
+                <form:options items="${status}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+            </form:select>
         </li>
-        <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
+        <li>
+            <label>邀请人手机号:</label>
+            <form:input path="inviterPhone" htmlEscape="false" maxlength="11" class="input-medium" />
+        </li>
+        <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="搜索"/></li>
         <li class="clearfix"></li>
     </ul>
 </form:form>
@@ -55,59 +59,31 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>活动名称</th>
-        <th>优惠金额</th>
-        <th>限制数量</th>
-        <th>优惠券有效期</th>
-        <th>发布状态</th>
-        <th>发布人</th>
-        <th>领取数量</th>
-        <th>使用数量</th>
-        <shiro:hasPermission name="web:couupon:edit"><th>操作</th></shiro:hasPermission>
+        <th>邀请人手机号</th>
+        <th>被邀请人手机号</th>
+        <th>邀请状态</th>
+        <th>发起时间</th>
+        <th>邀请成功时间</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${page.list}" var="coupon" varStatus="index">
+    <c:forEach items="${page.list}" var="invite" varStatus="index">
         <tr>
             <td>
-                    ${index.index}
+                    ${invite.inviterPhone}
             </td>
             <td>
-                    ${coupon.activityName}
+                    ${invite.inviteePhone}
             </td>
             <td>
-                    ${coupon.price}
+                    ${invite.inviteStatusName}
             </td>
             <td>
-                    ${coupon.cnt}
+                    <fmt:formatDate value="${invite.inviteTime}" pattern="yyyy年MM月dd日 HH:MM"/>
             </td>
             <td>
-                <fmt:formatDate value="${coupon.validityStart}" pattern="yyyy年MM月dd日 HH:MM"/> 至 <fmt:formatDate value="${coupon.validityEnd}" pattern="yyyy年MM月dd日 HH:MM"/>
+                    <fmt:formatDate value="${invite.successTime}" pattern="yyyy年MM月dd日 HH:MM"/>
             </td>
-            <td>
-                <c:if test="${coupon.published}">
-                    已发布
-                </c:if>
-                <c:if test="${coupon.prePublished}">
-                    未发布
-                </c:if>
-                <c:if test="${coupon.postPublished}">
-                    已过期
-                </c:if>
-            </td>
-            <td>
-                    ${coupon.createBy.name}
-            </td>
-            <td>
-                    ${coupon.received}
-            </td>
-            <td>
-                    ${coupon.consumed}
-            </td>
-            <shiro:hasPermission name="web:coupon:edit"><td>
-                <a href="${ctx}/web/coupon/form?id=${coupon.id}">编辑</a>
-            </td></shiro:hasPermission>
         </tr>
     </c:forEach>
     </tbody>

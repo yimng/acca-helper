@@ -13,5 +13,5 @@ import java.util.List;
  */
 @MyBatisDao
 public interface CouponDao extends CrudDao<Coupon> {
-    public List<Coupon> findListByName(String name);
+    List<Coupon> findListByName(String name);
 }

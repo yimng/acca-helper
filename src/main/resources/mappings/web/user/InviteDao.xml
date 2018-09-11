@@ -29,7 +29,26 @@
         <where>
             a.del_flag = #{DEL_FLAG_NORMAL}
             <if test="inviterPhone != null and inviterPhone != ''">
-                AND a.inviter_phone = ${inviterPhone}
+                AND a.inviter_phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{inviterPhone}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{inviterPhone}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{inviterPhone},'%')</if>
+            </if>
+            <if test="inviteStart != null and inviteStart != ''">
+                AND a.invite_time > #{inviteStart}
+            </if>
+            <if test="inviteEnd != null and inviteEnd != ''">
+                AND #{inviteEnd} > a.invite_time
+            </if>
+            <if test="inviteStatus != null and inviteStatus == 0">
+                AND a.invite_time > date_sub(now(), interval 3 day)
+                AND NOW() > a.invite_time
+            </if>
+            <if test="inviteStatus != null and inviteStatus == 1">
+                AND a.success_time is not null
+            </if>
+            <if test="inviteStatus != null and inviteStatus == 2">
+                AND date_sub(now(), interval 3 day) > a.invite_time
             </if>
         </where>
         <choose>
@@ -39,41 +58,19 @@
         </choose>
     </select>
 
-    <select id="findListByTimeAndPhone" resultType="com.thinkgem.jeesite.acca.web.user.entity.Invite">
-        SELECT
-        <include refid="inviteColumns"/>
-        FROM tbl_invite a
-        <include refid="inviteJoins"/>
-        <where>
-            a.del_flag = #{DEL_FLAG_NORMAL}
-            <if test="phone != null and phone != ''">
-                AND a.inviter_phone LIKE
-                <if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
-                <if test="dbName == 'mssql'">'%'+#{phone}+'%'</if>
-                <if test="dbName == 'mysql'">concat('%',#{phone},'%')</if>
-            </if>
-            <if test="start != null and start != ''">
-                AND a.invite_time > ${start}
-            </if>
-            <if test="end != null and end != ''">
-                AND ${end} > a.invite_time
-            </if>
-        </where>
-    </select>
-
     <select id="findInviteRank" resultType="com.thinkgem.jeesite.acca.web.user.entity.InviteRank">
         SELECT inviter_phone as phone,
                 count(distinct (invitee_phone)) as successCount
         FROM tbl_invite a
         <where>
-            a.del_flag = #{DEL_FLAG_NORMAL}
+            a.del_flag = 0
+            AND a.success_time IS NOT NULL
             <if test="start != null and start != ''">
-                AND a.invite_time > ${start}
+                AND a.invite_time > #{start}
             </if>
             <if test="end != null and end != ''">
-                AND ${end} > a.invite_time
+                AND #{end} > a.invite_time
             </if>
-            AND a.success_time IS NOT NULL
         </where>
         GROUP BY a.inviter_phone
     </select>

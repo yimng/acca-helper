@@ -44,9 +44,6 @@ public class InviteService extends CrudService<InviteDao, Invite> {
         super.delete(invite);
     }
 
-    public List<Invite> findListByTimeAndPhone(Date start, Date end, String phone) {
-        return dao.findListByTimeAndPhone(start, end, phone);
-    }
 
     public List<InviteRank> findInviteRank(Date start, Date end) {
         return dao.findInviteRank(start, end);

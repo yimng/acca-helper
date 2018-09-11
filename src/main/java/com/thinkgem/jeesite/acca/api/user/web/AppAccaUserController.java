@@ -207,7 +207,7 @@ public class AppAccaUserController extends BaseController {
         if (resp != RespConstants.GLOBAL_SUCCESS) {
             return new BasePageResponse(resp);
         }
-        //TODO 验证被邀请从的手机号没有被注册过
+        //TODO 验证被邀请人的手机号没有被注册过
         return appInviteService.invite(req);
 
 	}
