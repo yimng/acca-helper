@@ -16,6 +16,9 @@ public class RespConstants {
 	public static final int USER_NONEXIST = 00101; //用户不存在
 	public static final int USER_RREEZED = 00102; //账户被冻结
 	public static final int USER_MUSTAPP = 00103; //必须为注册用户
+	public static final int USER_EXIST = 00104;   //用户已存在
+	// 用户正在被邀请
+	public static final int USER_WAS_INVITING = 00105;
 	/**
 	 * 短信验证码
 	 */

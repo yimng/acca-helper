@@ -61,6 +61,25 @@
 		</choose>
     </select>
 
+	<select id="findActiveList" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+		SELECT
+		<include refid="couponColumns"/>
+		FROM tbl_coupon a
+		<include refid="couponJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND NOW() > a.start_time
+			AND a.end_time > NOW()
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
     <select id="findListByName" resultType="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
         SELECT
         <include refid="couponColumns"/>

@@ -5,12 +5,12 @@ package com.thinkgem.jeesite.acca.api.user.web;
 
 import com.bcloud.msg.http.HttpSender;
 import com.thinkgem.jeesite.acca.api.model.request.*;
-import com.thinkgem.jeesite.acca.api.user.entity.AppAccaClub;
-import com.thinkgem.jeesite.acca.api.user.entity.AppAccaUser;
-import com.thinkgem.jeesite.acca.api.user.entity.AppApkVersion;
+import com.thinkgem.jeesite.acca.api.user.entity.*;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
 import com.thinkgem.jeesite.acca.api.user.service.AppInviteService;
 import com.thinkgem.jeesite.acca.api.user.service.AppSmsVcodeService;
+import com.thinkgem.jeesite.acca.api.user.service.AppUserCouponService;
+import com.thinkgem.jeesite.common.utils.AppUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
@@ -36,6 +36,8 @@ import com.thinkgem.jeesite.acca.api.model.response.AccaConfInfo;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.constant.Constants;
 
+import java.util.List;
+
 /**
  * AppAccaUserController
  * @author Ivan
@@ -54,6 +56,9 @@ public class AppAccaUserController extends BaseController {
 
 	@Autowired
     private AppInviteService appInviteService;
+
+	@Autowired
+    private AppUserCouponService appUserCouponService;
 	
 	@ApiOperation(value = "test验证码", httpMethod = "POST", notes = "获取短信验证码")
 	@RequestMapping(value = "getTestVcode.do" ,method=RequestMethod.POST)
@@ -207,8 +212,26 @@ public class AppAccaUserController extends BaseController {
         if (resp != RespConstants.GLOBAL_SUCCESS) {
             return new BasePageResponse(resp);
         }
-        //TODO 验证被邀请人的手机号没有被注册过
-        return appInviteService.invite(req);
+        // 验证手机号码
+        if (!AppUtils.isMobileNum(req.getInviterPhone())) {
+            return new BaseResponse(RespConstants.SMS_VCODE_MOBILE_TYPE_ERROR);
+        }
+        if (!AppUtils.isMobileNum(req.getInviteePhone())) {
+            return new BaseResponse(RespConstants.SMS_VCODE_MOBILE_TYPE_ERROR);
+        }
+        //验证被邀请人的手机号没有被注册过，并且被邀请人的手机号没有在被邀请中
+
+		String inviteePhone = req.getInviteePhone();
+		AppAccaUser invitee = appAccaUserService.getAccaUserByPhone(inviteePhone);
+        if (invitee != null){
+			return new BaseResponse(RespConstants.USER_EXIST);
+		}
+		boolean inviteStatus = appInviteService.getInviteStatus(inviteePhone);
+        // 被邀请人正在被邀请
+        if (inviteStatus) {
+        	return new BaseResponse(RespConstants.USER_WAS_INVITING);
+		}
+		return appInviteService.invite(req);
 
 	}
 	

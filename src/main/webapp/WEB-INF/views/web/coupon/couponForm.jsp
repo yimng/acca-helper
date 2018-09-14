@@ -76,7 +76,7 @@
     <div class="control-group">
         <label class="control-label">数量限制<span class="help-inline"><font color="red">*</font></span></label>
         <div class="controls">
-            <form:input path="cnt" value="${coupon.cnt}" htmlEscape="false" maxlength="200" class="input-xlarg required"/>
+            <form:input path="number" value="${coupon.number}" htmlEscape="false" maxlength="200" class="input-xlarg required"/>
         </div>
     </div>
     <div class="control-group">
@@ -105,12 +105,12 @@
     <div class="control-group">
         <label class="control-label">活动时间<font color="red">*</font></label>
         <div class="controls">
-            <input id="startTime" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="<fmt:formatDate value="${coupon.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+            <input id="startTime" name="activityStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                   value="<fmt:formatDate value="${coupon.activityStart}" pattern="yyyy-MM-dd HH:mm:ss"/>"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:true});"/>
             -
-            <input id="endTime" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="<fmt:formatDate value="${coupon.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
+            <input id="endTime" name="activityEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                   value="<fmt:formatDate value="${coupon.activityEnd}" pattern="yyyy-MM-dd HH:mm:ss"/>"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:true});"/>
         </div>
     </div>

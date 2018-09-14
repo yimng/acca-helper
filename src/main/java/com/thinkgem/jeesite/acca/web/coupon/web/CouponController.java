@@ -27,9 +27,9 @@ public class CouponController extends BaseController {
     private CouponService  couponService;
 
     @ModelAttribute
-    public Coupon get(@RequestParam(required=false) String id) {
+    public Coupon get(@RequestParam(required=false) Long id) {
         Coupon entity = null;
-        if (StringUtils.isNotBlank(id)){
+        if (id != null){
             entity = couponService.get(id);
         }
         if (entity == null){

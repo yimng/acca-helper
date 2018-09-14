@@ -1,89 +1,167 @@
 package com.thinkgem.jeesite.acca.web.user.entity;
 
-import com.thinkgem.jeesite.common.persistence.DataEntity;
-import com.thinkgem.jeesite.common.utils.DateUtils;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.omg.CORBA.UNKNOWN;
 
+import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.*;
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Invite extends DataEntity<Invite> {
+@Table(name = "tbl_invite")
+public class Invite implements Serializable {
+    @Id
+    @GeneratedValue(generator = "JDBC")
+    private Long id;
+
+    /**
+     * 邀请人手机号
+     */
+    @Column(name = "inviter_phone")
+    private String inviterPhone;
+
+    /**
+     * 被邀请从手机号
+     */
+    @Column(name = "invitee_phone")
+    private String inviteePhone;
+
+    /**
+     * 代金券ID
+     */
+    @Column(name = "coupon_id")
+    private Long couponId;
+
+    /**
+     * 邀请发出时间
+     */
+    @Column(name = "invite_time")
+    private Date inviteTime;
+
+    /**
+     * 邀请成功时间
+     */
+    @Column(name = "success_time")
+    private Date successTime;
+
+    @Column(name = "del_flag")
+    private String delFlag;
+
     private static final long serialVersionUID = 1L;
 
-    private String inviterPhone;
-    private String inviteePhone;
-    private Date inviteTime;
-    private Date inviteStart;
-    private Date inviteEnd;
-    private Date successTime;
-    private Integer inviteStatus;
-    private String inviteStatusName;
-
-    private static final int INVITE_TIME_GAP = 3;
-
-
-    public int getInviteStatus () {
-        if (inviteStatus != null) {
-            return inviteStatus;
-        }
-        if (successTime != null) {
-            this.inviteStatus = InviteStatus.SUCESS.getId();
-            return this.inviteStatus;
-        }
-        if (inviteTime == null) {
-            this.inviteStatus = InviteStatus.UNKOWN.getId();
-            return this.inviteStatus;
-        }
-        if (DateUtils.getDistanceOfTwoDate(inviteTime, new Date()) <= INVITE_TIME_GAP) {
-            this.inviteStatus = InviteStatus.INVITING.getId();
-            return this.inviteStatus;
-        } else {
-            this.inviteStatus = InviteStatus.FAILED.getId();
-            return this.inviteStatus;
-        }
+    /**
+     * @return id
+     */
+    public Long getId() {
+        return id;
     }
 
-    public String getInviteStatusName(){
-        int status = getInviteStatus();
-        switch(status){
-            case -1:
-                return InviteStatus.UNKOWN.getName();
-            case 0:
-                return InviteStatus.INVITING.getName();
-            case 1:
-                return InviteStatus.SUCESS.getName();
-            case 2:
-                return InviteStatus.FAILED.getName();
-            default:
-                return InviteStatus.UNKOWN.getName();
-        }
+    /**
+     * @param id
+     */
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public enum InviteStatus {
-        UNKOWN("请选择", -1),
-        //受邀中
-        INVITING("受邀中", 0),
-        //邀请成功
-        SUCESS("邀请成功", 1),
-        //邀请失败
-        FAILED("邀请失败", 2);
+    /**
+     * 获取邀请人手机号
+     *
+     * @return inviter_phone - 邀请人手机号
+     */
+    public String getInviterPhone() {
+        return inviterPhone;
+    }
 
-        private  String name;
-        private  int id;
+    /**
+     * 设置邀请人手机号
+     *
+     * @param inviterPhone 邀请人手机号
+     */
+    public void setInviterPhone(String inviterPhone) {
+        this.inviterPhone = inviterPhone;
+    }
 
-        private InviteStatus(String name, int id) {
-            this.name = name;
-            this.id = id;
-        }
+    /**
+     * 获取被邀请从手机号
+     *
+     * @return invitee_phone - 被邀请从手机号
+     */
+    public String getInviteePhone() {
+        return inviteePhone;
+    }
 
-        public String getName() {
-            return name;
-        }
+    /**
+     * 设置被邀请从手机号
+     *
+     * @param inviteePhone 被邀请从手机号
+     */
+    public void setInviteePhone(String inviteePhone) {
+        this.inviteePhone = inviteePhone;
+    }
 
-        public int getId() {
-            return id;
-        }
+    /**
+     * 获取代金券ID
+     *
+     * @return coupon_id - 代金券ID
+     */
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    /**
+     * 设置代金券ID
+     *
+     * @param couponId 代金券ID
+     */
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
+    }
+
+    /**
+     * 获取邀请发出时间
+     *
+     * @return invite_time - 邀请发出时间
+     */
+    public Date getInviteTime() {
+        return inviteTime;
+    }
+
+    /**
+     * 设置邀请发出时间
+     *
+     * @param inviteTime 邀请发出时间
+     */
+    public void setInviteTime(Date inviteTime) {
+        this.inviteTime = inviteTime;
+    }
+
+    /**
+     * 获取邀请成功时间
+     *
+     * @return success_time - 邀请成功时间
+     */
+    public Date getSuccessTime() {
+        return successTime;
+    }
+
+    /**
+     * 设置邀请成功时间
+     *
+     * @param successTime 邀请成功时间
+     */
+    public void setSuccessTime(Date successTime) {
+        this.successTime = successTime;
+    }
+
+    /**
+     * @return del_flag
+     */
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    /**
+     * @param delFlag
+     */
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
     }
 }

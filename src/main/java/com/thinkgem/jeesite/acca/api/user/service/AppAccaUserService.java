@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.thinkgem.jeesite.acca.api.user.dao.*;
+import com.thinkgem.jeesite.acca.api.user.entity.*;
+import com.thinkgem.jeesite.acca.web.coupon.dao.CouponDao;
+import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,16 +38,6 @@ import com.thinkgem.jeesite.acca.api.model.request.UpdateUserLocationReq;
 import com.thinkgem.jeesite.acca.api.model.response.AccaConfInfo;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.api.order.dao.AppOrderDao;
-import com.thinkgem.jeesite.acca.api.user.entity.AppAccaClub;
-import com.thinkgem.jeesite.acca.api.user.entity.AppAccaUser;
-import com.thinkgem.jeesite.acca.api.user.entity.AppApkVersion;
-import com.thinkgem.jeesite.acca.api.user.entity.AppConfExamTips;
-import com.thinkgem.jeesite.acca.api.user.entity.AppFeedback;
-import com.thinkgem.jeesite.acca.api.user.dao.AppAccaClubDao;
-import com.thinkgem.jeesite.acca.api.user.dao.AppAccaUserDao;
-import com.thinkgem.jeesite.acca.api.user.dao.AppApkVersionDao;
-import com.thinkgem.jeesite.acca.api.user.dao.AppConfExamTipsDao;
-import com.thinkgem.jeesite.acca.api.user.dao.AppFeedbackDao;
 import com.thinkgem.jeesite.acca.constant.Constants;
 
 /**
@@ -81,6 +75,15 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 	
 	@Autowired
 	private AppOrderDao appOrderDao;
+
+	@Autowired
+	private CouponDao couponDao;
+
+//	@Autowired
+//    private AppInviteService appInviteService;
+//
+//	@Autowired
+//    private AppUserCouponDao appUserCouponDao;
 
 	@Override
 	public AppAccaUser get(String id) {
@@ -143,9 +146,10 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 			accaUser.setDeviceId(deviceId);
 			accaUser.setLoginDate(new Date());
 			dao.insert(accaUser);
-			
-			
-		}else{
+            publishCoupon(phone);
+
+
+        }else{
 			//如果存在，表示已经注册过账号
 			accaUser.setLoginDate(new Date());
 			accaUser.setDeviceId(deviceId);
@@ -157,7 +161,37 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 		return new BaseObjResponse<AppAccaUser>(accaUser);
 	}
 
-	public BaseObjResponse<AppAccaUser> getUserInfo(Long appUserId) {
+    public void publishCoupon(String phone) {
+        //如果做活动期间被邀请，给用户分配代金券
+//        List<Coupon> activeList = couponDao.findActiveList();
+//        for(Coupon coupon : activeList) {
+//            if (coupon.getFlag1()) {
+//                AppUserCoupon userCoupon = new AppUserCoupon();
+//                userCoupon.setUserId(getAccaUserByPhone(phone).getAccaUserId());
+//                userCoupon.setCouponId(coupon.getId());
+//                appUserCouponDao.insert(userCoupon);
+//            } else if (coupon.getFlag3() || coupon.getFlag4()) {
+//                List<AppInvite> invites = appInviteService.getAppInvitesByPhoneAndInviteTime(phone, coupon.getStartTime(), coupon.getEndTime());
+//                for (AppInvite invite : invites) {
+//                    invite.setSuccessTime(new Date());
+//					appInviteService.updateByPrimaryKeySelective(invite);
+//                    AppAccaUser invitee = getAccaUserByPhone(invite.getInviteePhone());
+//                    AppAccaUser inviter = getAccaUserByPhone(invite.getInviterPhone());
+//                    AppUserCoupon inviterCoupon = new AppUserCoupon();
+//                    inviterCoupon.setCouponId(coupon.getId());
+//                    inviterCoupon.setUserId(inviter.getAccaUserId());
+//                    AppUserCoupon inviteeCoupon = new AppUserCoupon();
+//                    inviteeCoupon.setCouponId(coupon.getId());
+//                    inviteeCoupon.setUserId(invitee.getAccaUserId());
+//                    appUserCouponDao.insert(inviterCoupon);
+//                    appUserCouponDao.insert(inviteeCoupon);
+//                }
+//            }
+//
+//        }
+    }
+
+    public BaseObjResponse<AppAccaUser> getUserInfo(Long appUserId) {
 		
 		AppAccaUser accaUser = this.get(new AppAccaUser(appUserId));
 		

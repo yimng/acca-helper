@@ -1,3 +1,4 @@
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
@@ -24,12 +25,12 @@
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <ul class="ul-form">
         <li><label>发布时间：</label>
-            <input id="start" name="startTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${coupon.startTime}"
+            <input id="start" name="activityStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                   value="${coupon.activityStart}"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
             -
-            <input id="end" name="endTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${coupon.endTime}"
+            <input id="end" name="activityEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                   value="${coupon.activityEnd}"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
         </li>
         <li><label>活动名称：</label>
@@ -64,6 +65,7 @@
         <th>发布人</th>
         <th>领取数量</th>
         <th>使用数量</th>
+        <th></th>
         <shiro:hasPermission name="web:couupon:edit"><th>操作</th></shiro:hasPermission>
     </tr>
     </thead>
@@ -80,24 +82,24 @@
                     ${coupon.price}
             </td>
             <td>
-                    ${coupon.cnt}
+                    ${coupon.number}
             </td>
             <td>
                 <fmt:formatDate value="${coupon.validityStart}" pattern="yyyy年MM月dd日 HH:MM"/> 至 <fmt:formatDate value="${coupon.validityEnd}" pattern="yyyy年MM月dd日 HH:MM"/>
             </td>
-            <td>
-                <c:if test="${coupon.published}">
+            <td><c:set var="currentTime" value="<%= new Date()%>"></c:set>
+                <c:if test="${coupon.activityStart.time < currentTime.time and currentTime.time < coupon.activityEnd.time}">
                     已发布
                 </c:if>
-                <c:if test="${coupon.prePublished}">
+                <c:if test="${coupon.activityEnd.time < currentTime.time}">
                     未发布
                 </c:if>
-                <c:if test="${coupon.postPublished}">
+                <c:if test="${coupon.activityStart.time > currentTime.time}">
                     已过期
                 </c:if>
             </td>
             <td>
-                ${coupon.createBy.name}
+                ${coupon.creator}
             </td>
             <td>
                 ${coupon.received}

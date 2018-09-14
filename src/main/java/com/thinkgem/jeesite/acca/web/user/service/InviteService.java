@@ -15,37 +15,32 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-public class InviteService extends CrudService<InviteDao, Invite> {
+public class InviteService {
 
-    @Override
-    public Invite get(String id) {
-        return super.get(id);
-    }
-
-    @Override
-    public List<Invite> findList(Invite invite) {
-        return super.findList(invite);
-    }
-
-    @Override
-    public Page<Invite> findPage(Page<Invite> page, Invite invite) {
-        return super.findPage(page, invite);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void save(Invite invite) {
-        super.save(invite);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(Invite invite) {
-        super.delete(invite);
-    }
-
-
-    public List<InviteRank> findInviteRank(Date start, Date end) {
-        return dao.findInviteRank(start, end);
-    }
+//    public Invite get(String id) {
+//        return super.get(id);
+//    }
+//
+//    public List<Invite> findList(Invite invite) {
+//        return super.findList(invite);
+//    }
+//
+//    public Page<Invite> findPage(Page<Invite> page, Invite invite) {
+//        return super.findPage(page, invite);
+//    }
+//
+//    @Transactional(readOnly = false)
+//    public void save(Invite invite) {
+//        super.save(invite);
+//    }
+//
+//    @Transactional(readOnly = false)
+//    public void delete(Invite invite) {
+//        super.delete(invite);
+//    }
+//
+//
+//    public List<InviteRank> findInviteRank(Date start, Date end) {
+//        return dao.findInviteRank(start, end);
+//    }
 }

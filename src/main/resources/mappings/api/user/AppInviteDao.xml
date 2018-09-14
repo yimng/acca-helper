@@ -29,7 +29,16 @@
         <where>
             a.del_flag = #{DEL_FLAG_NORMAL}
             <if test="inviterPhone != null and inviterPhone != ''">
-                AND a.inviter_phone = ${inviterPhone}
+                AND a.inviter_phone LIKE
+                <if test="dbName == 'oracle'">'%'||#{inviterPhone}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{inviterPhone}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{inviterPhone},'%')</if>
+            </if>
+            <if test="inviteStart != null and inviteStart != ''">
+                AND a.invite_time > #{inviteStart}
+            </if>
+            <if test="inviteEnd != null and inviteEnd != ''">
+                AND #{inviteEnd} > a.invite_time
             </if>
         </where>
         <choose>
