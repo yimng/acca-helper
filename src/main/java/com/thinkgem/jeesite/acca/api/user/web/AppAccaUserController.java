@@ -8,6 +8,7 @@ import com.thinkgem.jeesite.acca.api.model.request.*;
 import com.thinkgem.jeesite.acca.api.user.entity.*;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
 import com.thinkgem.jeesite.acca.api.user.service.AppSmsVcodeService;
+import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
 import com.thinkgem.jeesite.acca.web.user.service.InviteService;
 import com.thinkgem.jeesite.common.utils.AppUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -51,6 +52,9 @@ public class AppAccaUserController extends BaseController {
 
 	@Autowired
     private InviteService appInviteService;
+
+	@Autowired
+    private CouponService couponService;
 
 	@ApiOperation(value = "test验证码", httpMethod = "POST", notes = "获取短信验证码")
 	@RequestMapping(value = "getTestVcode.do" ,method=RequestMethod.POST)
@@ -211,8 +215,12 @@ public class AppAccaUserController extends BaseController {
         if (!AppUtils.isMobileNum(req.getInviteePhone())) {
             return new BaseResponse(RespConstants.SMS_VCODE_MOBILE_TYPE_ERROR);
         }
-        //验证被邀请人的手机号没有被注册过，并且被邀请人的手机号没有在被邀请中
 
+        int availableCoupons = couponService.getAvailableCoupons(req.getCouponId());
+        if (availableCoupons <= 0) {
+            return new BaseResponse(RespConstants.COUPON_NOT_AVAILABLE);
+        }
+        //验证被邀请人的手机号没有被注册过，并且被邀请人的手机号没有在被邀请中
 		String inviteePhone = req.getInviteePhone();
 		AppAccaUser invitee = appAccaUserService.getAccaUserByPhone(inviteePhone);
         if (invitee != null){

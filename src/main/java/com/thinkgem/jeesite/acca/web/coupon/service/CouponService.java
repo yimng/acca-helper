@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.Sqls;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +39,18 @@ public class CouponService {
         coupon.setActivityName(activity.getActivityName());
         return coupon;
     }
+
+    public int getAvailableCoupons(Long id) {
+        Example example = Example.builder(Coupon.class)
+                .select("number")
+                .select("received")
+                .where(Sqls.custom().andEqualTo("id", id))
+                .forUpdate()
+                .build();
+        List<Coupon> coupons = couponMapper.selectByExample(example);
+        return coupons.get(0).getNumber() - coupons.get(0).getReceived();
+    }
+
 
     public List<Coupon> findList(Coupon coupon) {
         return couponMapper.select(coupon);

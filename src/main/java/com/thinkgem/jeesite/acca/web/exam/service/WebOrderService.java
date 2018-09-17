@@ -12,6 +12,8 @@ import com.thinkgem.jeesite.acca.web.exam.entity.WebSignup;
 import com.thinkgem.jeesite.acca.web.exam.utils.SignupComparator;
 import com.thinkgem.jeesite.acca.web.register.dao.WebAccaRegisterDao;
 import com.thinkgem.jeesite.acca.web.user.dao.WebAccaUserDao;
+import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
+import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.common.utils.sms.SmsUtils;
 import com.thinkgem.jeesite.freetek.util.TimeUtils;
@@ -31,17 +33,13 @@ import java.util.List;
 public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 	
 	@Autowired
-	private WebAccaRegisterDao accaRegisterDao;
-	@Autowired
-	private WebAccaUserDao accaUserDao;
-	@Autowired
 	private WebOrderDao webOrderDao;
-	@Autowired
-	private AppAccaUserDao appAccaUserDao;
 	@Autowired
 	private WebMsgSysService msgSysService;
 	@Autowired
 	private AppUserLearningPlanService learningPlanService;
+	@Autowired
+	private UserCouponService userCouponService;
 	
 	public List<WebOrder> findOrders(WebOrder order){
 		return dao.findOrders(order);
@@ -105,6 +103,11 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 			msgSysService.savePushToPersonal("考试报名未通过审核","抱歉，您的报考申请未通过审核，快去查看原因并重新提交报考申请吧。", wo.getAccaUserId());
 			SmsUtils.sendSms2Vcode(wo.getPhone(),"您好，您的考试报名申请未通过审核，快去小助手【考点】首页，右上【考试管理】查看原因并重新提交报考申请吧。");
 		} else if (wo.getOrderStatus() == Constants.OrderStatus.checkSuccess){
+			UserCoupon userCoupon = new UserCoupon();
+			//TODO 怎么得到代金券的ID
+			userCoupon.setCouponId(0L);
+			userCoupon.setUserId(wo.getAccaUserId());
+			userCouponService.saveOrUpdate(userCoupon);
 			String courseNames = "";
 			//获取报考的信息
 			List<WebSignup> signups = wo.getSignups();

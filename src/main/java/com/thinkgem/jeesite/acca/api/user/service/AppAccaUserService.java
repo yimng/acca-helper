@@ -3,33 +3,6 @@
  */
 package com.thinkgem.jeesite.acca.api.user.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.thinkgem.jeesite.acca.api.user.dao.*;
-import com.thinkgem.jeesite.acca.api.user.entity.*;
-import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
-import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
-import com.thinkgem.jeesite.acca.web.user.entity.Invite;
-import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
-import com.thinkgem.jeesite.acca.web.user.service.InviteService;
-import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.service.CrudService;
-import com.thinkgem.jeesite.common.utils.IdGen;
-import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
-import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
-import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
-import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
-import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
-import com.thinkgem.jeesite.freetek.api.model.PageApi;
-import com.thinkgem.jeesite.freetek.file.entity.FileInfo;
-import com.thinkgem.jeesite.freetek.util.DateTimeUtils;
 import com.thinkgem.jeesite.acca.api.article.dao.AppArticleCollectDao;
 import com.thinkgem.jeesite.acca.api.article.dao.AppArticleDao;
 import com.thinkgem.jeesite.acca.api.article.entity.AppArticle;
@@ -41,7 +14,29 @@ import com.thinkgem.jeesite.acca.api.model.request.UpdateUserLocationReq;
 import com.thinkgem.jeesite.acca.api.model.response.AccaConfInfo;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.api.order.dao.AppOrderDao;
+import com.thinkgem.jeesite.acca.api.user.dao.*;
+import com.thinkgem.jeesite.acca.api.user.entity.*;
 import com.thinkgem.jeesite.acca.constant.Constants;
+import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
+import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
+import com.thinkgem.jeesite.acca.web.user.entity.Invite;
+import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
+import com.thinkgem.jeesite.acca.web.user.service.InviteService;
+import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
+import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.service.CrudService;
+import com.thinkgem.jeesite.common.utils.IdGen;
+import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
+import com.thinkgem.jeesite.freetek.api.model.*;
+import com.thinkgem.jeesite.freetek.file.entity.FileInfo;
+import com.thinkgem.jeesite.freetek.util.DateTimeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * AppAccaUserService

@@ -86,12 +86,12 @@ public class InviteService {
     @Transactional(readOnly = false)
     public BaseResponse invite(InviteReq invitereq) {
 
-        Invite appInvite = new Invite();
-        appInvite.setInviterPhone(invitereq.getInviterPhone());
-        appInvite.setInviteePhone(invitereq.getInviteePhone());
-        appInvite.setCouponId(invitereq.getCouponId());
-        appInvite.setInviteTime(new Date());
-        inviteMapper.insert(appInvite);
+        Invite invite = new Invite();
+        invite.setInviterPhone(invitereq.getInviterPhone());
+        invite.setInviteePhone(invitereq.getInviteePhone());
+        invite.setCouponId(invitereq.getCouponId());
+        invite.setInviteTime(new Date());
+        inviteMapper.insert(invite);
         BaseResponse resp = new BaseResponse(RespConstants.GLOBAL_SUCCESS);
         return resp;
     }
@@ -122,4 +122,5 @@ public class InviteService {
     public int updateByPrimaryKeySelective(Invite appInvite) {
         return inviteMapper.updateByPrimaryKeySelective(appInvite);
     }
+
 }
