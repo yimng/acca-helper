@@ -3,6 +3,7 @@ package com.thinkgem.jeesite.acca.web.user.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.*;
 @Data
@@ -164,4 +165,31 @@ public class Invite implements Serializable {
     public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
     }
+
+    @Transient
+    private Integer inviteStatus;
+    public Integer getInviteStatus(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -3);
+        Date start = cal.getTime();
+        // success
+        if (successTime != null) {
+            return 1;
+            // inviting
+        } else if (inviteTime != null && inviteTime.after(start) && inviteTime.before(new Date())){
+            return 0;
+            //failed
+        } else if (inviteTime != null && inviteTime.before(start)) {
+            return 2;
+        } else {
+            return -1;
+        }
+
+
+    }
+    @Transient
+    private Date inviteStart;
+    @Transient
+    private Date inviteEnd;
 }

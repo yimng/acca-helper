@@ -7,9 +7,8 @@ import com.bcloud.msg.http.HttpSender;
 import com.thinkgem.jeesite.acca.api.model.request.*;
 import com.thinkgem.jeesite.acca.api.user.entity.*;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
-import com.thinkgem.jeesite.acca.api.user.service.AppInviteService;
 import com.thinkgem.jeesite.acca.api.user.service.AppSmsVcodeService;
-import com.thinkgem.jeesite.acca.api.user.service.AppUserCouponService;
+import com.thinkgem.jeesite.acca.web.user.service.InviteService;
 import com.thinkgem.jeesite.common.utils.AppUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
@@ -18,7 +17,6 @@ import com.thinkgem.jeesite.freetek.api.model.BasePageRequest;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
 import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
-import com.thinkgem.jeesite.freetek.api.model.PageApi;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,12 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.thinkgem.jeesite.acca.api.article.entity.AppArticle;
 import com.thinkgem.jeesite.acca.api.model.response.AccaConfInfo;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.constant.Constants;
-
-import java.util.List;
 
 /**
  * AppAccaUserController
@@ -55,11 +50,8 @@ public class AppAccaUserController extends BaseController {
 	private AppSmsVcodeService appSmsVcodeService;
 
 	@Autowired
-    private AppInviteService appInviteService;
+    private InviteService appInviteService;
 
-	@Autowired
-    private AppUserCouponService appUserCouponService;
-	
 	@ApiOperation(value = "test验证码", httpMethod = "POST", notes = "获取短信验证码")
 	@RequestMapping(value = "getTestVcode.do" ,method=RequestMethod.POST)
 	public @ResponseBody BaseObjResponse<String> getTestVcode(@RequestBody GetSmsVcodeReq req) {
@@ -205,7 +197,7 @@ public class AppAccaUserController extends BaseController {
 		
 		return appAccaUserService.deleteCollectBatch(req.getArticleIdList(),req.getAppUser());
 	}
-	@ApiOperation(value = "发送邀请人被邀请人手机号", notes = "发送邀请人被邀请人手机号")
+	@ApiOperation(value = "发送邀请人被邀请人手机号和代金券信息", notes = "发送邀请人被邀请人手机号和代金券信息")
 	@RequestMapping(value = "invite.do", method = RequestMethod.POST)
 	public @ResponseBody BaseResponse invite(@RequestBody InviteReq req) {
         int resp = req.isCorrectParams();

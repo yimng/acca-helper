@@ -8,7 +8,6 @@ import javax.persistence.*;
 public class Activity implements Serializable {
     @Id
     @Column(name = "activity_id")
-    @GeneratedValue(generator = "JDBC")
     private Long activityId;
 
     @Column(name = "activity_name")

@@ -9,13 +9,16 @@ import java.util.List;
 
 import com.thinkgem.jeesite.acca.api.user.dao.*;
 import com.thinkgem.jeesite.acca.api.user.entity.*;
-import com.thinkgem.jeesite.acca.web.coupon.dao.CouponDao;
 import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
+import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
+import com.thinkgem.jeesite.acca.web.user.entity.Invite;
+import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
+import com.thinkgem.jeesite.acca.web.user.service.InviteService;
+import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.common.utils.IdGen;
@@ -77,13 +80,14 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 	private AppOrderDao appOrderDao;
 
 	@Autowired
-	private CouponDao couponDao;
+	private CouponService couponService;
 
-//	@Autowired
-//    private AppInviteService appInviteService;
-//
-//	@Autowired
-//    private AppUserCouponDao appUserCouponDao;
+	@Autowired
+    private UserCouponService userCouponService;
+
+	@Autowired
+    private InviteService inviteService;
+
 
 	@Override
 	public AppAccaUser get(String id) {
@@ -163,32 +167,39 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 
     public void publishCoupon(String phone) {
         //如果做活动期间被邀请，给用户分配代金券
-//        List<Coupon> activeList = couponDao.findActiveList();
-//        for(Coupon coupon : activeList) {
-//            if (coupon.getFlag1()) {
-//                AppUserCoupon userCoupon = new AppUserCoupon();
-//                userCoupon.setUserId(getAccaUserByPhone(phone).getAccaUserId());
-//                userCoupon.setCouponId(coupon.getId());
-//                appUserCouponDao.insert(userCoupon);
-//            } else if (coupon.getFlag3() || coupon.getFlag4()) {
-//                List<AppInvite> invites = appInviteService.getAppInvitesByPhoneAndInviteTime(phone, coupon.getStartTime(), coupon.getEndTime());
-//                for (AppInvite invite : invites) {
-//                    invite.setSuccessTime(new Date());
-//					appInviteService.updateByPrimaryKeySelective(invite);
-//                    AppAccaUser invitee = getAccaUserByPhone(invite.getInviteePhone());
-//                    AppAccaUser inviter = getAccaUserByPhone(invite.getInviterPhone());
-//                    AppUserCoupon inviterCoupon = new AppUserCoupon();
-//                    inviterCoupon.setCouponId(coupon.getId());
-//                    inviterCoupon.setUserId(inviter.getAccaUserId());
-//                    AppUserCoupon inviteeCoupon = new AppUserCoupon();
-//                    inviteeCoupon.setCouponId(coupon.getId());
-//                    inviteeCoupon.setUserId(invitee.getAccaUserId());
-//                    appUserCouponDao.insert(inviterCoupon);
-//                    appUserCouponDao.insert(inviteeCoupon);
-//                }
-//            }
-//
-//        }
+        List<Coupon> activeList = couponService.findActiveCoupon();
+        for(Coupon coupon : activeList) {
+            if (coupon.getFlag1()) {
+                UserCoupon userCoupon = new UserCoupon();
+                userCoupon.setUserId(getAccaUserByPhone(phone).getAccaUserId());
+                userCoupon.setCouponId(coupon.getId());
+                userCouponService.saveOrUpdate(userCoupon);
+            } else if (coupon.getFlag3() || coupon.getFlag4()) {
+                List<Invite> invites = inviteService.getAppInvitesByPhoneAndInviteTime(phone,
+                        coupon.getActivityStart(), coupon.getActivityEnd());
+                for (Invite invite : invites) {
+                    if (invite.getInviteStatus() == 2) {
+                        continue;
+                    }
+                    invite.setSuccessTime(new Date());
+					inviteService.updateByPrimaryKeySelective(invite);
+					if (coupon.getFlag3()) {
+                        AppAccaUser inviter = getAccaUserByPhone(invite.getInviterPhone());
+                        UserCoupon inviterCoupon = new UserCoupon();
+                        inviterCoupon.setCouponId(coupon.getId());
+                        inviterCoupon.setUserId(inviter.getAccaUserId());
+                        userCouponService.saveOrUpdate(inviterCoupon);
+                    }
+                    if (coupon.getFlag4()) {
+                        AppAccaUser invitee = getAccaUserByPhone(invite.getInviteePhone());
+                        UserCoupon inviteeCoupon = new UserCoupon();
+                        inviteeCoupon.setCouponId(coupon.getId());
+                        inviteeCoupon.setUserId(invitee.getAccaUserId());
+                        userCouponService.saveOrUpdate(inviteeCoupon);
+                    }
+                }
+            }
+        }
     }
 
     public BaseObjResponse<AppAccaUser> getUserInfo(Long appUserId) {

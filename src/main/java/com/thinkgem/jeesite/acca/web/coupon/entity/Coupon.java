@@ -339,6 +339,7 @@ public class Coupon implements Serializable {
         this.couponType = couponType;
     }
 
+
     @Transient
     private Page page;
     @Transient

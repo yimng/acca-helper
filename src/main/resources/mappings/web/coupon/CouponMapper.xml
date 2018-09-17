@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.coupon.dao.CouponMapper">
+  <resultMap id="BaseResultMap" type="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="activity_id" jdbcType="BIGINT" property="activityId" />
+    <result column="price" jdbcType="REAL" property="price" />
+    <result column="validity_start" jdbcType="TIMESTAMP" property="validityStart" />
+    <result column="validity_end" jdbcType="TIMESTAMP" property="validityEnd" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="received" jdbcType="INTEGER" property="received" />
+    <result column="consumed" jdbcType="INTEGER" property="consumed" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="assign" jdbcType="BIT" property="assign" />
+    <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
+  </resultMap>
+</mapper>

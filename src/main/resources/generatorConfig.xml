@@ -21,13 +21,12 @@
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
         <!-- 防止生成的代码中有很多注释，加入下面的配置控制 -->
         <commentGenerator>
-            <property name="suppressAllComments" value="true" />
             <property name="suppressDate" value="true" />
         </commentGenerator>
 
         <!-- 数据库连接 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/mybatis"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/acca"
                         userId="root"
                         password="root">
         </jdbcConnection>
@@ -37,19 +36,78 @@
         </javaTypeResolver>
 
         <!-- 数据表对应的model层  -->
-        <javaModelGenerator targetPackage="com.zbgedu.lukun.mybatisdemo.model" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.thinkgem.jeesite.acca.web.content.entity"
+                            targetProject="src/main/java">
         </javaModelGenerator>
 
         <!-- sql mapper 映射配置文件 -->
-        <sqlMapGenerator targetPackage="mapper"  targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mappings.web.content"  targetProject="src/main/resources">
         </sqlMapGenerator>
 
         <!-- mybatis3中的mapper接口 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.zbgedu.lukun.mybatisdemo.mapper"  targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.thinkgem.jeesite.acca.web.content.dao"
+                             targetProject="src/main/java">
         </javaClientGenerator>
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-        <table tableName="%">
+        <table tableName="tbl_activity" domainObjectName="Activity">
+            <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
+
+    </context>
+    <context id="mysql2" defaultModelType="flat" targetRuntime="Mybatis3Simple">
+
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+            <!-- caseSensitive默认false，当数据库表名区分大小写时，可以将该属性设置为true -->
+            <property name="caseSensitive" value="true"/>
+        </plugin>
+        <!-- 增加Models Serializable实现 -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <!-- 防止生成的代码中有很多注释，加入下面的配置控制 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/acca"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 数据表对应的model层  -->
+        <javaModelGenerator targetPackage="com.thinkgem.jeesite.acca.web.user.entity"
+                            targetProject="src/main/java">
+        </javaModelGenerator>
+
+        <!-- sql mapper 映射配置文件 -->
+        <sqlMapGenerator targetPackage="mappings.web.user"  targetProject="src/main/resources">
+        </sqlMapGenerator>
+
+        <!-- mybatis3中的mapper接口 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.thinkgem.jeesite.acca.web.user.dao"
+                             targetProject="src/main/java">
+        </javaClientGenerator>
+
+        <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
+        <table tableName="tbl_user_coupon" domainObjectName="UserCoupon">
+            <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
+        <table tableName="tbl_invite" domainObjectName="Invite">
+            <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
+            <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
 
     </context>

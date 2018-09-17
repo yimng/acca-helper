@@ -26,45 +26,45 @@ import java.util.Map;
 @RequestMapping(value = "${adminPath}/user/invite")
 public class InviteController extends BaseController {
 
-//    @Autowired
-//    private InviteService inviteService;
-//
-//    @ModelAttribute
-//    public Invite get(@RequestParam(required=false) String id) {
-//        Invite entity = null;
-//        if (StringUtils.isNotBlank(id)){
-//            entity = inviteService.get(id);
+    @Autowired
+    private InviteService inviteService;
+
+    @ModelAttribute
+    public Invite get(@RequestParam(required=false) Long id) {
+        Invite entity = null;
+        if (id != null){
+            entity = inviteService.get(id);
+        }
+        if (entity == null){
+            entity = new Invite();
+        }
+        return entity;
+    }
+
+    @RequiresPermissions("user:invite:view")
+    @RequestMapping(value = {"list", ""})
+    public String list(Invite invite,
+                       HttpServletRequest request, HttpServletResponse response, Model model) {
+        Page<Invite> page = inviteService.findPage(new Page<Invite>(request, response), invite);
+
+        model.addAttribute("page", page);
+//        Map<String, String> result = new HashMap<String, String>();
+//        for (Invite.InviteStatus s : Invite.InviteStatus.values()) {
+//            result.put(s.getShortName(), s.getFullName());
 //        }
-//        if (entity == null){
-//            entity = new Invite();
-//        }
-//        return entity;
-//    }
-//
-//    @RequiresPermissions("user:invite:view")
-//    @RequestMapping(value = {"list", ""})
-//    public String list(Invite invite,
-//                       HttpServletRequest request, HttpServletResponse response, Model model) {
-//        Page<Invite> page = inviteService.findPage(new Page<Invite>(request, response), invite);
-//
-//        model.addAttribute("page", page);
-////        Map<String, String> result = new HashMap<String, String>();
-////        for (Invite.InviteStatus s : Invite.InviteStatus.values()) {
-////            result.put(s.getShortName(), s.getFullName());
-////        }
-////        model.addAttribute("status", Invite.InviteStatus.values());
-//        return "web/user/webInviteList";
-//    }
-//
-//    @RequiresPermissions("user:invite:view")
-//    @RequestMapping(value = {"listrank", ""})
-//    public String listRank(@RequestParam(value = "start", required = false) Date start,
-//                           @RequestParam(value = "end", required = false) Date end, Model model) {
-//        List<InviteRank> inviteRank = inviteService.findInviteRank(start, end);
-//        model.addAttribute("inviteRankList",inviteRank);
-//        return "web/user/webInviteRankList";
-//    }
-//
+//        model.addAttribute("status", Invite.InviteStatus.values());
+        return "web/user/webInviteList";
+    }
+
+    @RequiresPermissions("user:invite:view")
+    @RequestMapping(value = {"listrank", ""})
+    public String listRank(@RequestParam(value = "start", required = false) Date start,
+                           @RequestParam(value = "end", required = false) Date end, Model model) {
+        List<InviteRank> inviteRank = inviteService.findInviteRank(start, end);
+        model.addAttribute("inviteRankList",inviteRank);
+        return "web/user/webInviteRankList";
+    }
+
 
 
 }
