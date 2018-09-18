@@ -27,6 +27,7 @@ public class Constants extends PublicConstants {
 		ORDER_STATUS_TYPES.put(OrderStatus.uncheckd, "待审核");
 		ORDER_STATUS_TYPES.put(OrderStatus.unpay, "待支付");
 		ORDER_STATUS_TYPES.put(OrderStatus.checkSuccess, "审核通过");
+		ORDER_STATUS_TYPES.put(OrderStatus.checkSupplement,"补传信息");
 		ORDER_STATUS_TYPES.put(OrderStatus.checkFail, "审核未通过");
 		ORDER_STATUS_TYPES.put(OrderStatus.cancel, "已取消");
 		ORDER_STATUS_TYPES.put(OrderStatus.delete, "已删除");
@@ -71,6 +72,7 @@ public class Constants extends PublicConstants {
 		public static int unpay=10;//待支付
 		public static int uncheckd=20;//待审核
 		public static int checkSuccess=30;//审核通过
+		public static int checkSupplement=35;//补传信息
 		public static int checkFail=40;//审核失败
 		public static int cancel=50;//已取消
 		public static int delete=60;//以删除

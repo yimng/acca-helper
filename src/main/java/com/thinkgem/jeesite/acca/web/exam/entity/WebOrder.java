@@ -62,6 +62,7 @@ public class WebOrder extends DataEntity<WebOrder> {
 	private Integer uncheck = Constants.OrderStatus.uncheckd;
 	private Integer checkSuccess = Constants.OrderStatus.checkSuccess;
 	private Integer checkFail = Constants.OrderStatus.checkFail;
+	private Integer checkSupplement = Constants.OrderStatus.checkSupplement;
 	private List<WebSignup> signups;
 	private Long examSignupId;
 	private List<WebOrder> orders;
@@ -182,7 +183,7 @@ public class WebOrder extends DataEntity<WebOrder> {
 		this.examSignupTime = examSignupTime;
 	}
 	
-	@Length(min=0, max=11, message="状态：10待支付，20待审核，30审核通过，40审核不通过，50已取消长度必须介于 0 和 11 之间")
+	@Length(min=0, max=11, message="状态：10待支付，20待审核，30审核通过，35补传信息，40审核不通过，50已取消长度必须介于 0 和 11 之间")
 	public Integer getOrderStatus() {
 		return orderStatus;
 	}
@@ -405,6 +406,14 @@ public class WebOrder extends DataEntity<WebOrder> {
 
 	public void setCheckFail(Integer checkFail) {
 		this.checkFail = checkFail;
+	}
+
+	public Integer getCheckSupplement() {
+		return checkSupplement;
+	}
+
+	public void setCheckSupplement(Integer checkSupplement) {
+		this.checkSupplement = checkSupplement;
 	}
 
 	public String getOrg() {

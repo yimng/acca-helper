@@ -199,8 +199,10 @@ public class WebOrderController extends BaseController {
 		} else {
 			if(flag == null || flag == 0){
 				webOrder.setOrderStatus(Constants.OrderStatus.checkFail);				
-			} else {
+			} else if (flag == 1){
 				webOrder.setOrderStatus(Constants.OrderStatus.checkSuccess);				
+			} else if (flag == 2) {
+				webOrder.setOrderStatus(Constants.OrderStatus.checkSupplement);
 			}
 			orderService.updOrderStatus2(webOrder);
 			addMessage(redirectAttributes, "操作成功！");

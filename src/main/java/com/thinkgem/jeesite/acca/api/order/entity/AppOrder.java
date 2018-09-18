@@ -32,7 +32,7 @@ public class AppOrder extends DataEntity<AppOrder> {
 	private String accaRegisterName;		// acca注册账号
 	private String accaRegisterPassword;		// acca密码
 	private Date examSignupTime;		// 报名时间
-	private Integer orderStatus;		// 状态：10待支付，20待审核，30审核通过，40审核不通过，50已取消
+	private Integer orderStatus;		// 状态：10待支付，20待审核，30审核通过，35补传信息，40审核不通过，50已取消
 	private Double amount;		// 报名费用
 	private Long orderPayImgId;		// 支付截图
 	private String checkPersonId;		// 审核人id

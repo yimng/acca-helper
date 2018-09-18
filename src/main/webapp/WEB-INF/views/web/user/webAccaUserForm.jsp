@@ -56,7 +56,7 @@
 		<div class="control-group">
 			<label class="control-label">手机号：</label>
 			<div class="controls">
-				<form:input path="phone" htmlEscape="false" maxlength="32" readOnly="true" class="input-xlarge "/>
+				<form:input path="phone" htmlEscape="false" maxlength="32" class="input-xlarge "/>
 			</div>
 		</div>
 		<%-- <div class="control-group">

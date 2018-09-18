@@ -201,7 +201,7 @@
 	<form:form id="inputForm" modelAttribute="webOrder" action="${ctx}/web/order/audit" class="form-horizontal">
 		<sys:message content="${message}"/>
 		<input type="hidden" name="orderId" value="${webOrder.orderId}"/>
-		<c:if test="${webOrder.orderStatus == webOrder.checkSuccess or webOrder.orderStatus == webOrder.checkFail}">
+		<c:if test="${webOrder.orderStatus == webOrder.checkSuccess or webOrder.orderStatus == webOrder.checkFail or webOrder.orderStatus == webOrder.checkSupplement}">
 			<fieldset>
 				<legend>审核记录</legend>
 				<table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -275,7 +275,7 @@
 				</div>
 			</div>
 		</fieldset>
-		<c:if test="${webOrder.orderStatus == webOrder.uncheck or webOrder.orderStatus == webOrder.checkSuccess or webOrder.orderStatus == webOrder.checkFail}">
+		<c:if test="${webOrder.orderStatus == webOrder.uncheck or webOrder.orderStatus == webOrder.checkSuccess or webOrder.orderStatus == webOrder.checkFail or webOrder.orderStatus == webOrder.checkSupplement}">
 			<fieldset>
 				<legend>支付信息</legend>
 				<div style="float: left;width: 40%;">
@@ -380,6 +380,9 @@
 						<input type="radio" value="1" name="flag" onclick="showDesc(value);" checked/> 通过
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="radio" value="0" name="flag" onclick="showDesc(value);"/> 不通过
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" value="2" name="flag" onclick="showDesc(value);"/> 补传信息
+
 					</font>
 				</div>
 				<br/>
