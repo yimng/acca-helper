@@ -103,19 +103,22 @@ public class InviteService {
         Date start = cal.getTime();
         Date end = new Date();
 
-        List<Invite> appInvites = getAppInvitesByPhoneAndInviteTime(phone, start, end);
+        List<Invite> appInvites = getAppInvitesByPhoneAndInviteTime(phone, start, end, null);
         if (appInvites.size() > 0) {
             return true;
         }
         return false;
     }
 
-    public List<Invite> getAppInvitesByPhoneAndInviteTime(String phone, Date start, Date end) {
+    public List<Invite> getAppInvitesByPhoneAndInviteTime(String phone, Date start, Date end, Long couponId) {
         Example example = new Example(Invite.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("inviteePhone", phone);
         criteria.andEqualTo("delFlag", 0);
         criteria.andBetween("inviteTime", start, end);
+        if (couponId != null) {
+            criteria.andEqualTo("couponId", couponId);
+        }
         return inviteMapper.selectByExample(example);
     }
 

@@ -6,6 +6,8 @@ import com.thinkgem.jeesite.acca.api.plan.service.AppUserLearningPlanService;
 import com.thinkgem.jeesite.acca.api.user.dao.AppAccaUserDao;
 import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.acca.web.content.service.WebMsgSysService;
+import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
+import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
 import com.thinkgem.jeesite.acca.web.exam.dao.WebOrderDao;
 import com.thinkgem.jeesite.acca.web.exam.entity.WebOrder;
 import com.thinkgem.jeesite.acca.web.exam.entity.WebSignup;
@@ -40,6 +42,8 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 	private AppUserLearningPlanService learningPlanService;
 	@Autowired
 	private UserCouponService userCouponService;
+	@Autowired
+    private CouponService couponService;
 	
 	public List<WebOrder> findOrders(WebOrder order){
 		return dao.findOrders(order);
@@ -103,12 +107,8 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 			msgSysService.savePushToPersonal("考试报名未通过审核","抱歉，您的报考申请未通过审核，快去查看原因并重新提交报考申请吧。", wo.getAccaUserId());
 			SmsUtils.sendSms2Vcode(wo.getPhone(),"您好，您的考试报名申请未通过审核，快去小助手【考点】首页，右上【考试管理】查看原因并重新提交报考申请吧。");
 		} else if (wo.getOrderStatus() == Constants.OrderStatus.checkSuccess){
-			UserCoupon userCoupon = new UserCoupon();
-			//TODO 怎么得到代金券的ID
-			userCoupon.setCouponId(0L);
-			userCoupon.setUserId(wo.getAccaUserId());
-			userCouponService.saveOrUpdate(userCoupon);
-			String courseNames = "";
+            publishCoupon(wo);
+            String courseNames = "";
 			//获取报考的信息
 			List<WebSignup> signups = wo.getSignups();
 			Long accaUserId = wo.getAccaUserId();
@@ -142,8 +142,22 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 		}
 		
 	}
-	
-	/**
+
+    public void publishCoupon(WebOrder wo) {
+        //TODO 怎么得到代金券的ID
+        List<Coupon> activeList = couponService.findActiveCoupon();
+        for (Coupon coupon : activeList) {
+            if (!coupon.getFlag2()) {
+                continue;
+            }
+            UserCoupon userCoupon = new UserCoupon();
+            userCoupon.setCouponId(coupon.getId());
+            userCoupon.setUserId(wo.getAccaUserId());
+            userCouponService.saveOrUpdate(userCoupon);
+        }
+    }
+
+    /**
 	 * 修改已经审核通过订单，延期或调整科目
 	 * @param oldorder,newolder
      */

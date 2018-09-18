@@ -171,8 +171,9 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
                 userCouponService.saveOrUpdate(userCoupon);
             } else if (coupon.getFlag3() || coupon.getFlag4()) {
                 List<Invite> invites = inviteService.getAppInvitesByPhoneAndInviteTime(phone,
-                        coupon.getActivityStart(), coupon.getActivityEnd());
+                        coupon.getActivityStart(), coupon.getActivityEnd(), coupon.getId());
                 for (Invite invite : invites) {
+                	// invite failed
                     if (invite.getInviteStatus() == 2) {
                         continue;
                     }
