@@ -34,6 +34,10 @@ public class SmallCourse extends DataEntity<SmallCourse> {
 	
 	private boolean checked = false;
 
+	private String prePrice;
+	private String normalPrice;
+	private String postPrice;
+
 	@Override
 	public boolean equals(Object obj) {
 		if(obj != null){
@@ -144,5 +148,28 @@ public class SmallCourse extends DataEntity<SmallCourse> {
 	public void setExamSignupEndtime(Date examSignupEndtime) {
 		this.examSignupEndtime = examSignupEndtime;
 	}
-	
+
+	public String getPrePrice() {
+		return prePrice;
+	}
+
+	public void setPrePrice(String prePrice) {
+		this.prePrice = prePrice;
+	}
+
+	public String getNormalPrice() {
+		return normalPrice;
+	}
+
+	public void setNormalPrice(String normalPrice) {
+		this.normalPrice = normalPrice;
+	}
+
+	public String getPostPrice() {
+		return postPrice;
+	}
+
+	public void setPostPrice(String postPrice) {
+		this.postPrice = postPrice;
+	}
 }

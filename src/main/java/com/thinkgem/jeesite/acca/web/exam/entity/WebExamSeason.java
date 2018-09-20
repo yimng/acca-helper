@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.acca.web.exam.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -24,6 +25,12 @@ public class WebExamSeason extends DataEntity<WebExamSeason> {
 	private String examCourse;		// exam_course
 	private String examVersionJson;		// exam_version_json
 	private String examSeasonStr;		// 年月字符串
+	private Date preSignup;
+	private Date signUp;
+	private Date postSignup;
+	private String prePrice;
+	private String normalPrice;
+	private String postPrice;
 	
 	private String oldSeasonStr;
 	
@@ -97,5 +104,52 @@ public class WebExamSeason extends DataEntity<WebExamSeason> {
 	public void setOldSeasonStr(String oldSeasonStr) {
 		this.oldSeasonStr = oldSeasonStr;
 	}
-	
+
+	public Date getPreSignup() {
+		return preSignup;
+	}
+
+	public void setPreSignup(Date preSignup) {
+		this.preSignup = preSignup;
+	}
+
+	public Date getSignUp() {
+		return signUp;
+	}
+
+	public void setSignUp(Date signUp) {
+		this.signUp = signUp;
+	}
+
+	public Date getPostSignup() {
+		return postSignup;
+	}
+
+	public void setPostSignup(Date postSignup) {
+		this.postSignup = postSignup;
+	}
+
+    public String getPrePrice() {
+        return prePrice;
+    }
+
+    public void setPrePrice(String prePrice) {
+        this.prePrice = prePrice;
+    }
+
+    public String getNormalPrice() {
+        return normalPrice;
+    }
+
+    public void setNormalPrice(String normalPrice) {
+        this.normalPrice = normalPrice;
+    }
+
+    public String getPostPrice() {
+        return postPrice;
+    }
+
+    public void setPostPrice(String postPrice) {
+        this.postPrice = postPrice;
+    }
 }

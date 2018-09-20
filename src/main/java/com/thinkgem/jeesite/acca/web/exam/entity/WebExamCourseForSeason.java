@@ -30,6 +30,9 @@ public class WebExamCourseForSeason extends BaseModel{
 	private String englishShortName;		// 英文缩写
 	private String price;		// 报名费
 	private Integer examType;		// 支持的考试类型：1自有考试，2官方机考，4官方笔考，如果同时支持多个，则采用位运算&ldquo;或&rdquo;进行，比如，取值为3，则支持自有考试和官方机考*/
+	private String prePrice;
+	private String normalPrice;
+	private String postPrice;
 	
 	
 	private List<WebExamVersion> versionList;	//考试版本信息
@@ -67,6 +70,10 @@ public class WebExamCourseForSeason extends BaseModel{
 	}
 
 	public String getExamVersionJson() {
+		if (StringUtils.isNotEmpty(this.examVersionJson)) {
+			return this.examVersionJson;
+		}
+		this.examVersionJson = JsonMapper.toJsonString(this.getVersionList());
 		return examVersionJson;
 	}
 
@@ -94,5 +101,27 @@ public class WebExamCourseForSeason extends BaseModel{
 		this.showVersionStr = showVersionStr;
 	}
 
+	public String getPrePrice() {
+		return prePrice;
+	}
 
+	public void setPrePrice(String prePrice) {
+		this.prePrice = prePrice;
+	}
+
+	public String getNormalPrice() {
+		return normalPrice;
+	}
+
+	public void setNormalPrice(String normalPrice) {
+		this.normalPrice = normalPrice;
+	}
+
+	public String getPostPrice() {
+		return postPrice;
+	}
+
+	public void setPostPrice(String postPrice) {
+		this.postPrice = postPrice;
+	}
 }

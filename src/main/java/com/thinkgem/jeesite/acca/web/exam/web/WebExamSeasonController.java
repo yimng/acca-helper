@@ -78,6 +78,9 @@ public class WebExamSeasonController extends BaseController {
 				for(WebExamCourseForSeason season : examSeason.getExamCourselist()){
 					if(season.getExamCourseId().equals(sc.getExamCourseId())){
 						sc.setChecked(true);
+						sc.setPrePrice(season.getPrePrice());
+						sc.setNormalPrice(season.getNormalPrice());
+						sc.setPostPrice(season.getPostPrice());
 						for(WebExamVersion we : sc.getExamVersions()){
 							if(season.getVersionList() != null) {
                                 for(WebExamVersion sea : season.getVersionList()){
@@ -102,7 +105,7 @@ public class WebExamSeasonController extends BaseController {
 	
 	@RequestMapping("validata")
 	@ResponseBody
-	public ModelMap validata(WebExamSeason webExamSeason, Long[] examCourseIds, String[] examVersionStrs){
+	public ModelMap validata(WebExamSeason webExamSeason){
 		ModelMap map = new ModelMap();
 		List<WebExamSeason> allList = webExamSeasonService.findAllList(webExamSeason);
 		if(StringUtils.isEmpty(webExamSeason.getOldSeasonStr())){
@@ -118,16 +121,18 @@ public class WebExamSeasonController extends BaseController {
 				return map;
 			}
 		}
-		if(examCourseIds == null || examCourseIds.length == 0){
-			map.put("result", false);
-			map.put("msg", "保存失败！未选中相关课程");
-			return map;
-		}
-		/*if(examVersionStrs == null || examVersionStrs.length == 0){
+		boolean selectedCourse = false;
+		for(WebExamCourseForSeason c: webExamSeason.getExamCourselist()) {
+		    if(c.getExamCourseId() != null) {
+                selectedCourse = true;
+                break;
+            }
+        }
+		if(!selectedCourse){
 			map.put("result", false);
 			map.put("msg", "保存失败！未选中相关版本");
 			return map;
-		}*/
+		}
 		map.put("result", true);
 		return map;
 	}
@@ -135,7 +140,7 @@ public class WebExamSeasonController extends BaseController {
 
 	@RequiresPermissions("exam:webExamSeason:edit")
 	@RequestMapping(value = "save")
-	public String save(WebExamSeason webExamSeason, Long[] examCourseIds, String[] examVersionStrs, Model model, RedirectAttributes redirectAttributes) {
+	public String save(WebExamSeason webExamSeason, Model model, RedirectAttributes redirectAttributes) {
 		/*List<WebExamSeason> allList = webExamSeasonService.findAllList(webExamSeason);
 		if(StringUtils.isEmpty(webExamSeason.getOldSeasonStr())){
 			if(allList != null && allList.size() != 0){
@@ -156,38 +161,77 @@ public class WebExamSeasonController extends BaseController {
 			addMessage(redirectAttributes, "保存失败！未选中相关版本");
 			return "redirect:"+Global.getAdminPath()+"/exam/webExamSeason/?repage";
 		}*/
-		List<WebExamSeason> seasons = new ArrayList<WebExamSeason>();
-		for(Long examCourseId : examCourseIds){
-			WebExamSeason season = new WebExamSeason();
-			season.setExamCourseId(examCourseId);
-			season.setExamSeasonStr(webExamSeason.getExamSeasonStr());
-			List<SmallVersion> versions = new ArrayList<SmallVersion>();
-			if(examVersionStrs!= null ){
-				if(examVersionStrs.length != 0 && examVersionStrs.length == 3 && examVersionStrs[0].split(",").length == 1){
-					String[] array = examVersionStrs;
-					if(Long.valueOf(array[0]).equals(examCourseId)){
-						SmallVersion version = new SmallVersion();
-						version.setExamVersionId(Long.valueOf(array[1]));
-						version.setExamVersionName(array[2]);
-						versions.add(version);
-					}
-				} else {
-					for(String s : examVersionStrs){
-						String[] array = s.split(",");
-						if(Long.valueOf(array[0]).equals(examCourseId)){
-							SmallVersion version = new SmallVersion();
-							version.setExamVersionId(Long.valueOf(array[1]));
-							version.setExamVersionName(array[2]);
-							versions.add(version);
-						}
-					}
-				}
-			}
-			if(versions.size() != 0){
-				season.setExamVersionJson(JsonMapper.toJsonString(versions));
-			}
-			seasons.add(season);
-		}
+
+
+//		for(Long examCourseId : examCourseIds){
+//			WebExamSeason season = new WebExamSeason();
+//			season.setExamCourseId(examCourseId);
+//			season.setExamSeasonStr(webExamSeason.getExamSeasonStr());
+//			List<SmallVersion> versions = new ArrayList<SmallVersion>();
+//			if(examVersionStrs!= null ){
+//				if(examVersionStrs.length != 0 && examVersionStrs.length == 3 && examVersionStrs[0].split(",").length == 1){
+//					String[] array = examVersionStrs;
+//					if(Long.valueOf(array[0]).equals(examCourseId)){
+//						SmallVersion version = new SmallVersion();
+//						version.setExamVersionId(Long.valueOf(array[1]));
+//						version.setExamVersionName(array[2]);
+//						versions.add(version);
+//					}
+//				} else {
+//					for(String s : examVersionStrs){
+//						String[] array = s.split(",");
+//						if(Long.valueOf(array[0]).equals(examCourseId)){
+//							SmallVersion version = new SmallVersion();
+//							version.setExamVersionId(Long.valueOf(array[1]));
+//							version.setExamVersionName(array[2]);
+//							versions.add(version);
+//						}
+//					}
+//				}
+//			}
+//			if(versions.size() != 0){
+//				season.setExamVersionJson(JsonMapper.toJsonString(versions));
+//			}
+//			seasons.add(season);
+//		}
+
+        List<WebExamSeason> seasons = new ArrayList<WebExamSeason>();
+        for(WebExamCourseForSeason courseForSeason : webExamSeason.getExamCourselist()) {
+            if (courseForSeason.getExamCourseId() == null) {
+                continue;
+            }
+            WebExamSeason examSeason = new WebExamSeason();
+            examSeason.setExamSeasonStr(webExamSeason.getExamSeasonStr());
+            examSeason.setExamCourseId(courseForSeason.getExamCourseId());
+            examSeason.setExamCourse(courseForSeason.getExamCourse());
+            List<SmallVersion> versions = new ArrayList<>();
+            if (courseForSeason.getVersionList() != null) {
+                for (WebExamVersion examVersion : courseForSeason.getVersionList()) {
+                    if (examVersion.getExamVersionId() == null) {
+                        continue;
+                    }
+                    SmallVersion version = new SmallVersion();
+                    version.setExamVersionId(examVersion.getExamVersionId());
+                    version.setExamVersionName(examVersion.getExamVersionName());
+                    versions.add(version);
+                }
+            }
+            examSeason.setExamVersionJson(JsonMapper.toJsonString(versions));
+            examSeason.setPreSignup(webExamSeason.getPreSignup());
+            examSeason.setSignUp(webExamSeason.getSignUp());
+            examSeason.setPostSignup(webExamSeason.getPostSignup());
+            if (StringUtils.isNotEmpty(courseForSeason.getPrePrice())) {
+                examSeason.setPrePrice(courseForSeason.getPrePrice());
+            }
+            if (StringUtils.isNotEmpty(courseForSeason.getNormalPrice())) {
+                examSeason.setNormalPrice(courseForSeason.getNormalPrice());
+            }
+            if (StringUtils.isNotEmpty(courseForSeason.getPostPrice())) {
+                examSeason.setPostPrice(courseForSeason.getPostPrice());
+            }
+            seasons.add(examSeason);
+        }
+
 		webExamSeasonService.saveSeasons(webExamSeason, seasons);
 		addMessage(redirectAttributes, "保存成功");
 		return "redirect:"+Global.getAdminPath()+"/exam/webExamSeason";

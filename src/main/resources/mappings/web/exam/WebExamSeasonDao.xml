@@ -2,22 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinkgem.jeesite.acca.web.exam.dao.WebExamSeasonDao">
     
-    <resultMap type="WebExamSeason" id="webExamSeasonMap">
+    <resultMap type="com.thinkgem.jeesite.acca.web.exam.entity.WebExamSeason" id="webExamSeasonMap">
 		<result column="examSeasonStr" property="examSeasonStr" />
+        <result column="preSignup" property="preSignup" />
+        <result column="signUp" property="signUp" />
+        <result column="postSignup" property="postSignup" />
 		<collection property="examCourselist" ofType="com.thinkgem.jeesite.acca.web.exam.entity.WebExamCourseForSeason">
 			<result column="examCourseId" property="examCourseId" />
 			<result column="examCourse" property="examCourse" />
 			<result column="examVersionJson" property="examVersionJson" />
+			<result column="prePrice" property="prePrice" />
+            <result column="normalPrice" property="normalPrice" />
+            <result column="postPrice" property="postPrice" />
 		</collection>
 	</resultMap>
     
     
 	<sql id="webExamSeasonColumns">
 		a.exam_season_id AS "examSeasonId",
+		a.exam_season_str AS "examSeasonStr",
+		a.exam_pre_signup AS "preSignup",
+		a.exam_signup AS signUp,
+		a.exam_post_signup AS postSignup,
+		a.exam_version_json AS "examVersionJson",
 		a.exam_course_id AS "examCourseId",
 		b.course AS "examCourse",
-		a.exam_version_json AS "examVersionJson",
-		a.exam_season_str AS "examSeasonStr"
+		a.exam_pre_price AS "prePrice",
+		a.exam_normal_price AS "normalPrice",
+		a.exam_post_price AS "postPrice"
 	</sql>
 	
 	<sql id="webExamSeasonJoins">
@@ -65,11 +77,23 @@
 		INSERT INTO tbl_exam_season(
 			exam_course_id,
 			exam_version_json,
-			exam_season_str
+			exam_season_str,
+			exam_pre_price,
+			exam_normal_price,
+			exam_post_price,
+			exam_pre_signup,
+			exam_signup,
+			exam_post_signup
 		) VALUES (
 			#{examCourseId},
 			#{examVersionJson},
-			#{examSeasonStr}
+			#{examSeasonStr},
+			#{prePrice},
+            #{normalPrice},
+            #{postPrice},
+            #{preSignup},
+            #{signUp},
+            #{postSignup}
 		)
 	</insert>
 	
@@ -84,7 +108,7 @@
 	
 	<delete id="delete">
 		DELETE FROM tbl_exam_season
-		WHERE exam_season_str = #{examSeasonStr}
+		WHERE exam_season_str = #{oldSeasonStr}
 	</delete>
 	
 </mapper>
