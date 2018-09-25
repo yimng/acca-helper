@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class UserCouponService {
@@ -22,5 +24,9 @@ public class UserCouponService {
         } else {
             userCouponMapper.insert(userCoupon);
         }
+    }
+
+    public int savebatch(List<UserCoupon> userCouponList) {
+        return userCouponMapper.insertList(userCouponList);
     }
 }

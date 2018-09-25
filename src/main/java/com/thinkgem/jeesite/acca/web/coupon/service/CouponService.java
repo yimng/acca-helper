@@ -92,6 +92,13 @@ public class CouponService {
     }
 
     @Transactional(readOnly = false)
+    public void update(Coupon coupon) {
+        Example example = new Example(Coupon.class);
+        Example.Criteria criteria1 = example.createCriteria().andEqualTo("id", coupon.getId());
+        couponMapper.updateByExampleSelective(coupon, example);
+    }
+
+    @Transactional(readOnly = false)
     public void save(Coupon coupon) {
         if (coupon.getId() == null) {
             Activity activity = new Activity();

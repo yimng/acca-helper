@@ -6,6 +6,15 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function() {
+            $("#isassign").click(function () {
+                if ($(this).is(':checked')) {
+                    $("#inputForm").attr("enctype", "multipart/form-data");
+                    $("#inputForm").attr("action", "${ctx}/web/coupon/saveimport");
+                } else {
+                    $("#inputForm").attr("enctype", "application/x-www-form-urlencoded");
+                    $("#inputForm").attr("action", "${ctx}/web/coupon/save");
+                }
+            })
             //$("#name").focus();
             $("#inputForm").validate({
                 rules: {
@@ -44,7 +53,7 @@
 </head>
 <body>
 
-<form:form id="inputForm" modelAttribute="coupon" action="${ctx}/web/coupon/save" method="post" class="form-horizontal">
+<form:form id="inputForm" modelAttribute="coupon" action="${ctx}/web/coupon/save" method="post" enctype="multipart/form-data" class="form-horizontal">
     <form:hidden path="id"/>
     <form:hidden path="couponType"/>
     <form:hidden path="assign" />
@@ -91,6 +100,9 @@
     <div class="control-group">
         <div class="controls assign">
             <input id="isassign" name="assign" type="checkbox"  <c:if test="${coupon.assign}">checked="checked"</c:if> />指定用户
+        </div>
+        <div class="controls assign">
+            <input type="file" name="file"></input>
         </div>
     </div>
 

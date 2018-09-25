@@ -37,6 +37,11 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
         <property name="basePackage" value="com.thinkgem.jeesite"/>
         <property name="annotationClass" value="com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao"/>
+		<property name="properties">
+			<value>
+				mappers=com.thinkgem.jeesite.common.persistence.BaseMapper
+			</value>
+		</property>
     </bean>
     
     <!-- 定义事务 -->
