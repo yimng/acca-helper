@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Controller
@@ -122,9 +123,10 @@ public class CouponController extends BaseController {
                             Cell cell = row.getCell(0);
                             String phone;
                             if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                                phone = cell.getStringCellValue();//数字类型
+                                phone = cell.getStringCellValue();
                             } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                phone = Double.toString(cell.getNumericCellValue());
+                                DecimalFormat df = new DecimalFormat("###########");
+                                phone = df.format(cell.getNumericCellValue());
                             } else {
                                 throw new RuntimeException("Invalid value in excel");
                             }
@@ -144,9 +146,13 @@ public class CouponController extends BaseController {
                     userCoupon.setDelFlag("0");
                     userCoupons.add(userCoupon);
                 }
-                userCouponService.savebatch(userCoupons);
-                coupon.setReceived(userCoupons.size());
-                couponService.update(coupon);
+                if (userCoupons.size() > 0) {
+                    for (UserCoupon userCoupon: userCoupons) {
+                        userCouponService.saveOrUpdate(userCoupon);
+                    }
+                    coupon.setReceived(userCoupons.size());
+                    couponService.update(coupon);
+                }
             }
         }
         addMessage(redirectAttributes, "保存Coupon成功");

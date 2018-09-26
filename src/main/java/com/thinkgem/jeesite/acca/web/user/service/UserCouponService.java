@@ -15,6 +15,7 @@ public class UserCouponService {
     @Autowired
     private UserCouponMapper userCouponMapper;
 
+    @Transactional(readOnly = false)
     public void saveOrUpdate(UserCoupon userCoupon) {
         if (userCoupon.getId() != null) {
             Example example = new Example(UserCoupon.class);
@@ -26,6 +27,7 @@ public class UserCouponService {
         }
     }
 
+    @Transactional(readOnly = false)
     public int savebatch(List<UserCoupon> userCouponList) {
         return userCouponMapper.insertList(userCouponList);
     }
