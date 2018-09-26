@@ -341,8 +341,6 @@ public class Coupon implements Serializable {
 
 
     @Transient
-    private Page page;
-    @Transient
     private String activityName;
     @Transient
     private boolean flag1;

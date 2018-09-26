@@ -30,6 +30,25 @@
         <property name="typeAliasesSuperType" value="com.thinkgem.jeesite.common.persistence.BaseEntity"/>
         <property name="mapperLocations" value="classpath:/mappings/**/*.xml"/>
 		<property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+		<property name="plugins">
+			<array>
+                <bean class="com.thinkgem.jeesite.common.persistence.interceptor.PaginationInterceptor" />
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<!-- 这里的几个配置主要演示如何使用，如果不理解，一定要去掉下面的配置 -->
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+							reasonable=true
+							supportMethodsArguments=true
+							params=count=countSql
+							autoRuntimeDialect=true
+						</value>
+					</property>
+				</bean>
+
+			</array>
+
+		</property>
     </bean>
     
     <!-- 扫描basePackage下所有以@MyBatisDao注解的接口 -->

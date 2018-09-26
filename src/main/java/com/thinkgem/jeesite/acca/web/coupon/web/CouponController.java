@@ -1,5 +1,6 @@
 package com.thinkgem.jeesite.acca.web.coupon.web;
 
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.acca.api.user.entity.AppAccaUser;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
@@ -66,9 +67,12 @@ public class CouponController extends BaseController {
 
     @RequiresPermissions("web:coupon:view")
     @RequestMapping(value = {"list", ""})
-    public String list(Coupon coupon, HttpServletRequest request, HttpServletResponse response, Model model) {
-        Page<Coupon> page = couponService.findPage(new Page<Coupon>(request, response), coupon);
+    public String list(Coupon coupon,Model model, @RequestParam(required = false, defaultValue = "1") int page,
+                       @RequestParam(required = false, defaultValue = "30") int rows) {
+        List<Coupon> coupos = couponService.findPage(coupon, page, rows);
+        model.addAttribute("pageInfo", new PageInfo<Coupon>(coupos));
         model.addAttribute("page", page);
+        model.addAttribute("rows", rows);
         return "web/coupon/couponList";
     }
 

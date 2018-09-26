@@ -1,5 +1,6 @@
 package com.thinkgem.jeesite.acca.web.coupon.service;
 
+import com.github.pagehelper.PageHelper;
 import com.thinkgem.jeesite.acca.web.content.dao.ActivityMapper;
 import com.thinkgem.jeesite.acca.web.content.entity.Activity;
 import com.thinkgem.jeesite.acca.web.coupon.dao.CouponMapper;
@@ -15,6 +16,7 @@ import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
@@ -56,8 +58,7 @@ public class CouponService {
         return couponMapper.select(coupon);
     }
 
-    public Page<Coupon> findPage(Page<Coupon> page, Coupon coupon) {
-        coupon.setPage(page);
+    public List<Coupon> findPage(Coupon coupon, int page, int rows) {
         Example example = new Example(Activity.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotEmpty(coupon.getActivityName())) {
@@ -66,9 +67,6 @@ public class CouponService {
         criteria.andGreaterThan("beginTime", coupon.getActivityStart());
         criteria.andLessThan("endTime", coupon.getActivityEnd());
         List<Activity> activities = activityMapper.selectByExample(example);
-        if (activities.size() == 0) {
-            return page;
-        }
         Map<Long, Activity> actMap = new HashMap<>();
         for (Activity act : activities) {
             actMap.put(act.getActivityId(), act);
@@ -77,6 +75,7 @@ public class CouponService {
         Example example1 = new Example(Coupon.class);
         Example.Criteria criteria1 = example1.createCriteria();
         criteria1.andIn("activityId", actMap.keySet());
+        PageHelper.startPage(page, rows);
         List<Coupon> coupons = couponMapper.selectByExample(example1);
         for (Coupon c : coupons) {
             Activity activity = actMap.get(c.getActivityId());
@@ -87,8 +86,7 @@ public class CouponService {
             c.setCreator(user.getName());
         }
 
-        page.setList(coupons);
-        return page;
+        return coupons;
     }
 
     @Transactional(readOnly = false)
