@@ -5,6 +5,7 @@ package com.thinkgem.jeesite.common.service;
 
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +62,8 @@ public abstract class CrudService<D extends CrudDao<T>, T extends DataEntity<T>>
 	 */
 	public Page<T> findPage(Page<T> page, T entity) {
 		entity.setPage(page);
+		page.setCount(dao.findList(entity).size());
+		PageHelper.startPage(page.getPageNo(), page.getPageSize());
 		page.setList(dao.findList(entity));
 		return page;
 	}
