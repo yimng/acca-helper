@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.acca.web.feedback.dao.QuestionPraiseMapper">
+  <resultMap id="BaseResultMap" type="com.thinkgem.jeesite.acca.web.feedback.entity.QuestionPraise">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="question_id" jdbcType="BIGINT" property="questionId" />
+    <result column="acca_user_id" jdbcType="BIGINT" property="accaUserId" />
+    <result column="praise_flag" jdbcType="SMALLINT" property="praiseFlag" />
+  </resultMap>
+</mapper>
