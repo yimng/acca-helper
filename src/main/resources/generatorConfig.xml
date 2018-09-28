@@ -36,7 +36,7 @@
         </javaTypeResolver>
 
         <!-- 数据表对应的model层  -->
-        <javaModelGenerator targetPackage="com.thinkgem.jeesite.acca.web.content.entity"
+        <javaModelGenerator targetPackage="com.thinkgem.jeesite.acca.web.feedback.entity"
                             targetProject="src/main/java">
         </javaModelGenerator>
 
@@ -46,15 +46,16 @@
 
         <!-- mybatis3中的mapper接口 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.thinkgem.jeesite.acca.web.content.dao"
+                             targetPackage="com.thinkgem.jeesite.acca.web.feedback.dao"
                              targetProject="src/main/java">
         </javaClientGenerator>
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-        <table tableName="tbl_activity" domainObjectName="Activity">
+        <table tableName="tbl_question_category" domainObjectName="QuestionCategory">
             <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
-            <generatedKey column="activity_id" sqlStatement="JDBC"/>
+            <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
+
 
     </context>
 </generatorConfiguration>

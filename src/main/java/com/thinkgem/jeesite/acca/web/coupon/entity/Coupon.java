@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.acca.web.coupon.entity;
 
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.persistence.PageInfo;
 import lombok.Data;
 
 import javax.persistence.*;

@@ -1,18 +1,14 @@
 package com.thinkgem.jeesite.acca.web.coupon.web;
 
-import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.acca.api.user.entity.AppAccaUser;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
 import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
 import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
-import com.thinkgem.jeesite.acca.web.exam.entity.WebExamCourse;
-import com.thinkgem.jeesite.acca.web.feedback.entity.WebFeedback;
 import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
 import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.config.Global;
-import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.web.BaseController;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -31,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -67,12 +61,10 @@ public class CouponController extends BaseController {
 
     @RequiresPermissions("web:coupon:view")
     @RequestMapping(value = {"list", ""})
-    public String list(Coupon coupon,Model model, @RequestParam(required = false, defaultValue = "1") int page,
-                       @RequestParam(required = false, defaultValue = "30") int rows) {
-        List<Coupon> coupos = couponService.findPage(coupon, page, rows);
-        model.addAttribute("pageInfo", new PageInfo<Coupon>(coupos));
-        model.addAttribute("page", page);
-        model.addAttribute("rows", rows);
+    public String list(Coupon coupon,Model model, @RequestParam(required = false, defaultValue = "1") int pageNo,
+                       @RequestParam(required = false, defaultValue = "3") int pageSize) {
+        PageInfo<Coupon> pageinfo = couponService.findPage(coupon, pageNo, pageSize);
+        model.addAttribute("page", pageinfo);
         return "web/coupon/couponList";
     }
 

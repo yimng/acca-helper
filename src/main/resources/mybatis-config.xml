@@ -43,8 +43,12 @@
 	<typeAliases>
 		<typeAlias alias="Page" type="com.thinkgem.jeesite.common.persistence.Page" /><!--分页  -->
 	</typeAliases>
-	
-	<!-- 插件配置 -->
+    <databaseIdProvider type="DB_VENDOR">
+        <property name="MySQL" value="mysql"/>
+        <property name="Oracle" value="oracle" />
+    </databaseIdProvider>
+
+    <!-- 插件配置 -->
 	<!--<plugins>-->
 		<!--<plugin interceptor="com.github.pagehelper.PageInterceptor">-->
 			<!--&lt;!&ndash; 使用下面的方式配置参数，后面会有所有的参数介绍 &ndash;&gt;-->

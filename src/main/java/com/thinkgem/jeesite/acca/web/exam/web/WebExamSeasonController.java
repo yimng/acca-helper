@@ -58,7 +58,7 @@ public class WebExamSeasonController extends BaseController {
 	@RequiresPermissions("exam:webExamSeason:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(WebExamSeason webExamSeason, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<WebExamSeason> page = webExamSeasonService.findPage(new Page<WebExamSeason>(request, response,-1), webExamSeason); 
+		Page<WebExamSeason> page = webExamSeasonService.findPage(new Page<WebExamSeason>(request, response), webExamSeason);
 		logger.info("list:{}",page.getList());
 		model.addAttribute("page", page);
 		return "web/exam/webExamSeasonList";

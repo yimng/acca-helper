@@ -5,36 +5,34 @@ import com.thinkgem.jeesite.acca.web.content.dao.ActivityMapper;
 import com.thinkgem.jeesite.acca.web.content.entity.Activity;
 import com.thinkgem.jeesite.acca.web.coupon.dao.CouponMapper;
 import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
-import com.thinkgem.jeesite.acca.web.user.dao.WebAccaUserDao;
-import com.thinkgem.jeesite.acca.web.user.entity.WebAccaUser;
-import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.persistence.PageInfo;
+import com.thinkgem.jeesite.common.service.MyService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
-import com.thinkgem.jeesite.modules.act.entity.Act;
 import com.thinkgem.jeesite.modules.sys.dao.UserDao;
 import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
-public class CouponService {
-    @Autowired
-    private CouponMapper couponMapper;
+public class CouponService extends MyService<CouponMapper, Coupon> {
+
     @Autowired
     private ActivityMapper activityMapper;
     @Autowired
     private UserDao userDao;
 
     public Coupon get(Long id) {
-        Coupon coupon = couponMapper.selectByPrimaryKey(id);
+        Coupon coupon = dao.selectByPrimaryKey(id);
         Activity activity = activityMapper.selectByPrimaryKey(coupon.getActivityId());
         coupon.setActivityStart(activity.getBeginTime());
         coupon.setActivityEnd(activity.getEndTime());
@@ -49,16 +47,18 @@ public class CouponService {
                 .where(Sqls.custom().andEqualTo("id", id))
                 .forUpdate()
                 .build();
-        List<Coupon> coupons = couponMapper.selectByExample(example);
+        List<Coupon> coupons = dao.selectByExample(example);
         return coupons.get(0).getNumber() - coupons.get(0).getReceived();
     }
 
 
+    @Override
     public List<Coupon> findList(Coupon coupon) {
-        return couponMapper.select(coupon);
+        return dao.select(coupon);
     }
 
-    public List<Coupon> findPage(Coupon coupon, int page, int rows) {
+    @Override
+    public PageInfo<Coupon> findPage(Coupon coupon, int pageNum, int pageSize) {
         Example example = new Example(Activity.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotEmpty(coupon.getActivityName())) {
@@ -75,8 +75,9 @@ public class CouponService {
         Example example1 = new Example(Coupon.class);
         Example.Criteria criteria1 = example1.createCriteria();
         criteria1.andIn("activityId", actMap.keySet());
-        PageHelper.startPage(page, rows);
-        List<Coupon> coupons = couponMapper.selectByExample(example1);
+        PageHelper.startPage(pageNum, pageSize);
+        List<Coupon> coupons = dao.selectByExample(example1);
+
         for (Coupon c : coupons) {
             Activity activity = actMap.get(c.getActivityId());
             c.setActivityName(activity.getActivityName());
@@ -86,17 +87,17 @@ public class CouponService {
             c.setCreator(user.getName());
         }
 
-        return coupons;
+        return new PageInfo<Coupon>(coupons);
     }
 
     @Transactional(readOnly = false)
     public void update(Coupon coupon) {
         Example example = new Example(Coupon.class);
         Example.Criteria criteria1 = example.createCriteria().andEqualTo("id", coupon.getId());
-        couponMapper.updateByExampleSelective(coupon, example);
+        dao.updateByExampleSelective(coupon, example);
     }
 
-    @Transactional(readOnly = false)
+    @Override
     public void save(Coupon coupon) {
         if (coupon.getId() == null) {
             Activity activity = new Activity();
@@ -112,7 +113,7 @@ public class CouponService {
             if (StringUtils.isNotEmpty(user.getId())) {
                 coupon.setCreateBy(user.getId());
             }
-            couponMapper.insert(coupon);
+            dao.insert(coupon);
         } else {
             Activity activity = activityMapper.selectByPrimaryKey(coupon.getActivityId());
             activity.setActivityName(coupon.getActivityName());
@@ -125,14 +126,14 @@ public class CouponService {
 
             Example example1 = new Example(Coupon.class);
             Example.Criteria criteria1 = example1.createCriteria().andEqualTo("id", coupon.getId());
-            couponMapper.updateByExampleSelective(coupon, example1);
+            dao.updateByExampleSelective(coupon, example1);
         }
 
     }
 
-    @Transactional(readOnly = false)
+    @Override
     public void delete(Coupon coupon) {
-        couponMapper.delete(coupon);
+        dao.delete(coupon);
     }
 
     public List<Coupon> findActiveCoupon() {
@@ -149,7 +150,7 @@ public class CouponService {
         Example example1 = new Example(Coupon.class);
         Example.Criteria criteria1 = example1.createCriteria();
         criteria1.andIn("activityId", actMap.keySet());
-        List<Coupon> coupons = couponMapper.selectByExample(example1);
+        List<Coupon> coupons = dao.selectByExample(example1);
         for (Coupon c : coupons) {
             Activity activity = actMap.get(c.getActivityId());
             c.setActivityName(activity.getActivityName());
@@ -161,4 +162,5 @@ public class CouponService {
 
         return coupons;
     }
+
 }

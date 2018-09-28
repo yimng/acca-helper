@@ -9,6 +9,12 @@
         $(document).ready(function () {
 
         });
+        function page(n,s){
+            $("#pageNo").val(n);
+            $("#pageSize").val(s);
+            $("#searchForm").submit();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -16,6 +22,8 @@
 <form:form id="searchForm" modelAttribute="coupon" action="${ctx}/web/coupon/" method="post"
            class="breadcrumb form-search">
     <input id="type" name="type" type="hidden" value="1"/>
+    <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
+    <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <ul class="ul-form">
         <li><label>发布时间：</label>
             <input id="start" name="activityStart" type="text" readonly="readonly" maxlength="20"
@@ -72,7 +80,7 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${pageInfo.list}" var="coupon" varStatus="index">
+    <c:forEach items="${page.list}" var="coupon" varStatus="index">
         <tr>
             <td>
                     ${index.index}
@@ -119,31 +127,6 @@
     </c:forEach>
     </tbody>
 </table>
-<div class="pagination">
-    <table>
-        <tr>
-            <c:if test="${pageInfo.hasPreviousPage}">
-                <td>
-                    <a href="${ctx}/web/coupon/list?page=${pageInfo.prePage}&rows=${pageInfo.pageSize}&countryname=${queryParam.countryname}&countrycode=${queryParam.countrycode}">前一页</a>
-                </td>
-            </c:if>
-            <c:forEach items="${pageInfo.navigatepageNums}" var="nav">
-                <c:if test="${nav == pageInfo.pageNum}">
-                    <td style="font-weight: bold;">${nav}</td>
-                </c:if>
-                <c:if test="${nav != pageInfo.pageNum}">
-                    <td>
-                        <a href="${ctx}/web/coupon/list?page=${nav}&rows=${pageInfo.pageSize}&countryname=${queryParam.countryname}&countrycode=${queryParam.countrycode}">${nav}</a>
-                    </td>
-                </c:if>
-            </c:forEach>
-            <c:if test="${pageInfo.hasNextPage}">
-                <td>
-                    <a href="${ctx}/web/coupon/list?page=${pageInfo.nextPage}&rows=${pageInfo.pageSize}&countryname=${queryParam.countryname}&countrycode=${queryParam.countrycode}">下一页</a>
-                </td>
-            </c:if>
-        </tr>
-    </table>
-</div>
+<div class="pagination">${page}</div>
 </body>
 </html>
