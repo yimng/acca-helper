@@ -31,7 +31,7 @@
 			a.exam_id = #{id}
 		</where>
 	</select>
-	
+
 	<select id="get" resultType="WebExam">
 		select <include refid="columns"/> from tbl_exam a
 		<where>
@@ -39,10 +39,10 @@
 			and a.exam_id = #{examId}
 		</where>
 	</select>
-	
+
 	<select id="selectCoursesByExamId" resultType="SmallCourse">
 		select a.exam_course_id examCourseId,b.course course,a.exam_version_json examVersionJson
-		from tbl_exam_course_relation a 
+		from tbl_exam_course_relation a
 		left join tbl_exam_course b on a.exam_course_id = b.exam_course_id and b.del_flag = #{DEL_FLAG_NORMAL}
 		<where>
 			a.exam_id = #{examId}
@@ -96,7 +96,7 @@
 		<where>
 			a.del_flag = #{delFlag}
 			<if test="list != null">
-				and a.exam_id in 
+				and a.exam_id in
 				<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
 					${item.examId}
 				</foreach>
@@ -104,8 +104,8 @@
 		</where>
 		group by a.exam_id
 	</select>
-	
-	
+
+
 	<resultMap type="WebExam" id="courseResult">
 		<id column="examId" property="examId" />
 		<collection property="courses" ofType="SmallCourse">
@@ -114,7 +114,7 @@
 			<result column="examVersionJson" property="examVersionJson" />
 		</collection>
 	</resultMap>
-	
+
 	<select id="findCourseByIds" parameterType="List" resultMap="courseResult">
 		select a.exam_id examId,a.exam_version_json examVersionJson,b.exam_course_id examCourseId,b.course course
 		from tbl_exam_course_relation a left join tbl_exam_course b on a.exam_course_id = b.exam_course_id
@@ -125,9 +125,9 @@
 			</foreach>
 		</where>
 	</select>
-	
+
 	<select id="selectCitysByType" resultType="WebSmallCity">
-		select a.id openCityId,a.city_id examCityId, a.exam_type examType, b.area_name cityName 
+		select a.id openCityId,a.city_id examCityId, a.exam_type examType, b.area_name cityName
 		from tbl_exam_open_city a left join tbl_area b on a.city_id = b.id
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
@@ -140,7 +140,7 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<select id="selectPlaceByType" resultType="WebExamPlace">
 		select a.exam_place_id examPlaceId, a.exam_place_name examPlaceName, a.exam_city_id examCityId from tbl_exam_place a
 		<where>
@@ -163,12 +163,12 @@
 			<result column="examVersionName" property="examVersionName" />
 		</collection>
 	</resultMap>
-	
+
 	<select id="selectCoursesByType" resultMap="smallCourseResult">
-		select 
-		a.exam_course_id examCourseId, a.course course, 
-		c.exam_version_id examVersionId, c.name examVersionName 
-		from tbl_exam_course a 
+		select
+		a.exam_course_id examCourseId, a.course course,
+		c.exam_version_id examVersionId, c.name examVersionName
+		from tbl_exam_course a
 		left join tbl_exam_course_version b on a.exam_course_id = b.exam_course_id
 		left join tbl_exam_version c on b.exam_version_id = c.exam_version_id
 		<where>
@@ -181,7 +181,7 @@
 		</where>
 		order by a.exam_course_id asc
 	</select>
-	
+
 	<select id="countSignupNum" resultType="WebExam">
 		select count(a.exam_signup_id) signupNum, a.exam_signup_status examSignupStatus from tbl_exam_signup a
 		<where>
@@ -191,10 +191,10 @@
 		group by a.exam_signup_status
 		order by a.exam_signup_status
 	</select>
-	
+
 	<select id="getDayList" parameterType="Map" resultType="WebExam">
-		select count(b.exam_signup_id) signupNum, <include refid="columns"/> from tbl_exam a 
-		left join tbl_exam_signup b on a.exam_id = b.exam_id 
+		select count(b.exam_signup_id) signupNum, <include refid="columns"/> from tbl_exam a
+		left join tbl_exam_signup b on a.exam_id = b.exam_id
 		<where>
 			a.del_flag = #{delFlag}
 			AND b.exam_signup_status = #{examSignupStatus}
@@ -211,10 +211,10 @@
 		</where>
 		group by a.exam_id
 	</select>
-	
-	
+
+
 	<select id="selectExamByTypeAndSeason" resultType="WebExam">
-		select <include refid="columns" />, b.exam_course_id examCourseId from tbl_exam a 
+		select <include refid="columns" />, b.exam_course_id examCourseId from tbl_exam a
 		left join tbl_exam_course_relation b on a.exam_id = b.exam_id
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
@@ -230,11 +230,11 @@
 			</if>
 		</where>
 	</select>
-	
+
 	<select id="selectSeasons" resultType="WebExam">
 		select distinct a.exam_season_str from tbl_exam_season a
 	</select>
-	
+
 	<insert id="insert" useGeneratedKeys="true" keyProperty="examId">
 		INSERT INTO tbl_exam(
 			del_flag,
@@ -270,7 +270,7 @@
 			#{usedSeats}
 		)
 	</insert>
-	
+
 	<insert id="insertVersion">
 		insert into tbl_exam_course_relation (
 			exam_id,exam_course_id,exam_version_json
@@ -278,20 +278,20 @@
 			#{examId},#{examCourseId},#{examVersionJson}
 		)
 	</insert>
-	
+
 	<delete id="deleteVersion">
 		delete from tbl_exam_course_relation where exam_id = #{examId}
 	</delete>
-	
+
 	<delete id="deleteVersionByIds" parameterType="List">
 		delete from tbl_exam_course_relation where exam_id in
 		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
 			${item.examId}
 		</foreach>
 	</delete>
-	
+
 	<update id="update">
-		UPDATE tbl_exam SET 	
+		UPDATE tbl_exam SET
 			update_by = #{updateBy.id},
 			update_date = #{updateDate}
 			<if test="examType != null and examType !=''">
@@ -310,11 +310,11 @@
 			</if>
 		WHERE exam_id = #{examId}
 	</update>
-	
+
 	<update id="updateSeat">
 		UPDATE tbl_exam SET total_seats = #{totalSeats} where exam_id = #{examId}
 	</update>
-	
+
 	<update id="delete">
 		update tbl_exam set del_flag = #{DEL_FLAG_DELETE} where exam_id = #{examId}
 	</update>

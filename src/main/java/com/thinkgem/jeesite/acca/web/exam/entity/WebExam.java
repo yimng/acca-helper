@@ -9,6 +9,7 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 import com.thinkgem.jeesite.freetek.util.TimeUtils;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +38,7 @@ public class WebExam extends DataEntity<WebExam> {
 	private Integer examFlag;
 	private Long signupNum;
 	private List<SmallCourse> courses;
-	private String timeStr;
+//	private String timeStr;
 	private String courseStr;
 	private Integer examSignupStatus;
 	private Long examCourseId;
@@ -218,13 +219,14 @@ public class WebExam extends DataEntity<WebExam> {
 		this.pen = pen;
 	}
 
-	public String getTimeStr() {
-		return TimeUtils.DateToStr(this.examStartTime, TimeUtils.dateFormat1)+"-"+TimeUtils.DateToStr(this.examEndTime, TimeUtils.dateFormat2);
-	}
-
-	public void setTimeStr(String timeStr) {
-		this.timeStr = timeStr;
-	}
+//	public String getTimeStr() {
+//		this.timeStr = TimeUtils.DateToStr(this.examStartTime, TimeUtils.dateFormat1)+"-"+TimeUtils.DateToStr(this.examEndTime, TimeUtils.dateFormat2);
+//		return this.timeStr;
+//	}
+//
+//	public void setTimeStr(String timeStr) {
+//		this.timeStr = timeStr;
+//	}
 
 	public String getCourseStr() {
 		if(this.courses != null){

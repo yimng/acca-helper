@@ -66,7 +66,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label">考试时间:</label>
-				<div class="controls"><label class="lbl">${exam.timeStr}</label></div>
+				<div class="controls"><label class="lbl"><fmt:formatDate value="${exam.examStartTime}" pattern="yyyy-MM-dd HH:mm" />-<fmt:formatDate value="${exam.examEndTime}" pattern="HH:mm" /></label></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">考试科目:</label>

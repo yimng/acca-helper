@@ -74,7 +74,7 @@
 			<tr>
 				<td>${exam.examCityName}</td>
 				<td>${exam.examPlaceName}</td>
-				<td>${exam.timeStr}</td>
+				<td><fmt:formatDate value="${exam.examStartTime}" pattern="yyyy-MM-dd HH:mm" />-<fmt:formatDate value="${exam.examEndTime}" pattern="HH:mm" /></td>
 				<td>${exam.courseStr}</td>
 				<c:if test="${webExam.examType == webExam.self}">
 					<td>${exam.totalSeats - exam.usedSeats}</td>

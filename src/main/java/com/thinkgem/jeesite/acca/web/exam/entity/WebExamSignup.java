@@ -64,7 +64,7 @@ public class WebExamSignup extends DataEntity<WebExamSignup> {
 	private Long examPlaceId;		// exam_place_id
 	
 	private String orderStatusName;
-	private String timeStr;
+//	private String timeStr;
 	
 	private FileInfo image;
 	private String imageStr;
@@ -396,13 +396,13 @@ public class WebExamSignup extends DataEntity<WebExamSignup> {
 		this.orderStatusName = orderStatusName;
 	}
 
-	public String getTimeStr() {
-		return TimeUtils.DateToStr(this.examStartTime, TimeUtils.dateFormat1)+"-"+TimeUtils.DateToStr(this.examEndTime, TimeUtils.dateFormat2);
-	}
-
-	public void setTimeStr(String timeStr) {
-		this.timeStr = timeStr;
-	}
+//	public String getTimeStr() {
+//		return TimeUtils.DateToStr(this.examStartTime, TimeUtils.dateFormat1)+"-"+TimeUtils.DateToStr(this.examEndTime, TimeUtils.dateFormat2);
+//	}
+//
+//	public void setTimeStr(String timeStr) {
+//		this.timeStr = timeStr;
+//	}
 
 	public FileInfo getImage() {
 		return image;
