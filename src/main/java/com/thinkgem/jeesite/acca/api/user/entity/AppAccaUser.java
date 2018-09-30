@@ -33,6 +33,8 @@ public class AppAccaUser extends DataEntity<AppAccaUser> {
 	private Integer type;		// 用户类型：1普通用户，2学习达人，3名师
 	@ApiModelProperty(value = "用户访问token")
 	private String userAccessToken;		// 用户访问token
+	@ApiModelProperty(value = "用户登录password")
+	private String password;
 	@ApiModelProperty(value = "用户状态：1正常，2冻结")
 	private Integer userStatus;		// 账号状态：1正常，2冻结
 	@JsonIgnore
@@ -349,5 +351,13 @@ public class AppAccaUser extends DataEntity<AppAccaUser> {
 
 	public void setEditable(int editable) {
 		this.editable = editable;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

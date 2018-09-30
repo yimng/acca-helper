@@ -18,10 +18,7 @@ public class UserCouponService {
     @Transactional(readOnly = false)
     public void saveOrUpdate(UserCoupon userCoupon) {
         if (userCoupon.getId() != null) {
-            Example example = new Example(UserCoupon.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("id", userCoupon.getId());
-            userCouponMapper.updateByExampleSelective(userCoupon, example);
+            userCouponMapper.updateByPrimaryKeySelective(userCoupon);
         } else {
             userCouponMapper.insert(userCoupon);
         }

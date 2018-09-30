@@ -114,6 +114,17 @@ public class AppAccaUserController extends BaseController {
 		
 		return appAccaUserService.login(req.getPhone(),req.getSmsVcode(),req.getDeviceId());
 	}
+
+    @ApiOperation(value = "用户名密码登陆",  notes = "用户名密码登陆")
+    @RequestMapping(value = "loginWithPassword.do",method=RequestMethod.POST)
+    public @ResponseBody BaseObjResponse<AppAccaUser> loginWithPassword(@RequestBody LoginWithPasswordReq req){
+
+        if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
+            return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+        }
+
+        return appAccaUserService.loginWithPassword(req.getPhone(),req.getPassword(),req.getDeviceId());
+    }
 	
 	@ApiOperation(value = "获取用户信息",  notes = "获取用户信息")
 	@RequestMapping(value = "getUserInfo.do",method=RequestMethod.POST)
@@ -123,6 +134,15 @@ public class AppAccaUserController extends BaseController {
 		}
 		
 		return appAccaUserService.getUserInfo(req.getAppUserId());
+	}
+
+	@ApiOperation(value = "判断用户是否设置了密码", notes = "判断用户是否设置了密码")
+	@RequestMapping(value = "getUserPassword.do", method=RequestMethod.POST)
+	public @ResponseBody BaseObjResponse<Boolean> getUserPassword(@RequestBody BaseRequest req) {
+		if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
+			return new BaseObjResponse<Boolean>(req.isCorrectParams());
+		}
+		return appAccaUserService.getPassword(req.getAppUserId());
 	}
 	
 	@ApiOperation(value = "修改用户信息",  notes = "修改用户信息")
@@ -134,6 +154,26 @@ public class AppAccaUserController extends BaseController {
 		
 		return appAccaUserService.updateUserInfo(req);
 	}
+
+    @ApiOperation(value = "修改用户登录密码",  notes = "修改用户登录密码")
+    @RequestMapping(value = "updateUserPassword.do",method=RequestMethod.POST)
+    public @ResponseBody BaseObjResponse<AppAccaUser> updateUserPassword(@RequestBody UpdateUserPasswordReq req){
+        if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
+            return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+        }
+
+        return appAccaUserService.updateUserPassword(req);
+    }
+
+    @ApiOperation(value = "修改用户登录手机号",  notes = "修改用户登录手机号")
+    @RequestMapping(value = "updateUserPhone.do",method=RequestMethod.POST)
+    public @ResponseBody BaseObjResponse<AppAccaUser> updateUserPhone(@RequestBody UpdateUserPhoneReq req){
+        if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
+            return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+        }
+
+        return appAccaUserService.updateUserPhone(req);
+    }
 	
 	@ApiOperation(value = "获取acca俱乐部列表",  notes = "获取acca俱乐部列表")
 	@RequestMapping(value = "getAccaClubList.do",method=RequestMethod.POST)

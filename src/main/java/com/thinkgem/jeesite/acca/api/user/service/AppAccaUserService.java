@@ -8,9 +8,7 @@ import com.thinkgem.jeesite.acca.api.article.dao.AppArticleDao;
 import com.thinkgem.jeesite.acca.api.article.entity.AppArticle;
 import com.thinkgem.jeesite.acca.api.exam.dao.AppExamSignupDao;
 import com.thinkgem.jeesite.acca.api.exam.entity.AppExamSignup;
-import com.thinkgem.jeesite.acca.api.model.request.FeedbackReq;
-import com.thinkgem.jeesite.acca.api.model.request.UpdateUserInfoReq;
-import com.thinkgem.jeesite.acca.api.model.request.UpdateUserLocationReq;
+import com.thinkgem.jeesite.acca.api.model.request.*;
 import com.thinkgem.jeesite.acca.api.model.response.AccaConfInfo;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.api.order.dao.AppOrderDao;
@@ -30,6 +28,7 @@ import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.*;
 import com.thinkgem.jeesite.freetek.file.entity.FileInfo;
 import com.thinkgem.jeesite.freetek.util.DateTimeUtils;
+import com.thinkgem.jeesite.modules.sys.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -160,16 +159,51 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 		return new BaseObjResponse<AppAccaUser>(accaUser);
 	}
 
+    @Transactional(readOnly = false)
+    public BaseObjResponse<AppAccaUser> loginWithPassword(String phone, String password, String deviceId) {
+
+        // 是否是注册用户
+        AppAccaUser accaUser = dao.getAccaUserByPhone(phone);
+
+        if(accaUser == null){
+            return new BaseObjResponse<AppAccaUser>(RespConstants.USER_NONEXIST);
+        }else{
+            //如果存在，表示已经注册过账号
+            if(accaUser.getUserStatus()==Constants.AccaUserStatus.frozen){
+                logger.info("login，账号被冻结：{},{}", phone, password);
+                return new BaseObjResponse<AppAccaUser>(RespConstants.USER_RREEZED);
+            }
+            // 密码是否正确
+            if (!checkPassword(accaUser, password)) {
+                logger.info("login，密码错误：{},{}", phone, password);
+                return new BaseObjResponse<AppAccaUser>(RespConstants.SMS_VCODE_INCORRECT);
+            }
+            accaUser.setLoginDate(new Date());
+            accaUser.setDeviceId(deviceId);
+            dao.update(accaUser);
+        }
+
+        accaUser = dao.getAccaUserByPhone(phone);
+        logger.info("accaUser:{}",accaUser);
+        return new BaseObjResponse<AppAccaUser>(accaUser);
+    }
+
+    private boolean checkPassword(AppAccaUser accaUser, String password) {
+	    String str = accaUser.getPassword();
+	    return SystemService.validatePassword(password, str);
+    }
+
     public void publishCoupon(String phone) {
         //如果做活动期间被邀请，给用户分配代金券
         List<Coupon> activeList = couponService.findActiveCoupon();
         for(Coupon coupon : activeList) {
+            //新注册用户
             if (coupon.getFlag1()) {
                 UserCoupon userCoupon = new UserCoupon();
                 userCoupon.setUserId(getAccaUserByPhone(phone).getAccaUserId());
                 userCoupon.setCouponId(coupon.getId());
                 userCouponService.saveOrUpdate(userCoupon);
-            } else if (coupon.getFlag3() || coupon.getFlag4()) {
+            } else if (coupon.getFlag3() || coupon.getFlag4()) { //邀请用户和被邀请用户
                 List<Invite> invites = inviteService.getAppInvitesByPhoneAndInviteTime(phone,
                         coupon.getActivityStart(), coupon.getActivityEnd(), coupon.getId());
                 for (Invite invite : invites) {
@@ -225,6 +259,14 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 		return new BaseObjResponse<AppAccaUser>(accaUser);
 	}
 
+	public BaseObjResponse<Boolean> getPassword(Long appUserId) {
+		AppAccaUser accaUser = this.get(new AppAccaUser(appUserId));
+		if (accaUser.getPassword() != null) {
+			return new BaseObjResponse<Boolean>(true);
+		}
+		return new BaseObjResponse<>(false);
+	}
+
 	@Transactional(readOnly = false)
 	public BaseObjResponse<AppAccaUser> updateUserInfo(UpdateUserInfoReq req) {
 		
@@ -246,6 +288,29 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 		
 		return this.getUserInfo(req.getAppUserId());
 	}
+
+	@Transactional(readOnly = false)
+	public BaseObjResponse<AppAccaUser> updateUserPassword(UpdateUserPasswordReq req) {
+		AppAccaUser accaUser = new AppAccaUser();
+		accaUser.setAccaUserId(req.getAppUserId());
+        String password = SystemService.entryptPassword(req.getPassword());
+        accaUser.setPassword(password);
+		accaUser.setUpdateDate(new Date());
+		dao.update(accaUser);
+
+		return this.getUserInfo(req.getAppUserId());
+	}
+
+	@Transactional(readOnly = false)
+    public BaseObjResponse<AppAccaUser> updateUserPhone(UpdateUserPhoneReq req) {
+	    AppAccaUser accaUser = new AppAccaUser();
+	    accaUser.setAccaUserId(req.getAppUserId());
+	    accaUser.setPhone(req.getPhone());
+	    accaUser.setUpdateDate(new Date());
+	    dao.update(accaUser);
+
+	    return this.getUserInfo(req.getAppUserId());
+    }
 	
 	public BasePageResponse<AppAccaClub> getAccaClubList(BaseRequest req) {
 		
