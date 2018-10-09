@@ -1,10 +1,12 @@
 package com.thinkgem.jeesite.acca.web.user.service;
 
+import com.github.pagehelper.PageHelper;
 import com.thinkgem.jeesite.acca.api.model.request.InviteReq;
 import com.thinkgem.jeesite.acca.web.user.dao.InviteMapper;
 import com.thinkgem.jeesite.acca.web.user.entity.Invite;
 import com.thinkgem.jeesite.acca.web.user.entity.InviteRank;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
@@ -32,7 +34,7 @@ public class InviteService {
 //        return super.findList(invite);
 //    }
 //
-    public Page<Invite> findPage(Page<Invite> page, Invite invite) {
+    public PageInfo<Invite> findPage(Invite invite, int pageNo, int pageSize) {
         Example example = new Example(Invite.class);
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(invite.getInviterPhone())) {
@@ -61,9 +63,9 @@ public class InviteService {
             }
 
         }
+        PageHelper.startPage(pageNo,pageSize);
         List<Invite> invites = inviteMapper.selectByExample(example);
-        page.setList(invites);
-        return page;
+        return new PageInfo<Invite>(invites);
     }
 //
 //    @Transactional(readOnly = false)

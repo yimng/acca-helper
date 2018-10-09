@@ -24,19 +24,22 @@
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <ul class="ul-form">
         <li><label>发起时间：</label>
-            <input id="start" name="inviteStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+            <form:input id="start" path="inviteStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
             -
-            <input id="end" name="inviteEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+            <form:input id="end" path="inviteEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
         </li>
         <li><label>邀请状态：</label>
-            <form:select path="inviteStatus" class="input-medium">
-                <form:options items="${status}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+            <form:select path="inviteStatus">
+                <option value="">邀请状态</option>
+                <option value="1">邀请成功</option>
+                <option value="0">受邀中</option>
+                <option value="2">邀请失败</option>
             </form:select>
         </li>
         <li>
-            <label>邀请人手机号:</label>
+            <label>邀请人手机:</label>
             <form:input path="inviterPhone" htmlEscape="false" maxlength="11" class="input-medium" />
         </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="搜索"/></li>

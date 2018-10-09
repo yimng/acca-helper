@@ -5,6 +5,7 @@ import com.thinkgem.jeesite.acca.web.user.entity.Invite;
 import com.thinkgem.jeesite.acca.web.user.entity.InviteRank;
 import com.thinkgem.jeesite.acca.web.user.service.InviteService;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -43,11 +44,12 @@ public class InviteController extends BaseController {
 
     @RequiresPermissions("user:invite:view")
     @RequestMapping(value = {"list", ""})
-    public String list(Invite invite,
-                       HttpServletRequest request, HttpServletResponse response, Model model) {
-        Page<Invite> page = inviteService.findPage(new Page<Invite>(request, response), invite);
+    public String list(Invite invite, Model model, @RequestParam(required = false, defaultValue = "1") int pageNo,
+                       @RequestParam(required = false, defaultValue = "3") int pageSize) {
+        PageInfo<Invite> page = inviteService.findPage(invite, pageNo, pageSize);
 
         model.addAttribute("page", page);
+        model.addAttribute("invite", invite);
 //        Map<String, String> result = new HashMap<String, String>();
 //        for (Invite.InviteStatus s : Invite.InviteStatus.values()) {
 //            result.put(s.getShortName(), s.getFullName());
