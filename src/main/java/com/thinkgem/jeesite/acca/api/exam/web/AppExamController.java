@@ -9,6 +9,7 @@ import com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfCityTiny;
 import com.thinkgem.jeesite.acca.api.exam.entity.AppOfficialExamSignup;
 import com.thinkgem.jeesite.acca.api.exam.service.AppExamService;
 import com.thinkgem.jeesite.acca.api.model.request.*;
+import com.thinkgem.jeesite.acca.api.model.response.GetSelfExamCartGroupByPlaceResp;
 import com.thinkgem.jeesite.acca.api.model.response.GetSelfExamCartResp;
 import com.thinkgem.jeesite.acca.api.model.response.GetSelfOfficialExamNameResp;
 import com.thinkgem.jeesite.acca.api.model.response.SubmitExamRegisterResp;
@@ -135,6 +136,18 @@ public class AppExamController extends BaseController {
 		}
 		
 		return appExamService.getSelfExamCart(req.getAppUser());
+	}
+
+	@ApiOperation(value = "F1-F4考试：已经添加购物车中的按考点分组的考试列表", notes = "已经添加购物车中的按考点分组的考试列表")
+	@RequestMapping(value = "getSelfExamCartGroupByPlace.do" ,method=RequestMethod.POST)
+	public @ResponseBody GetSelfExamCartGroupByPlaceResp getSelfExamCartGroupByPlaceId(@RequestBody BaseRequest req) {
+
+		int respCode = req.isCorrectParams();
+		if(respCode!=RespConstants.GLOBAL_SUCCESS){
+			return new GetSelfExamCartGroupByPlaceResp(respCode);
+		}
+
+		return appExamService.getSelfExamCartByPlace(req.getAppUser());
 	}
 	
 	@ApiOperation(value = "F1-F4考试：报名/添加考试到购物车中", notes = "F1-F4考试：报名/添加考试到购物车中")

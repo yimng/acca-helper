@@ -91,6 +91,7 @@ public class InviteService {
         invite.setInviteePhone(invitereq.getInviteePhone());
         invite.setCouponId(invitereq.getCouponId());
         invite.setInviteTime(new Date());
+        invite.setDelFlag("0");
         inviteMapper.insert(invite);
         BaseResponse resp = new BaseResponse(RespConstants.GLOBAL_SUCCESS);
         return resp;

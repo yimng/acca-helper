@@ -9,9 +9,13 @@ import com.thinkgem.jeesite.acca.api.order.entity.SmallOrder;
 import com.thinkgem.jeesite.acca.api.order.service.AppOffiOrderService;
 import com.thinkgem.jeesite.acca.api.plan.service.AppUserLearningPlanService;
 import com.thinkgem.jeesite.acca.constant.Constants;
+import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
+import com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon;
+import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
+import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
 import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 考试订单controller
@@ -38,6 +44,8 @@ public class AppOffiOrderController extends BaseController {
 	private AppOfficialOrderService orderService;
 	@Autowired
 	private AppUserLearningPlanService learningPlanService;
+	@Autowired
+	private UserCouponService userCouponService;
 	
 	@ApiOperation(value = "获取考试订单列表", notes = "获取考试订单列表")
 	@RequestMapping(value = "getOrderListByStatis", method = RequestMethod.POST)
@@ -132,6 +140,17 @@ public class AppOffiOrderController extends BaseController {
 			return new BaseResponse(respCode);
 		}
 		return learningPlanService.saveLearningPlan(req);
+	}
+
+	@ApiOperation(value = "根据用户id获得代金券", notes = "根据用户id获得代金券")
+	@RequestMapping(value = "getCouponList.do" ,method=RequestMethod.POST)
+	public @ResponseBody BasePageResponse<SmallCoupon> getCouponList(@RequestBody BaseRequest req) {
+		int respFlag = req.isCorrectParams();
+		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
+			return new BasePageResponse<SmallCoupon>(respFlag);
+		}
+		List<SmallCoupon> couponListByUserId = userCouponService.getCouponListByUserId(req.getAppUserId());
+		return new BasePageResponse<>(couponListByUserId);
 	}
 	
 }

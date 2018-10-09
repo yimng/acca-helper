@@ -9,9 +9,7 @@ import com.thinkgem.jeesite.acca.api.exam.entity.*;
 import com.thinkgem.jeesite.acca.api.home.service.AppMsgPushLogService;
 import com.thinkgem.jeesite.acca.api.model.request.AddSelfExamCartReq;
 import com.thinkgem.jeesite.acca.api.model.request.SubmitExamRegisterReq;
-import com.thinkgem.jeesite.acca.api.model.response.GetSelfExamCartResp;
-import com.thinkgem.jeesite.acca.api.model.response.GetSelfOfficialExamNameResp;
-import com.thinkgem.jeesite.acca.api.model.response.SubmitExamRegisterResp;
+import com.thinkgem.jeesite.acca.api.model.response.*;
 import com.thinkgem.jeesite.acca.api.order.dao.AppOrderDao;
 import com.thinkgem.jeesite.acca.api.order.entity.AppOrder;
 import com.thinkgem.jeesite.acca.api.order.entity.SmallDetailOrder;
@@ -25,6 +23,10 @@ import com.thinkgem.jeesite.acca.api.user.entity.AppConfExamTips;
 import com.thinkgem.jeesite.acca.constant.ApiConstant;
 import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.acca.web.content.service.WebMsgSysService;
+import com.thinkgem.jeesite.acca.web.coupon.dao.CouponMapper;
+import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
+import com.thinkgem.jeesite.acca.web.user.dao.UserCouponMapper;
+import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
@@ -37,12 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -89,6 +89,12 @@ public class AppExamService  extends BaseService{
 	
 	@Autowired
 	private WebMsgSysService msgSysService;
+
+	@Autowired
+    private CouponMapper couponMapper;
+
+	@Autowired
+    private UserCouponMapper userCouponMapper;
 	
 	@Transactional(readOnly = false)
 	public GetSelfOfficialExamNameResp getSelfOfficialExamName(BaseRequest req) {
@@ -107,7 +113,7 @@ public class AppExamService  extends BaseService{
 				if(appUser.getIszbg()!=3){
 					msgSysService.savePushToPersonal(
 							"学员认证提醒","同学您好：\n 中博&财萃学员在机考报名中享受： F1-F3 750元，F4 950元 的机考报名价格。\n"
-									+ "时间有限，考位有限，摸错良机！",appUser.getAccaUserId());
+									+ "时间有限，考位有限，莫错良机！",appUser.getAccaUserId());
 				}else{
 					System.out.println("==========================="+appUser.getNickname() + "学员已经认证===========================");
 				}
@@ -229,6 +235,43 @@ public class AppExamService  extends BaseService{
 		}
 		logger.info("totalAmount:"+totalAmount);		
 		return new GetSelfExamCartResp(list,totalAmount);
+	}
+	public GetSelfExamCartGroupByPlaceResp getSelfExamCartByPlace(AppAccaUser appUser) {
+		List<AppExamSelfCart> list = appExamSelfCartDao.getByUserId(appUser.getAccaUserId());
+		logger.info("getSelfExamCart list:"+list);
+		double totalAmount = 0;
+		HashMap<Long, List<AppExamSelfCart>> map = new HashMap<>();
+
+		// 根据examPlaceId分组
+		if(list!=null && !list.isEmpty()){
+			for(AppExamSelfCart index:list){
+				Long examPlaceId = index.getExamPlaceId();
+				if (!map.containsKey(examPlaceId)) {
+					List<AppExamSelfCart> li = new ArrayList<>();
+					li.add(index);
+					map.put(examPlaceId, li);
+				} else {
+					map.get(examPlaceId).add(index);
+				}
+			}
+		}
+        List<SelfExamGoups> groups = new ArrayList<>();
+		for (Map.Entry<Long, List<AppExamSelfCart>> entry : map.entrySet()) {
+			Long placeId = entry.getKey();
+			List<AppExamSelfCart> exams = entry.getValue();
+			double totByPlace = 0;
+			for (AppExamSelfCart cart : exams) {
+				if(appUser.getIszbg()==3){
+					cart.setPrice(cart.getStudentPrice());
+				}
+				totByPlace += cart.getPrice();
+			}
+			totalAmount += totByPlace;
+			SelfExamGoups group = new SelfExamGoups(placeId, exams, totByPlace);
+			groups.add(group);
+		}
+		logger.info("totalAmount:"+totalAmount);
+		return new GetSelfExamCartGroupByPlaceResp(groups, totalAmount);
 	}
 
 	@Transactional(readOnly = false)
@@ -427,7 +470,7 @@ public class AppExamService  extends BaseService{
 	public SubmitExamRegisterResp submitExamRegister(SubmitExamRegisterReq req) {
 		AppAccaUser appUser = req.getAppUser();
 		
-		List<AppExamSelfCart> list = appExamSelfCartDao.getByUserId(appUser.getAccaUserId());
+		List<AppExamSelfCart> list = appExamSelfCartDao.getByUserIdAndPlaceId(appUser.getAccaUserId(), req.getExamPlaceId());
 		logger.info("submitExamRegister list:"+list);
 		
 		if(list==null || list.isEmpty()){
@@ -474,6 +517,22 @@ public class AppExamService  extends BaseService{
 			}
 			amount+=index.getPrice();
 		}
+		if (req.getCouponId() != null) {
+            Coupon coupon = couponMapper.selectByPrimaryKey(req.getCouponId());
+            if (coupon != null) {
+                amount -= coupon.getPrice();
+                coupon.setConsumed(coupon.getConsumed() + 1);
+                couponMapper.updateByPrimaryKeySelective(coupon);
+                //删除user对应的优惠券（已使用）
+                Example example = new Example(UserCoupon.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("userId",appUser.getAccaUserId() );
+                criteria.andEqualTo("couponId", req.getCouponId());
+                UserCoupon userCoupon = new UserCoupon();
+                userCoupon.setDelFlag("1");
+                userCouponMapper.updateByExampleSelective(userCoupon, example);
+            }
+        }
 		order.setAmount(amount);
 		
 		appOrderDao.insert(order);
@@ -536,8 +595,8 @@ public class AppExamService  extends BaseService{
 			appExamDao.updateUsedSeats(index.getExamId());
 		}
 		
-		//根据userId清空购物车
-		appExamSelfCartDao.deleteByUserId(appUser.getAccaUserId());
+		//根据userId和placeId清空购物车
+		appExamSelfCartDao.deleteByUserId(appUser.getAccaUserId(), req.getExamPlaceId());
 		
 		
 		

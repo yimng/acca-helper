@@ -1,6 +1,5 @@
 package com.thinkgem.jeesite.common.service;
 
-import com.github.pagehelper.PageHelper;
 import com.thinkgem.jeesite.common.persistence.MyMapper;
 import com.thinkgem.jeesite.common.persistence.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

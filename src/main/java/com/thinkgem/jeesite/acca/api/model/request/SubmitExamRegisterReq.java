@@ -35,6 +35,10 @@ public class SubmitExamRegisterReq extends BaseRequest {
 	private Integer cardType;
 	@ApiModelProperty(value = "学校/单位",required = true)
 	private String org;
+	@ApiModelProperty(value = "考点ID", required = true)
+	private Long examPlaceId;
+	@ApiModelProperty(value = "优惠券ID", required = false)
+	private Long couponId;
 	
 	
 	@Override
@@ -170,4 +174,20 @@ public class SubmitExamRegisterReq extends BaseRequest {
 	public void setOrg(String org) {
 		this.org = org;
 	}
+
+	public Long getExamPlaceId() {
+		return examPlaceId;
+	}
+
+	public void setExamPlaceId(Long examPlaceId) {
+		this.examPlaceId = examPlaceId;
+	}
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
+    }
 }

@@ -202,6 +202,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
                 UserCoupon userCoupon = new UserCoupon();
                 userCoupon.setUserId(getAccaUserByPhone(phone).getAccaUserId());
                 userCoupon.setCouponId(coupon.getId());
+                userCoupon.setDelFlag("0");
                 userCouponService.saveOrUpdate(userCoupon);
             } else if (coupon.getFlag3() || coupon.getFlag4()) { //邀请用户和被邀请用户
                 List<Invite> invites = inviteService.getAppInvitesByPhoneAndInviteTime(phone,
@@ -218,6 +219,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
                         UserCoupon inviterCoupon = new UserCoupon();
                         inviterCoupon.setCouponId(coupon.getId());
                         inviterCoupon.setUserId(inviter.getAccaUserId());
+                        inviterCoupon.setDelFlag("0");
                         userCouponService.saveOrUpdate(inviterCoupon);
                     }
                     if (coupon.getFlag4()) {
@@ -225,6 +227,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
                         UserCoupon inviteeCoupon = new UserCoupon();
                         inviteeCoupon.setCouponId(coupon.getId());
                         inviteeCoupon.setUserId(invitee.getAccaUserId());
+                        inviteeCoupon.setDelFlag("0");
                         userCouponService.saveOrUpdate(inviteeCoupon);
                     }
                 }

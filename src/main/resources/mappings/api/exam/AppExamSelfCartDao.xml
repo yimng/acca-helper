@@ -65,6 +65,17 @@
 		<include refid="appExamSelfCartJoins"/>
 		WHERE a.acca_user_id = #{accaUserId} 
 	</select>
+
+	<select id="getByUserIdAndPlaceId" resultType="AppExamSelfCart">
+		SELECT
+		<include refid="appExamSelfCartColumns"/>
+		FROM tbl_exam_self_cart a
+		<include refid="appExamSelfCartJoins"/>
+		WHERE a.acca_user_id = #{accaUserId}
+        <if test="placeId != null and placeId != ''">
+		AND a.exam_place_id = #{placeId}
+        </if>
+	</select>
 	
 	
 	
@@ -102,7 +113,10 @@
 	
 	<delete id="deleteByUserId">
 		DELETE FROM tbl_exam_self_cart 
-		WHERE acca_user_id = #{accaUserId} 
+		WHERE acca_user_id = #{accaUserId}
+        <if test="placeId != null and placeId != ''">
+            AND a.exam_place_id = #{placeId}
+        </if>
 	</delete>
 	
 	<delete id="delete">

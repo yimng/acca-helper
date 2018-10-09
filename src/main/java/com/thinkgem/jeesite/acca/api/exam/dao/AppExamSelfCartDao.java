@@ -17,7 +17,9 @@ import com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfCart;
 @MyBatisDao
 public interface AppExamSelfCartDao extends CrudDao<AppExamSelfCart> {
 	public List<AppExamSelfCart> getByUserId(Long accaUserId);
+
+	public List<AppExamSelfCart> getByUserIdAndPlaceId(Long accaUserId, Long placeId);
 	
 	
-	public void deleteByUserId(Long accaUserId);
+	public void deleteByUserId(Long accaUserId, Long examPlaceId);
 }
