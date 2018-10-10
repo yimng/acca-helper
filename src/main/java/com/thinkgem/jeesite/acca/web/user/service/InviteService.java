@@ -29,16 +29,18 @@ public class InviteService {
     public Invite get(Long id) {
         return inviteMapper.selectByPrimaryKey(id);
     }
-//
+
+    //
 //    public List<Invite> findList(Invite invite) {
 //        return super.findList(invite);
 //    }
 //
-    public PageInfo<Invite> findPage(Invite invite, int pageNo, int pageSize) {
+    public PageInfo<Invite> findPage(Invite invite, String status, int pageNo, int pageSize) {
         Example example = new Example(Invite.class);
         Example.Criteria criteria = example.createCriteria();
+        criteria.andCondition("1=1");
         if (StringUtils.isNotBlank(invite.getInviterPhone())) {
-            criteria.andLessThan("inviterPhone", "%"+invite.getInviterPhone() +"%");
+            criteria.andLessThan("inviterPhone", "%" + invite.getInviterPhone() + "%");
         }
         if (invite.getInviteStart() != null) {
             criteria.andGreaterThan("inviteTime", invite.getInviteStart());
@@ -46,43 +48,30 @@ public class InviteService {
         if (invite.getInviteEnd() != null) {
             criteria.andLessThan("inviteTime", invite.getInviteEnd());
         }
-        if (invite.getInviteStatus() != null) {
-            if (invite.getInviteStatus() == 0) {
-                criteria.andLessThan("inviteTime", new Date());
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(new Date());
-                cal.add(Calendar.DATE, -3);
-                Date start = cal.getTime();
-                criteria.andGreaterThan("inviteTime", start);
-            }
-            if (invite.getInviteStatus() == 1) {
-                criteria.andIsNotNull("successTime");
-            }
-            if (invite.getInviteStatus() == 2) {
-                criteria.andGreaterThan("inviteTime", new Date());
-            }
-
+        if ("0".equals(status)) {
+            criteria.andLessThan("inviteTime", new Date());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, -3);
+            Date start = cal.getTime();
+            criteria.andGreaterThan("inviteTime", start);
         }
-        PageHelper.startPage(pageNo,pageSize);
+        if ("1".equals(status)) {
+            criteria.andIsNotNull("successTime");
+        }
+        if ("2".equals(status)) {
+            criteria.andGreaterThan("inviteTime", new Date());
+        }
+
+        PageHelper.startPage(pageNo, pageSize);
         List<Invite> invites = inviteMapper.selectByExample(example);
-        return new PageInfo<Invite>(invites);
-    }
-//
-//    @Transactional(readOnly = false)
-//    public void save(Invite invite) {
-//        super.save(invite);
-//    }
-//
-//    @Transactional(readOnly = false)
-//    public void delete(Invite invite) {
-//        super.delete(invite);
-//    }
-//
-//
-    public List<InviteRank> findInviteRank(Date start, Date end) {
-        return inviteMapper.findInviteRank(start, end);
+        return new PageInfo<>(invites);
     }
 
+    public List<InviteRank> findInviteRank(String start, String end, String sort, int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo, pageSize);
+        return inviteMapper.findInviteRank(start, end, sort);
+    }
 
 
     @Transactional(readOnly = false)

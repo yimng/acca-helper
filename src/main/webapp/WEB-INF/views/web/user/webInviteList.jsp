@@ -19,24 +19,25 @@
 <body>
 
 <form:form id="searchForm" modelAttribute="invite" action="${ctx}/user/invite/list" method="post" class="breadcrumb form-search">
-    <input id="type" name="type" type="hidden" value="1"/>
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <ul class="ul-form">
         <li><label>发起时间：</label>
-            <form:input id="start" path="inviteStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+            <input id="start" name="inviteStart" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                        value="<fmt:formatDate value='${invite.inviteStart}' pattern='yyyy-MM-dd' />"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
             -
-            <form:input id="end" path="inviteEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+            <input id="end" name="inviteEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+                        value="<fmt:formatDate value='${invite.inviteEnd}' pattern='yyyy-MM-dd' />"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
         </li>
         <li><label>邀请状态：</label>
-            <form:select path="inviteStatus">
+            <select name="status" value="${status}">
                 <option value="">邀请状态</option>
-                <option value="1">邀请成功</option>
-                <option value="0">受邀中</option>
-                <option value="2">邀请失败</option>
-            </form:select>
+                <option value="1" <c:if test="${'1' eq status}">selected</c:if>>邀请成功</option>
+                <option value="0" <c:if test="${'0' eq status}">selected</c:if>>受邀中</option>
+                <option value="2" <c:if test="${'2' eq status}">selected</c:if>>邀请失败</option>
+            </select>
         </li>
         <li>
             <label>邀请人手机:</label>
@@ -79,7 +80,7 @@
                     ${invite.inviteePhone}
             </td>
             <td>
-                    ${invite.inviteStatusName}
+                    ${invite.inviteStatus}
             </td>
             <td>
                     <fmt:formatDate value="${invite.inviteTime}" pattern="yyyy年MM月dd日 HH:MM"/>

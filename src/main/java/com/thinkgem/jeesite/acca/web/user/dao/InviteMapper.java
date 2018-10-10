@@ -12,5 +12,5 @@ import java.util.List;
 
 @MyBatisDao
 public interface InviteMapper extends MyMapper<Invite> {
-    public List<InviteRank> findInviteRank(@Param("start") Date start, @Param("end") Date end);
+    public List<InviteRank> findInviteRank(@Param("start") String start, @Param("end") String end, @Param("sort") String sort);
 }

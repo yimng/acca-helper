@@ -166,8 +166,6 @@ public class Invite implements Serializable {
         this.delFlag = delFlag;
     }
 
-    @Transient
-    private Integer inviteStatus;
     public Integer getInviteStatus(){
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
