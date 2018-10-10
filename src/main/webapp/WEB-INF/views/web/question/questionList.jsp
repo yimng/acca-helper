@@ -28,15 +28,28 @@
         <li><label>发布时间：</label>
             <input name="start" type="text" readonly="readonly" maxlength="20"
                    class="input-medium Wdate"
-                   value="${question.start}"
+                   value="<fmt:formatDate value='${question.start}' pattern='yyyy-MM-dd' />"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
             -
             <input name="end" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${question.end}"
+                   value="<fmt:formatDate value='${question.end}' pattern='yyyy-MM-dd' />"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
         </li>
         <li><label>问题名称：</label>
             <form:input path="title" htmlEscape="false" maxlength="200" class="input-medium"/>
+        </li>
+        <li><label>问题分类：</label>
+            <form:select path="catergoryId">
+                <form:option label="请选择:" value="" htmlEscape="false"/>
+                <form:options items="${category}" itemLabel="name" itemValue="id" htmlEscape="false"/>
+            </form:select>
+        </li>
+        <li><label>是否热门：</label>
+            <form:select path="hot">
+                <form:option label="请选择:" value="" htmlEscape="false"/>
+                <form:option label="否" value="0" htmlEscape="false"/>
+                <form:option label="是" value="1" htmlEscape="false"/>
+            </form:select>
         </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="clearfix"></li>
@@ -79,12 +92,13 @@
             </td>
             <td>
                 ${question.modifierName}
+
             </td>
             <td>
-                ${question.publishTime}
+                    <fmt:formatDate value="${question.publishTime}" pattern="yyyy-MM-dd"/>
             </td>
             <td>
-                ${question.modifyTime}
+                    <fmt:formatDate value="${question.modifyTime}" pattern="yyyy-MM-dd"/>
             </td>
             <td>
                 ${question.praised}

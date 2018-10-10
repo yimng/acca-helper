@@ -54,8 +54,10 @@ public class QuestionController extends BaseController {
     public String list(Question question, Model model,
                        @RequestParam(required = false, defaultValue = "1") int pageNo,
                        @RequestParam(required = false, defaultValue = "30") int pageSize) {
-            PageInfo page = questionService.findPage(question, pageNo , pageSize);
+        PageInfo page = questionService.findPage(question, pageNo, pageSize);
         model.addAttribute("page", page);
+        List<QuestionCategory> questionCategories = questionCategoryMapper.selectAll();
+        model.addAttribute("category", questionCategories);
         return "web/question/questionList";
     }
 
