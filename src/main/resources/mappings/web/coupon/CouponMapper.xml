@@ -21,4 +21,69 @@
     <result column="assign" jdbcType="BIT" property="assign" />
     <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
   </resultMap>
+  
+  <resultMap id="Coupon" extends="BaseResultMap" type="com.thinkgem.jeesite.acca.web.coupon.entity.Coupon">
+    <result column="name" jdbcType="VARCHAR" property="creator"/>
+    <result column="begin_time" jdbcType="TIMESTAMP" property="activityStart"/>
+    <result column="end_time" jdbcType="TIMESTAMP" property="activityEnd"/>
+    <result column="activity_name" jdbcType="VARCHAR" property="activityName"/>
+  </resultMap>
+
+  <select id="findList" resultMap="Coupon">
+    select c.id,
+      c.activity_id,
+      c.price,
+      c.validity_start,
+      c.validity_end,
+      c.number,
+      c.description,
+      c.create_by,
+      c.received,
+      c.consumed,
+      c.del_flag,
+      c.create_date,
+      c.update_date,
+      c.assign,
+      c.coupon_type,
+      u.name,
+      a.begin_time,
+      a.end_time,
+      a.activity_name
+    from tbl_coupon c
+    left join sys_user u on c.create_by = u.id
+    left join tbl_activity a on c.activity_id = a.activity_id
+    <where>
+        c.del_flag = "0"
+        <if test="activityStart != null">
+            And a.begin_time > #{activityStart}
+        </if>
+        <if test="activityEnd != null" >
+            AND #{activityEnd} > a.end_time
+        </if>
+        <if test="activityName != null and activityName != ''">
+            AND a.activity_name LIKE concat("%", #{activityName}, "%")
+            <!--<if test="dbName == 'oracle'">'%,'||#{activityName}||',%')</if>-->
+            <!--<if test="dbName == 'mssql'">'%,'+#{activityName}+',%')</if>-->
+            <!--<if test="dbName == 'mysql'">CONCAT('%,', #{activityName}, ',%'))</if>-->
+        </if>
+        <if test="creator != null and creator != ''">
+            AND u.name LIKE concat("%", #{creator}, "%")
+            <!--<if test="dbName == 'oracle'">'%,'||#{creator}||',%')</if>-->
+            <!--<if test="dbName == 'mssql'">'%,'+#{creator}+',%')</if>-->
+            <!--<if test="dbName == 'mysql'">CONCAT('%,', #{creator}, ',%'))</if>-->
+        </if>
+        <if test='"0".equals(status)'>
+            AND now() > a.begin_time
+            AND a.end_time > now()
+        </if>
+        <if test='"1".equals(status)'>
+            AND now() > a.end_time
+        </if>
+        <if test='"2".equals(status)'>
+            AND a.begin_time > now()
+        </if>
+    </where>
+
+
+  </select>
 </mapper>

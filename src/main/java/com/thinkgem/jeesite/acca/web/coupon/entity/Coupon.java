@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.acca.web.coupon.entity;
 
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.persistence.PageInfo;
+import com.thinkgem.jeesite.freetek.util.TimeUtils;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -357,16 +358,18 @@ public class Coupon implements Serializable {
     private Date activityEnd;
     @Transient
     private String creator;
+    @Transient
+    private String status;
 
 
     public boolean getFlag1() {
         if (getCouponType() == null) {
             return false;
         }
-        if((getCouponType()&1)==1){
+        if ((getCouponType() & 1) == 1) {
             this.flag1 = true;
-        }else{
-            this.flag1=false;
+        } else {
+            this.flag1 = false;
         }
         return flag1;
     }
@@ -375,18 +378,19 @@ public class Coupon implements Serializable {
         if (getCouponType() == null) {
             return false;
         }
-        if ((getCouponType()&2) == 2) {
+        if ((getCouponType() & 2) == 2) {
             this.flag2 = true;
         } else {
             this.flag2 = false;
         }
         return flag2;
     }
+
     public boolean getFlag3() {
         if (getCouponType() == null) {
             return false;
         }
-        if ((getCouponType()&4) == 4) {
+        if ((getCouponType() & 4) == 4) {
             this.flag3 = true;
         } else {
             this.flag3 = false;
@@ -398,7 +402,7 @@ public class Coupon implements Serializable {
         if (getCouponType() == null) {
             return false;
         }
-        if ((getCouponType()&8) == 8) {
+        if ((getCouponType() & 8) == 8) {
             this.flag4 = true;
         } else {
             this.flag4 = false;

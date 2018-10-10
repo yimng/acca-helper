@@ -61,10 +61,12 @@ public class CouponController extends BaseController {
 
     @RequiresPermissions("web:coupon:view")
     @RequestMapping(value = {"list", ""})
-    public String list(Coupon coupon,Model model, @RequestParam(required = false, defaultValue = "1") int pageNo,
-                       @RequestParam(required = false, defaultValue = "3") int pageSize) {
+    public String list(Coupon coupon, Model model,
+                       @RequestParam(required = false, defaultValue = "1") int pageNo,
+                       @RequestParam(required = false, defaultValue = "30") int pageSize) {
         PageInfo<Coupon> pageinfo = couponService.findPage(coupon, pageNo, pageSize);
         model.addAttribute("page", pageinfo);
+        model.addAttribute("coupon", coupon);
         return "web/coupon/couponList";
     }
 
@@ -108,27 +110,27 @@ public class CouponController extends BaseController {
                     wb = new HSSFWorkbook(file.getInputStream());
                 }
                 List<String> phones = Lists.newArrayList();
-                    //获取第一个sheet，可以利用循环获取每个sheet的内容
-                    Sheet sheet = wb.getSheetAt(0);
+                //获取第一个sheet，可以利用循环获取每个sheet的内容
+                Sheet sheet = wb.getSheetAt(0);
 
-                    //第一行是标题，跳过
-                    for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
-                        Row row = sheet.getRow(i);
-                        if (row != null) {
-                            //获取第一列的内容
-                            Cell cell = row.getCell(0);
-                            String phone;
-                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                                phone = cell.getStringCellValue();
-                            } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                DecimalFormat df = new DecimalFormat("###########");
-                                phone = df.format(cell.getNumericCellValue());
-                            } else {
-                                throw new RuntimeException("Invalid value in excel");
-                            }
-                            phones.add(phone);
+                //第一行是标题，跳过
+                for (int i = 1; i < sheet.getLastRowNum() + 1; i++) {
+                    Row row = sheet.getRow(i);
+                    if (row != null) {
+                        //获取第一列的内容
+                        Cell cell = row.getCell(0);
+                        String phone;
+                        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                            phone = cell.getStringCellValue();
+                        } else if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                            DecimalFormat df = new DecimalFormat("###########");
+                            phone = df.format(cell.getNumericCellValue());
+                        } else {
+                            throw new RuntimeException("Invalid value in excel");
                         }
+                        phones.add(phone);
                     }
+                }
                 List<UserCoupon> userCoupons = Lists.newArrayList();
                 for (String phone : phones) {
                     UserCoupon userCoupon = new UserCoupon();
@@ -143,7 +145,7 @@ public class CouponController extends BaseController {
                     userCoupons.add(userCoupon);
                 }
                 if (userCoupons.size() > 0) {
-                    for (UserCoupon userCoupon: userCoupons) {
+                    for (UserCoupon userCoupon : userCoupons) {
                         userCouponService.saveOrUpdate(userCoupon);
                     }
                     coupon.setReceived(userCoupons.size());

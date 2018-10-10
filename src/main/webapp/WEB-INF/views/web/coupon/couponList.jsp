@@ -28,38 +28,33 @@
         <li><label>发布时间：</label>
             <input id="start" name="activityStart" type="text" readonly="readonly" maxlength="20"
                    class="input-medium Wdate"
-                   value="${coupon.activityStart}"
+                   value="<fmt:formatDate value='${coupon.activityStart}' pattern='yyyy-MM-dd' />"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
             -
             <input id="end" name="activityEnd" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-                   value="${coupon.activityEnd}"
+                        value="<fmt:formatDate value='${coupon.activityEnd}' pattern='yyyy-MM-dd' />"
                    onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
         </li>
         <li><label>活动名称：</label>
             <form:input path="activityName" htmlEscape="false" maxlength="200" class="input-medium"/>
         </li>
+        <li><label>发布人：</label>
+            <form:input path="creator" htmlEscape="false" maxlength="200" class="input-medium"/>
+        </li>
+        <li><label>发布状态：</label>
+            <form:select path="status">
+                <option value="">未选择</option>
+                <option value="0">进行中</option>
+                <option value="1">未发布</option>
+                <option value="2">已过期</option>
+            </form:select>
+        </li>
         <li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
         <li class="clearfix"></li>
-            <%--<tr>--%>
-            <%--<th>页码：</th>--%>
-            <%--<td><input type="text" name="page" value="${page}"/></td>--%>
-            <%--<th>页面大小：</th>--%>
-            <%--<td><input type="text" name="rows" value="${rows}"/></td>--%>
-            <%--</tr>--%>
+
     </ul>
 </form:form>
-<%--<form:form id="searchForm2" modelAttribute="coupon" action="${ctx}/web/coupon/listbyname" method="post" class="breadcrumb form-search">--%>
-<%--<input id="type" name="type" type="hidden" value="1"/>--%>
-<%--<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>--%>
-<%--<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>--%>
-<%--<ul class="ul-form">--%>
-<%--<li><label>发布人：</label>--%>
-<%--<input name="name" value="${coupon.createBy.name}" htmlEscape="false" maxlength="200" class="input-medium"/>--%>
-<%--</li>--%>
-<%--<li class="btns"><input id="btnSubmit2" class="btn btn-primary" type="submit" value="查询"/></li>--%>
-<%--<li class="clearfix"></li>--%>
-<%--</ul>--%>
-<%--</form:form>--%>
+
 <sys:message content="${message}"/>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
