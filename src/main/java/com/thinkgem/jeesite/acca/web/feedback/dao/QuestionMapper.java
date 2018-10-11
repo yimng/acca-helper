@@ -9,4 +9,5 @@ import java.util.List;
 @MyBatisDao
 public interface QuestionMapper extends MyMapper<Question> {
     List<Question> findList(Question q);
+    Question getDetail(Long id);
 }

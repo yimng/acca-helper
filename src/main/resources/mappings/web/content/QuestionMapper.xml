@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinkgem.jeesite.acca.web.feedback.dao.QuestionMapper">
-  <resultMap id="BaseResultMap" type="com.thinkgem.jeesite.acca.web.feedback.entity.Question">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="catergory_id" jdbcType="TINYINT" property="catergoryId" />
-    <result column="hot" jdbcType="BIT" property="hot" />
-    <result column="publisher" jdbcType="VARCHAR" property="publisher" />
-    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
-    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
-    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
-    <result column="answer" jdbcType="VARCHAR" property="answer" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.thinkgem.jeesite.acca.web.feedback.entity.Question">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="catergory_id" jdbcType="TINYINT" property="catergoryId"/>
+        <result column="hot" jdbcType="BIT" property="hot"/>
+        <result column="publisher" jdbcType="VARCHAR" property="publisher"/>
+        <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+    </resultMap>
 
-  <select id="findList" resultType="com.thinkgem.jeesite.acca.web.feedback.entity.Question">
+    <resultMap id="AppQuestion" extends="BaseResultMap" type="com.thinkgem.jeesite.acca.web.feedback.entity.Question">
+        <result column="c.name" property="category"/>
+        <result column="p.name" property="publisherName"/>
+        <result column="m.name" property="modifierName"/>
+        <result column="praise.praise_num" property="praised"/>
+        <result column="praise2.praise_num" property="disPraised"/>
+    </resultMap>
 
-    select q.id as id,
+    <select id="getDetail" resultMap="AppQuestion">
+        select q.id as id,
           q.title as title,
           q.catergory_id as catergoryId,
           q.hot as hot,
@@ -32,28 +39,57 @@
           m.name as modifierName,
           praise.praise_num as praised,
           praise2.praise_num as disPraised
-    from tbl_question q
-    left join tbl_question_category c on q.catergory_id = c.id
-    left join sys_user p on q.publisher = p.id
-    left join sys_user m on q.modifier = m.id
-    left join (select question_id, count(*) as praise_num from tbl_question_praise where praise_flag = 0 group by question_id ) praise on praise.question_id = q.id
-    left join (select question_id, count(*) as praise_num from tbl_question_praise where praise_flag != 0 group by question_id ) praise2 on praise2.question_id = q.id
-    <where>
-        <if test="title != null and title != ''">
-            AND q.title LIKE concat('%',#{title},'%')
-        </if>
-        <if test="start != null">
-            AND q.publish_time > #{start}
-        </if>
-        <if test="end != null">
-            AND #{end} > q.publish_time
-        </if>
-        <if test="hot != null">
-            AND q.hot = #{hot}
-        </if>
-        <if test="catergoryId != null">
-            AND q.catergory_id = #{catergoryId}
-        </if>
-    </where>
-  </select>
+        from tbl_question q
+        left join tbl_question_category c on q.catergory_id = c.id
+        left join sys_user p on q.publisher = p.id
+        left join sys_user m on q.modifier = m.id
+        left join (select question_id, count(*) as praise_num from tbl_question_praise where praise_flag = 0 group by question_id ) praise on praise.question_id = q.id
+        left join (select question_id, count(*) as praise_num from tbl_question_praise where praise_flag != 0 group by question_id ) praise2 on praise2.question_id = q.id
+        WHERE
+        q.id = #{id}
+    </select>
+
+    <select id="findList" resultType="com.thinkgem.jeesite.acca.web.feedback.entity.Question">
+
+        select q.id as id,
+        q.title as title,
+        q.catergory_id as catergoryId,
+        q.hot as hot,
+        q.publisher as publisher,
+        q.publish_time as publishTime,
+        q.modifier as modifier,
+        q.modify_time as modifyTime,
+        q.answer as answer,
+        c.name as category,
+        p.name as publisherName,
+        m.name as modifierName,
+        praise.praise_num as praised,
+        praise2.praise_num as disPraised
+        from tbl_question q
+        left join tbl_question_category c on q.catergory_id = c.id
+        left join sys_user p on q.publisher = p.id
+        left join sys_user m on q.modifier = m.id
+        left join (select question_id, count(*) as praise_num from tbl_question_praise where praise_flag = 0 group by
+        question_id ) praise on praise.question_id = q.id
+        left join (select question_id, count(*) as praise_num from tbl_question_praise where praise_flag != 0 group by
+        question_id ) praise2 on praise2.question_id = q.id
+        <where>
+            q.del_flag = "0"
+            <if test="title != null and title != ''">
+                AND q.title LIKE concat('%',#{title},'%')
+            </if>
+            <if test="start != null">
+                AND q.publish_time > #{start}
+            </if>
+            <if test="end != null">
+                AND #{end} > q.publish_time
+            </if>
+            <if test="hot != null">
+                AND q.hot = #{hot}
+            </if>
+            <if test="catergoryId != null">
+                AND q.catergory_id = #{catergoryId}
+            </if>
+        </where>
+    </select>
 </mapper>
