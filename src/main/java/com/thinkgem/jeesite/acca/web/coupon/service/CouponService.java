@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
 
+import java.beans.Transient;
 import java.util.*;
 
 @Service
@@ -37,15 +38,9 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
         return coupon;
     }
 
-    public int getAvailableCoupons(Long id) {
-        Example example = Example.builder(Coupon.class)
-                .select("number")
-                .select("received")
-                .where(Sqls.custom().andEqualTo("id", id))
-                .forUpdate()
-                .build();
-        List<Coupon> coupons = dao.selectByExample(example);
-        return coupons.get(0).getNumber() - coupons.get(0).getReceived();
+    public int getAvailableCouponsByCouponId(Long id) {
+        Coupon coupon = dao.selectByPrimaryKey(id);
+        return coupon.getNumber() - coupon.getReceived();
     }
 
 
@@ -56,36 +51,6 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
 
     @Override
     public PageInfo<Coupon> findPage(Coupon coupon, int pageNum, int pageSize) {
-//        Example example = new Example(Activity.class);
-//        Example.Criteria criteria = example.createCriteria();
-//        if (StringUtils.isNotEmpty(coupon.getActivityName())) {
-//            criteria.andLike("activityName", "%" + coupon.getActivityName() + "%");
-//        }
-//        criteria.andGreaterThan("beginTime", coupon.getActivityStart());
-//        criteria.andLessThan("endTime", coupon.getActivityEnd());
-//        List<Activity> activities = activityMapper.selectByExample(example);
-//        if (activities.size() == 0) {
-//            return new PageInfo<Coupon>(new ArrayList());
-//        }
-//        Map<Long, Activity> actMap = new HashMap<>();
-//        for (Activity act : activities) {
-//            actMap.put(act.getActivityId(), act);
-//        }
-//
-//        Example example1 = new Example(Coupon.class);
-//        Example.Criteria criteria1 = example1.createCriteria();
-//        criteria1.andIn("activityId", actMap.keySet());
-//        PageHelper.startPage(pageNum, pageSize);
-//        List<Coupon> coupons = dao.selectByExample(example1);
-//
-//        for (Coupon c : coupons) {
-//            Activity activity = actMap.get(c.getActivityId());
-//            c.setActivityName(activity.getActivityName());
-//            c.setActivityStart(activity.getBeginTime());
-//            c.setActivityEnd(activity.getEndTime());
-//            User user = userDao.get(c.getCreateBy());
-//            c.setCreator(user.getName());
-//        }
         PageHelper.startPage(pageNum, pageSize);
         List<Coupon> coupons = dao.findList(coupon);
 
@@ -100,6 +65,7 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(Coupon coupon) {
         if (coupon.getId() == null) {
             Activity activity = new Activity();
@@ -111,6 +77,8 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
             coupon.setCreateDate(new Date());
             coupon.setUpdateDate(new Date());
             coupon.setActivityId(activity.getActivityId());
+            coupon.setConsumed(0);
+            coupon.setReceived(0);
             User user = UserUtils.getUser();
             if (StringUtils.isNotEmpty(user.getId())) {
                 coupon.setCreateBy(user.getId());

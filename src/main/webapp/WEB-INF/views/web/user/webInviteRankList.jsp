@@ -60,7 +60,7 @@
             <td>
                     ${inviteRank.phone}
             </td>
-        </tr>s
+        </tr>
     </c:forEach>
     </tbody>
 </table>

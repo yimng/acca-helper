@@ -9,6 +9,8 @@ import com.thinkgem.jeesite.acca.api.user.entity.*;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
 import com.thinkgem.jeesite.acca.api.user.service.AppSmsVcodeService;
 import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
+import com.thinkgem.jeesite.acca.web.user.entity.Invite;
+import com.thinkgem.jeesite.acca.web.user.entity.InviteReward;
 import com.thinkgem.jeesite.acca.web.user.service.InviteService;
 import com.thinkgem.jeesite.common.utils.AppUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -25,14 +27,13 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.thinkgem.jeesite.acca.api.model.response.AccaConfInfo;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.constant.Constants;
+
+import java.util.List;
 
 /**
  * AppAccaUserController
@@ -244,10 +245,7 @@ public class AppAccaUserController extends BaseController {
 	@ApiOperation(value = "发送邀请人被邀请人手机号和代金券信息", notes = "发送邀请人被邀请人手机号和代金券信息")
 	@RequestMapping(value = "invite.do", method = RequestMethod.POST)
 	public @ResponseBody BaseResponse invite(@RequestBody InviteReq req) {
-        int resp = req.isCorrectParams();
-        if (resp != RespConstants.GLOBAL_SUCCESS) {
-            return new BasePageResponse(resp);
-        }
+
         // 验证手机号码
         if (!AppUtils.isMobileNum(req.getInviterPhone())) {
             return new BaseResponse(RespConstants.SMS_VCODE_MOBILE_TYPE_ERROR);
@@ -256,7 +254,7 @@ public class AppAccaUserController extends BaseController {
             return new BaseResponse(RespConstants.SMS_VCODE_MOBILE_TYPE_ERROR);
         }
 
-        int availableCoupons = couponService.getAvailableCoupons(req.getCouponId());
+        int availableCoupons = couponService.getAvailableCouponsByCouponId(req.getCouponId());
         if (availableCoupons <= 0) {
             return new BaseResponse(RespConstants.COUPON_NOT_AVAILABLE);
         }
@@ -274,5 +272,29 @@ public class AppAccaUserController extends BaseController {
 		return appInviteService.invite(req);
 
 	}
+
+	@ApiOperation(value = "根据邀请状态获得邀请列表", notes = "根据邀请状态获得邀请列表")
+    @RequestMapping(value = "getInvitesByStatus.do", method = RequestMethod.POST)
+	public @ResponseBody BasePageResponse<Invite> getInvitesByStatus(@RequestBody InviteStatusReq req) {
+		int resp = req.isCorrectParams();
+		if (resp != RespConstants.GLOBAL_SUCCESS) {
+			return new BasePageResponse(resp);
+		}
+		String phone = req.getAppUser().getPhone();
+		Invite invite = new Invite();
+		invite.setInviterPhone(phone);
+		List<Invite> page = appInviteService.findPage(invite, req.getStatus(), req.getPage().getStartIndex(), req.getPage().getPageSize());
+		return new BasePageResponse(page);
+	}
+	@ApiOperation(value = "获得邀请排名", notes = "获得邀请排名")
+    @RequestMapping(value = "getInviteRewardsRank.do", method = RequestMethod.POST)
+	public @ResponseBody BasePageResponse<InviteReward> getInviteRewardsRank(@RequestBody BasePageRequest req) {
+        int resp = req.isCorrectParams();
+        if (resp != RespConstants.GLOBAL_SUCCESS) {
+            return new BasePageResponse(resp);
+        }
+        List<InviteReward> rank = appInviteService.findInviteRewardsRank(req.getPage().getStartIndex(), req.getPage().getPageSize());
+        return new BasePageResponse<>(rank);
+    }
 	
 }

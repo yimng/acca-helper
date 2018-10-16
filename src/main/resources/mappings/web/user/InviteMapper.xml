@@ -36,4 +36,11 @@
       ORDER successCount DESC
     </if>
   </select>
+  <select id="findInviteRewards" resultType="com.thinkgem.jeesite.acca.web.user.entity.InviteReward">
+    SELECT u.phone as phone, u.nickname as name, SUM(c.price) as rewards
+    FROM tbl_user_coupon uc
+    LEFT JOIN tbl_acca_user u ON uc.user_id = u.acca_user_id
+    LEFT JOIN tbl_coupon c ON uc.coupon_id = c.id
+    GROUP BY uc.user_id
+  </select>
 </mapper>

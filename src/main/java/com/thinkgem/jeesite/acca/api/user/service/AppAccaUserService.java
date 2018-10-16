@@ -125,10 +125,10 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 				return new BaseObjResponse<AppAccaUser>(RespConstants.USER_RREEZED);
 			}
 			// 验证码是否正确
-			if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
-				logger.info("login，验证码错误：{},{}", phone,smsVcode);
-				return new BaseObjResponse<AppAccaUser>(RespConstants.SMS_VCODE_INCORRECT);
-			}
+//			if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
+//				logger.info("login，验证码错误：{},{}", phone,smsVcode);
+//				return new BaseObjResponse<AppAccaUser>(RespConstants.SMS_VCODE_INCORRECT);
+//			}
 		}
 		
 		if(accaUser == null){
@@ -143,6 +143,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 			accaUser.setUserStatus(Constants.AccaUserStatus.normal);
 			accaUser.setDeviceId(deviceId);
 			accaUser.setLoginDate(new Date());
+			accaUser.setUpdateDate(new Date());
 			dao.insert(accaUser);
             publishCoupon(phone);
 
@@ -265,7 +266,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 	public BaseObjResponse<Boolean> getPassword(Long appUserId) {
 		AppAccaUser accaUser = this.get(new AppAccaUser(appUserId));
 		if (accaUser.getPassword() != null) {
-			return new BaseObjResponse<Boolean>(true);
+			return new BaseObjResponse<>(true);
 		}
 		return new BaseObjResponse<>(false);
 	}

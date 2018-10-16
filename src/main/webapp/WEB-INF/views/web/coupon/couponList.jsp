@@ -44,7 +44,7 @@
         <li><label>发布状态：</label>
             <form:select path="status">
                 <option value="">未选择</option>
-                <option value="0">进行中</option>
+                <option value="0">已发布</option>
                 <option value="1">未发布</option>
                 <option value="2">已过期</option>
             </form:select>

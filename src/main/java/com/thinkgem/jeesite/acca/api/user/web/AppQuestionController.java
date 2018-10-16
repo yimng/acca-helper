@@ -5,6 +5,7 @@ import com.thinkgem.jeesite.acca.api.user.service.AppQuestionService;
 import com.thinkgem.jeesite.acca.web.feedback.entity.Question;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
+import com.thinkgem.jeesite.freetek.api.model.BasePageRequest;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,8 +40,8 @@ public class AppQuestionController extends BaseController {
     @ApiOperation(value = "获取热点问题列表", httpMethod = "GET", notes = "获取热点问题列表")
     @RequestMapping(value = "getHotQuestions.do", method = RequestMethod.GET)
     public @ResponseBody
-    BasePageResponse<Question> getHotQuestions(@RequestBody GetHotQuestionReq req) {
-        return appQuestionService.getHotQuestions(req.getPage().getStartIndex(), req.getPage().getPageSize(),req.isHot());
+    BasePageResponse<Question> getHotQuestions(@RequestBody BasePageRequest req) {
+        return appQuestionService.getHotQuestions(req.getPage().getStartIndex(), req.getPage().getPageSize(),true);
     }
 
     @ApiOperation(value = "搜索问题列表", httpMethod = "GET", notes = "搜索问题列表")

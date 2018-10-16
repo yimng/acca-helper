@@ -41,16 +41,13 @@
                             var r = $(".couponTypes input:eq("+index+")").val();
                             r = parseInt(r);
                             i += r;
-                            alert(i);
                         }
                     });
                     $("#couponType").val(i);
 
                     if ($("#isassign").is(':checked')) {
-                        alert(true)
                         $("#assign").val(true);
                     } else {
-                        alert(false)
                         $("#assign").val(false)
                     }
 
@@ -102,7 +99,7 @@
     <div class="control-group">
         <label class="control-label">说明<span class="help-inline"><font color="red">*</font> </span></label>
         <div class="controls">
-            <form:textarea path="description" htmlEscape="false" maxlength="1024" class="input-xxlarge required" cols="200" rows="15"/>
+            <form:textarea path="description" htmlEscape="false" maxlength="1024" class="input-xxlarge required" cols="100" rows="10"/>
 
                 <%-- <form:input path="officialExamProcess" htmlEscape="false" maxlength="256" class="input-xlarge "/> --%>
         </div>

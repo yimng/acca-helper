@@ -34,8 +34,8 @@
         <li><label>邀请状态：</label>
             <select name="status" value="${status}">
                 <option value="">邀请状态</option>
-                <option value="1" <c:if test="${'1' eq status}">selected</c:if>>邀请成功</option>
                 <option value="0" <c:if test="${'0' eq status}">selected</c:if>>受邀中</option>
+                <option value="1" <c:if test="${'1' eq status}">selected</c:if>>邀请成功</option>
                 <option value="2" <c:if test="${'2' eq status}">selected</c:if>>邀请失败</option>
             </select>
         </li>
@@ -47,18 +47,6 @@
         <li class="clearfix"></li>
     </ul>
 </form:form>
-<%--<form:form id="searchForm2" modelAttribute="coupon" action="${ctx}/web/coupon/listbyname" method="post" class="breadcrumb form-search">--%>
-<%--<input id="type" name="type" type="hidden" value="1"/>--%>
-<%--<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>--%>
-<%--<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>--%>
-<%--<ul class="ul-form">--%>
-<%--<li><label>发布人：</label>--%>
-<%--<input name="name" value="${coupon.createBy.name}" htmlEscape="false" maxlength="200" class="input-medium"/>--%>
-<%--</li>--%>
-<%--<li class="btns"><input id="btnSubmit2" class="btn btn-primary" type="submit" value="查询"/></li>--%>
-<%--<li class="clearfix"></li>--%>
-<%--</ul>--%>
-<%--</form:form>--%>
 <sys:message content="${message}"/>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
@@ -74,19 +62,27 @@
     <c:forEach items="${page.list}" var="invite" varStatus="index">
         <tr>
             <td>
-                    ${invite.inviterPhone}
+                ${invite.inviterPhone}
             </td>
             <td>
-                    ${invite.inviteePhone}
+                ${invite.inviteePhone}
             </td>
             <td>
-                    ${invite.inviteStatus}
+                <c:if test="${invite.inviteStatus == 0}">
+                    受邀中
+                </c:if>
+                <c:if test="${invite.inviteStatus == 1}">
+                    邀请成功
+                </c:if>
+                <c:if test="${invite.inviteStatus == 2}">
+                    邀请失败
+                </c:if>
             </td>
             <td>
-                    <fmt:formatDate value="${invite.inviteTime}" pattern="yyyy年MM月dd日 HH:MM"/>
+                <fmt:formatDate value="${invite.inviteTime}" pattern="yyyy年MM月dd日 HH:MM"/>
             </td>
             <td>
-                    <fmt:formatDate value="${invite.successTime}" pattern="yyyy年MM月dd日 HH:MM"/>
+                <fmt:formatDate value="${invite.successTime}" pattern="yyyy年MM月dd日 HH:MM"/>
             </td>
         </tr>
     </c:forEach>

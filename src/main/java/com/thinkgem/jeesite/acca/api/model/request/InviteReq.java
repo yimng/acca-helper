@@ -9,7 +9,7 @@ import lombok.Data;
 
 @ApiModel(value = "InviteReq",description="用户邀请接口")
 @Data
-public class InviteReq extends BaseRequest {
+public class InviteReq {
     private static final long serialVersionUID = 1L;
     @ApiModelProperty(value = "邀请人手机号")
     private String inviterPhone;
@@ -17,15 +17,4 @@ public class InviteReq extends BaseRequest {
     private String inviteePhone;
     @ApiModelProperty(value = "代金券ID")
     private Long couponId;
-
-
-    @Override
-    public int isCorrectParams() {
-        int resp = super.isCorrectParams();
-        if(resp!=RespConstants.GLOBAL_SUCCESS){
-            return resp;
-        }
-
-        return RespConstants.GLOBAL_SUCCESS;
-    }
 }

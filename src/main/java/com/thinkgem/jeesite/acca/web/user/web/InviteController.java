@@ -38,9 +38,10 @@ public class InviteController extends BaseController {
     @RequestMapping(value = {"list", ""})
     public String list(Invite invite, String status, Model model, @RequestParam(required = false, defaultValue = "1") int pageNo,
                        @RequestParam(required = false, defaultValue = "30") int pageSize) {
-        PageInfo<Invite> page = inviteService.findPage(invite, status, pageNo, pageSize);
+        List<Invite> page = inviteService.findPage(invite, status, pageNo, pageSize);
 
-        model.addAttribute("page", page);
+
+        model.addAttribute("page", new PageInfo<>(page));
         model.addAttribute("invite", invite);
         model.addAttribute("status", status);
         return "web/user/webInviteList";

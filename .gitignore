@@ -108,3 +108,6 @@ src/main/webapp/static/appfile/share/css/
 src/main/webapp/static/appfile/share/js/
 src/test/
 target/generated-sources/
+acca-helper.iml
+src/main/resources/rebel.xml
+src/main/webapp/userfiles/
