@@ -77,6 +77,8 @@
 					confirmNewPassword: {equalTo: "输入与上面相同的密码"}
 				},
 				submitHandler: function(form){
+                    $('#examPlaceName').val($('#examPlaceId option:selected').text());
+                    $('#examCityName').val($('#examCityId option:selected').text());
 					$.ajax({    
 				        type :'post',  
 				        async : false,
