@@ -53,7 +53,6 @@
 		SELECT 
 			<include refid="columns"/>
 		FROM tbl_exam a
-		<include refid="joins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="examFlag != null and examFlag == old">
@@ -77,7 +76,7 @@
 			<if test="places != null">
 				AND a.exam_place_id IN
 				<foreach collection="places" item="examPlace" open="(" close=")" separator=",">
-					#{examPlace.examPlaceId}
+					${examPlace.examPlaceId}
 				</foreach>
 			</if>
 		</where>
