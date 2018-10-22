@@ -124,6 +124,10 @@
 					freetekToast("请选择您在中博或财萃网的课程班型。");
 					return false;
 				}
+				else if (cityId == null || cityId == "" || cityId == "undefined") {
+				    freetekToast("请选择你所在的城市");
+				    return false;
+                }
 				else if(grade == null || grade == "" || grade == "undefined"){
 					freetekToast("请选择您进入大学的时间。");
 					return false;
@@ -359,6 +363,7 @@
                     <div class="intro__select-cover" id="cityId_cover">距离最近/签约分部</div>
                    	<select name=cityId id="cityId">
 						<!--option value="340800">安庆市</option-->
+                        <option value="" >城市</option>
 						<option value="451000">百色市</option>
 						<option value="340300">蚌埠市</option>
 						<option value="130600">保定市</option>
@@ -420,6 +425,7 @@
 							<option value="2015级" >2015级</option>
 							<option value="2016级" >2016级</option>
 							<option value="2017级" >2017级</option>
+							<option value="2018级" >2018级</option>
 							<option value="已毕业" >已毕业</option>
 							
 					</select> 
