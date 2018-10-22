@@ -24,6 +24,8 @@ import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.service.CrudService;
 import com.thinkgem.jeesite.common.utils.IdGen;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.utils.http.ZBGUtils;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.*;
 import com.thinkgem.jeesite.freetek.file.entity.FileInfo;
@@ -112,10 +114,40 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 
 	
 	/////////////////////////////////////////////////////////////////////////////////////
-	
+	@Transactional(readOnly = false)
+    public BaseObjResponse<AppAccaUser> register(String phone, String password, String deviceId) {
+        AppAccaUser accaUser = dao.getAccaUserByPhone(phone);
+        String token = ZBGUtils.getToken();
+        String caicuiUser = ZBGUtils.getCaicuiUser(token, phone);
+        if (accaUser != null) {
+            return new BaseObjResponse<>(RespConstants.USER_EXIST);
+        }
+        accaUser = new AppAccaUser();
+        accaUser.setCreateDate(new Date());
+        accaUser.setPhone(phone);
+        accaUser.setPassword(password);
+        String nickname = "ACCA学员"+phone.substring(phone.length()-4);
+        accaUser.setNickname(nickname);
+        accaUser.setHeadId(0L);
+        accaUser.setType(Constants.AccaUserType.general);
+        accaUser.setUserAccessToken(IdGen.uuid());
+        accaUser.setUserStatus(Constants.AccaUserStatus.normal);
+        accaUser.setDeviceId(deviceId);
+        accaUser.setLoginDate(new Date());
+        accaUser.setUpdateDate(new Date());
+        dao.insert(accaUser);
+        publishCoupon(phone);
+        if (StringUtils.isEmpty(caicuiUser)) {
+            ZBGUtils.registerZBG(token, phone, password);
+        }
+
+        accaUser = dao.getAccaUserByPhone(phone);
+        logger.info("accaUser:{}",accaUser);
+        return new BaseObjResponse<AppAccaUser>(accaUser);
+    }
 	
 	@Transactional(readOnly = false)
-	public BaseObjResponse<AppAccaUser> login(String phone, String smsVcode,String deviceId) {
+	public BaseObjResponse<AppAccaUser> fastlogin(String phone, String smsVcode,String deviceId) {
 		
 		// 是否是注册用户
 		AppAccaUser accaUser = dao.getAccaUserByPhone(phone);
@@ -125,36 +157,38 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 				return new BaseObjResponse<AppAccaUser>(RespConstants.USER_RREEZED);
 			}
 			// 验证码是否正确
-//			if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
-//				logger.info("login，验证码错误：{},{}", phone,smsVcode);
-//				return new BaseObjResponse<AppAccaUser>(RespConstants.SMS_VCODE_INCORRECT);
-//			}
+			if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
+				logger.info("login，验证码错误：{},{}", phone,smsVcode);
+				return new BaseObjResponse<AppAccaUser>(RespConstants.SMS_VCODE_INCORRECT);
+			}
 		}
-		
-		if(accaUser == null){
-			accaUser = new AppAccaUser();
-			accaUser.setCreateDate(new Date());
-			accaUser.setPhone(phone);
-			String nickname = "ACCA学员"+phone.substring(phone.length()-4);
-			accaUser.setNickname(nickname);
-			accaUser.setHeadId(0L);
-			accaUser.setType(Constants.AccaUserType.general);
-			accaUser.setUserAccessToken(IdGen.uuid());
-			accaUser.setUserStatus(Constants.AccaUserStatus.normal);
-			accaUser.setDeviceId(deviceId);
-			accaUser.setLoginDate(new Date());
-			accaUser.setUpdateDate(new Date());
-			dao.insert(accaUser);
+
+        if(accaUser == null){
+            accaUser = new AppAccaUser();
+            accaUser.setCreateDate(new Date());
+            accaUser.setPhone(phone);
+            String nickname = "ACCA学员"+phone.substring(phone.length()-4);
+            accaUser.setNickname(nickname);
+            accaUser.setHeadId(0L);
+            accaUser.setType(Constants.AccaUserType.general);
+            accaUser.setUserAccessToken(IdGen.uuid());
+            accaUser.setUserStatus(Constants.AccaUserStatus.normal);
+            accaUser.setDeviceId(deviceId);
+            accaUser.setLoginDate(new Date());
+            accaUser.setUpdateDate(new Date());
+            dao.insert(accaUser);
             publishCoupon(phone);
-
-
         }else{
 			//如果存在，表示已经注册过账号
 			accaUser.setLoginDate(new Date());
 			accaUser.setDeviceId(deviceId);
 			dao.update(accaUser);
 		}
-		
+        String token = ZBGUtils.getToken();
+        String caicuiUser = ZBGUtils.getCaicuiUser(token, phone);
+        if (StringUtils.isEmpty(caicuiUser)) {
+            ZBGUtils.registerZBG(token, phone,"");
+        }
 		accaUser = dao.getAccaUserByPhone(phone);
 		logger.info("accaUser:{}",accaUser);
 		return new BaseObjResponse<AppAccaUser>(accaUser);
@@ -165,12 +199,12 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 
         // 是否是注册用户
         AppAccaUser accaUser = dao.getAccaUserByPhone(phone);
+        String token = ZBGUtils.getToken();
+        String caicuiUser = ZBGUtils.getCaicuiUser(token, phone);
 
-        if(accaUser == null){
-            return new BaseObjResponse<AppAccaUser>(RespConstants.USER_NONEXIST);
-        }else{
+        if (accaUser != null) {
             //如果存在，表示已经注册过账号
-            if(accaUser.getUserStatus()==Constants.AccaUserStatus.frozen){
+            if (accaUser.getUserStatus() == Constants.AccaUserStatus.frozen) {
                 logger.info("login，账号被冻结：{},{}", phone, password);
                 return new BaseObjResponse<AppAccaUser>(RespConstants.USER_RREEZED);
             }
@@ -182,11 +216,38 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
             accaUser.setLoginDate(new Date());
             accaUser.setDeviceId(deviceId);
             dao.update(accaUser);
+            accaUser = dao.getAccaUserByPhone(phone);
+            logger.info("accaUser:{}",accaUser);
+            return new BaseObjResponse<AppAccaUser>(accaUser);
+        } else if (StringUtils.isNotEmpty(caicuiUser)) {
+            boolean loginzbg = ZBGUtils.loginzbg(token, phone, password);
+            if (!loginzbg) {
+                return new BaseObjResponse<>(RespConstants.SMS_VCODE_INCORRECT);
+            }
+            accaUser = new AppAccaUser();
+            accaUser.setCreateDate(new Date());
+            accaUser.setPhone(phone);
+            String nickname = "ACCA学员"+phone.substring(phone.length()-4);
+            accaUser.setNickname(nickname);
+            accaUser.setHeadId(0L);
+            accaUser.setType(Constants.AccaUserType.general);
+            accaUser.setUserAccessToken(IdGen.uuid());
+            accaUser.setUserStatus(Constants.AccaUserStatus.normal);
+            accaUser.setDeviceId(deviceId);
+            accaUser.setLoginDate(new Date());
+            accaUser.setUpdateDate(new Date());
+            dao.insert(accaUser);
+            publishCoupon(phone);
+            accaUser = dao.getAccaUserByPhone(phone);
+            logger.info("accaUser:{}",accaUser);
+            return new BaseObjResponse<AppAccaUser>(accaUser);
+        } else {
+            return new BaseObjResponse<AppAccaUser>(RespConstants.USER_NONEXIST);
+
         }
 
-        accaUser = dao.getAccaUserByPhone(phone);
-        logger.info("accaUser:{}",accaUser);
-        return new BaseObjResponse<AppAccaUser>(accaUser);
+
+
     }
 
     private boolean checkPassword(AppAccaUser accaUser, String password) {
@@ -260,7 +321,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 			accaUser.setEditable(1);
 		}
 		
-		return new BaseObjResponse<AppAccaUser>(accaUser);
+		return new BaseObjResponse<>(accaUser);
 	}
 
 	public BaseObjResponse<Boolean> getPassword(Long appUserId) {
@@ -303,6 +364,16 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 		dao.update(accaUser);
 
 		return this.getUserInfo(req.getAppUserId());
+	}
+
+	@Transactional(readOnly = false)
+	public BaseObjResponse<AppAccaUser> resetUserPassword(AppAccaUser user, String pass) {
+		String password = SystemService.entryptPassword(pass);
+		user.setPassword(password);
+		user.setUpdateDate(new Date());
+		dao.update(user);
+
+		return this.getUserInfo(user.getAccaUserId());
 	}
 
 	@Transactional(readOnly = false)

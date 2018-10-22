@@ -114,7 +114,7 @@
 		
 		function getFormJson(form) {
 			var o = {};
-			var a = $(form).serializeArray();
+			var a	 = $(form).serializeArray();
 			$.each(a, function () {
 			if (o[this.name] !== undefined) {
 			if (!o[this.name].push) {

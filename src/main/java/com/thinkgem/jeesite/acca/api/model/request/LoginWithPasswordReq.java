@@ -4,8 +4,9 @@ import com.thinkgem.jeesite.common.utils.AppUtils;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-
+@Data
 public class LoginWithPasswordReq extends BaseModel {
     @ApiModelProperty(value = "手机号",required=true)
     private String phone;
@@ -29,29 +30,5 @@ public class LoginWithPasswordReq extends BaseModel {
         }
 
         return RespConstants.GLOBAL_SUCCESS;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
     }
 }

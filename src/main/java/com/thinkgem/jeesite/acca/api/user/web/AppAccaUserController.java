@@ -113,15 +113,26 @@ public class AppAccaUserController extends BaseController {
 			return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
 		}
 		
-		return appAccaUserService.login(req.getPhone(),req.getSmsVcode(),req.getDeviceId());
+		return appAccaUserService.fastlogin(req.getPhone(),req.getSmsVcode(),req.getDeviceId());
 	}
+
+    @ApiOperation(value = "用户名密码注册",  notes = "用户名密码注册")
+    @RequestMapping(value = "register.do",method=RequestMethod.POST)
+    public @ResponseBody BaseObjResponse<AppAccaUser> register(@RequestBody LoginWithPasswordReq req){
+
+        if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
+            return new BaseObjResponse<>(req.isCorrectParams());
+        }
+
+        return appAccaUserService.register(req.getPhone(),req.getPassword(),req.getDeviceId());
+    }
 
     @ApiOperation(value = "用户名密码登陆",  notes = "用户名密码登陆")
     @RequestMapping(value = "loginWithPassword.do",method=RequestMethod.POST)
     public @ResponseBody BaseObjResponse<AppAccaUser> loginWithPassword(@RequestBody LoginWithPasswordReq req){
 
         if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
-            return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+            return new BaseObjResponse<>(req.isCorrectParams());
         }
 
         return appAccaUserService.loginWithPassword(req.getPhone(),req.getPassword(),req.getDeviceId());
@@ -131,7 +142,7 @@ public class AppAccaUserController extends BaseController {
 	@RequestMapping(value = "getUserInfo.do",method=RequestMethod.POST)
 	public @ResponseBody BaseObjResponse<AppAccaUser> getUserInfo(@RequestBody BaseRequest req){
 		if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
-			return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+			return new BaseObjResponse<>(req.isCorrectParams());
 		}
 		
 		return appAccaUserService.getUserInfo(req.getAppUserId());
@@ -141,7 +152,7 @@ public class AppAccaUserController extends BaseController {
 	@RequestMapping(value = "getUserPassword.do", method=RequestMethod.POST)
 	public @ResponseBody BaseObjResponse<Boolean> getUserPassword(@RequestBody BaseRequest req) {
 		if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
-			return new BaseObjResponse<Boolean>(req.isCorrectParams());
+			return new BaseObjResponse<>(req.isCorrectParams());
 		}
 		return appAccaUserService.getPassword(req.getAppUserId());
 	}
@@ -150,7 +161,7 @@ public class AppAccaUserController extends BaseController {
 	@RequestMapping(value = "updateUserInfo.do",method=RequestMethod.POST)
 	public @ResponseBody BaseObjResponse<AppAccaUser> updateUserInfo(@RequestBody UpdateUserInfoReq req){
 		if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
-			return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+			return new BaseObjResponse<>(req.isCorrectParams());
 		}
 		
 		return appAccaUserService.updateUserInfo(req);
@@ -160,11 +171,22 @@ public class AppAccaUserController extends BaseController {
     @RequestMapping(value = "updateUserPassword.do",method=RequestMethod.POST)
     public @ResponseBody BaseObjResponse<AppAccaUser> updateUserPassword(@RequestBody UpdateUserPasswordReq req){
         if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
-            return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+            return new BaseObjResponse<>(req.isCorrectParams());
         }
 
         return appAccaUserService.updateUserPassword(req);
     }
+
+	@ApiOperation(value = "重置用户登录密码",  notes = "重置用户登录密码")
+	@RequestMapping(value = "resetUserPassword.do",method=RequestMethod.POST)
+	public @ResponseBody BaseObjResponse<AppAccaUser> resetUserPassword(@RequestBody ResetUserPasswordReq req){
+		String phone = req.getPhone();
+		AppAccaUser user = appAccaUserService.getAccaUserByPhone(phone);
+		if (user == null) {
+			return new BaseObjResponse(RespConstants.USER_NONEXIST);
+		}
+		return appAccaUserService.resetUserPassword(user, req.getPassword());
+	}
 
     @ApiOperation(value = "修改用户登录手机号",  notes = "修改用户登录手机号")
     @RequestMapping(value = "updateUserPhone.do",method=RequestMethod.POST)

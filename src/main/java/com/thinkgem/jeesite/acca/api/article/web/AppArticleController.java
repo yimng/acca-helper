@@ -194,7 +194,7 @@ public class AppArticleController extends BaseController {
 //			logger.info("login，账号被冻结：{}", phone);			
 //			return new BaseResponse(RespConstants.USER_RREEZED);
 //		}		
-		return appAccaUserService.login(phone, smsVcode, "");
+		return appAccaUserService.fastlogin(phone, smsVcode, "");
 	}
 
 	@ApiOperation(value = "记录分享", notes = "记录分享")
