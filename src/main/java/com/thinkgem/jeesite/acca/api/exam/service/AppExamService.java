@@ -267,7 +267,9 @@ public class AppExamService  extends BaseService{
 				totByPlace += cart.getPrice();
 			}
 			totalAmount += totByPlace;
-			SelfExamGoups group = new SelfExamGoups(placeId, exams, totByPlace);
+			AppExamSelfCart appExamSelfCart = exams.get(0);
+			SelfExamGoups group = new SelfExamGoups(placeId, appExamSelfCart.getExamDetailAddress(),
+					appExamSelfCart.getExamPlaceName(), appExamSelfCart.getExamPlaceSn(), exams, totByPlace);
 			groups.add(group);
 		}
 		logger.info("totalAmount:"+totalAmount);
