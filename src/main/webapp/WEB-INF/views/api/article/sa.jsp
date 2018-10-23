@@ -224,7 +224,7 @@
 		
 		function checkContactNumber(mobile) {  
 	        $("#error").css("display", "none");  
-	        var isMobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(14[0-9]{1}))+\d{8})$/;  
+	        var isMobile = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1})|(16[0-9]{1})|(19[0-9]{1})|(14[0-9]{1}))+\d{8})$/;
 	        var isPhone = /^(?:(?:0\d{2,3})-)?(?:\d{7,8})(-(?:\d{3,}))?$/;;  
 	        //var error = "<label id=\"error\" class=\"validate_input_error\">请正确填写电话号码，例如:13511111111或010-11111111</label>";  
 	        //如果为1开头则验证手机号码  
@@ -353,10 +353,8 @@
                     <div class="intro__select-cover" id="classStyle_cover">班型</div>
                    	<select name="classStyle" id="classStyle">
 							<option value="">班型</option>
-							<option value="面授精英班" >面授精英班</option>
-							<option value="面授标准班" >面授标准班</option>
-							<option value="网络保过班" >网络保过班</option>
-							<option value="网络标准班" >网络标准班</option>		
+							<option value="线下分部报名-面授(网络)课" >线下分部报名-面授(网络)课</option>
+							<option value="中博官网报名-网络课" >中博官网报名-网络课</option>
 					</select>
                 </div> 		
                 <div class="intro__form-region" id="cityId_div">
@@ -420,8 +418,6 @@
                     <div class="intro__select-cover" id="grade_cover">年级</div>
                    	<select name=grade id="grade">
 							<option value="">年级</option>
-							<option value="2013级" >2013级</option>
-							<option value="2014级" >2014级</option>
 							<option value="2015级" >2015级</option>
 							<option value="2016级" >2016级</option>
 							<option value="2017级" >2017级</option>
