@@ -11,14 +11,17 @@ import io.swagger.annotations.ApiModelProperty;
 public class GetSelfExamListByCityAndTimeSpanReq extends BaseRequest {
 private static final long serialVersionUID = 1L;
 	
-	@ApiModelProperty(value = "城市id，全国：-1，其他取值表示具体的城市id")
+	@ApiModelProperty(value = "城市id，全国：-1，其他取值表示具体的城市id", required = true)
 	private Integer examCityId;
 	
-	@ApiModelProperty(value = "筛选开始时间")
+	@ApiModelProperty(value = "筛选开始时间", required = false)
 	private Date startTime;
 	
-	@ApiModelProperty(value = "筛选结束时间")
+	@ApiModelProperty(value = "筛选结束时间", required = false)
 	private Date endTime;
+
+	@ApiModelProperty(value = "是否有考位", required = false)
+	private Boolean hasSeat;
 	
 	
 	@Override
@@ -31,9 +34,6 @@ private static final long serialVersionUID = 1L;
 		if(this.examCityId==null || this.examCityId==0){
 			return RespConstants.GLOBAL_PARAM_ERROR;
 		}
-		if(startTime ==null || endTime==null){
-			return RespConstants.GLOBAL_PARAM_ERROR;
-		}		
 		return RespConstants.GLOBAL_SUCCESS;
 	}
 
@@ -67,6 +67,11 @@ private static final long serialVersionUID = 1L;
 		this.endTime = endTime;
 	}
 
+	public Boolean isHasSeat() {
+		return hasSeat;
+	}
 
-	
+	public void setHasSeat(Boolean hasSeat) {
+		this.hasSeat = hasSeat;
+	}
 }

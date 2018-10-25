@@ -67,9 +67,8 @@ public class QuestionController extends BaseController {
         if (!beanValidator(model, question)) {
             return form(question, model);
         }
-        User user = UserUtils.getUser();
         questionService.save(question);
         addMessage(redirectAttributes, "保存Question成功");
-        return "redirect:" + Global.getAdminPath() + "/web/question/?repage";
+            return "redirect:" + Global.getAdminPath() + "/web/question/?repage";
     }
 }

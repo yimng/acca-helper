@@ -32,7 +32,7 @@ public class QuestionService extends MyService<QuestionMapper, Question> {
     }
 
     @Override
-    public PageInfo<Question> findPage(Question entity, int pageNo, int pageSize) {
+        public PageInfo<Question> findPage(Question entity, int pageNo, int pageSize) {
         PageHelper.startPage(pageNo, pageSize);
         return new PageInfo(mapper.findList(entity));
     }

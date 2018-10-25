@@ -160,12 +160,12 @@ public class AppExamService  extends BaseService{
 		return new BasePageResponse<AppExam>(list);
 	}
 	
-	public BasePageResponse<AppExam> getSelfExamListByCityAndTimeSpan(Integer examCityId,Date startTime, Date endTime, AppAccaUser appUser) {
+	public BasePageResponse<AppExam> getSelfExamListByCityAndTimeSpan(Integer examCityId,Date startTime, Date endTime, Boolean hasSeat, AppAccaUser appUser) {
 		logger.info("appUser:"+appUser);
 		logger.info("startTime:"+startTime);
 		logger.info("endTime:"+endTime);
 		
-		List<AppExam> list = appExamDao.findSelfExamListByCityAndTimeSpan(examCityId, startTime, endTime);
+		List<AppExam> list = appExamDao.findSelfExamListByCityAndTimeSpan(examCityId, startTime, endTime, hasSeat);
 		
 		logger.info("getSelfExamList:"+list);
 		

@@ -98,7 +98,7 @@ public class AppExamController extends BaseController {
 			return new BasePageResponse<AppExam>(respCode);
 		}
 		
-		return appExamService.getSelfExamListByCityAndTimeSpan(req.getExamCityId(),req.getStartTime(),req.getEndTime(),req.getAppUser());
+		return appExamService.getSelfExamListByCityAndTimeSpan(req.getExamCityId(),req.getStartTime(),req.getEndTime(), req.isHasSeat(), req.getAppUser());
 	}
 	
 	@ApiOperation(value = "F1-F4按照考点id展示考试详情", notes = "F1-F4按照考点id展示考试详情")

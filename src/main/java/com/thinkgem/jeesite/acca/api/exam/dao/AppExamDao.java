@@ -16,21 +16,25 @@ import com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfCityTiny;
 
 /**
  * AppExamDAO接口
+ *
  * @author Ivan
  * @version 2016-08-15
  */
 @MyBatisDao
 public interface AppExamDao extends CrudDao<AppExam> {
-	
-	public List<AppExam> findSelfExamListByCityAndTime(@Param("examCityId") Integer examCityId,@Param("startTime") Date startTime);
-	public List<AppExam> findSelfExamListByCityAndTimeSpan(@Param("examCityId") Integer examCityId,@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-	
-	public List<AppExamSelfCityTiny> getSelfExamPlaceList();
-	
-	public AppExam getExamInfoByExamId(Long examId);
-	
-	public List<AppExamCourseSelf> getExamCourseListByExamId(Long examId);
-	
-	public void updateUsedSeats(Long examId);
+    public List<AppExam> findSelfExamListByCityAndTime(@Param("examCityId") Integer examCityId, @Param("startTime") Date startTime);
+
+    public List<AppExam> findSelfExamListByCityAndTimeSpan(@Param("examCityId") Integer examCityId, @Param("startTime") Date startTime,
+                                                           @Param("endTime") Date endTime,
+                                                           @Param("hasSeat") Boolean hasSeat);
+
+
+    public List<AppExamSelfCityTiny> getSelfExamPlaceList();
+
+    public AppExam getExamInfoByExamId(Long examId);
+
+    public List<AppExamCourseSelf> getExamCourseListByExamId(Long examId);
+
+    public void updateUsedSeats(Long examId);
 }

@@ -116,15 +116,23 @@
 		AND 	
 			a.exam_type &amp; 1 = 1 
 		AND 
-			a.exam_signup_endtime>now() 
-		<if test="examCityId!=-1">
+			a.exam_signup_endtime > now()
+		<if test="examCityId != -1">
 			AND a.exam_city_id = #{examCityId}
 		</if>
-		<if test="startTime != null and startTime != ''">
+		<if test="startTime != null">
 			AND a.exam_start_time >= #{startTime}
 		</if>
-		<if test="endTime != null and endTime != ''">
+		<if test="endTime != null">
 			and #{endTime} >= a.exam_end_time
+		</if>
+
+		<if test="hasSeat != null and hasSeat == true">
+			and total_seats - used_seats > 0
+		</if>
+
+		<if test="hasSeat != null and hasSeat == false">
+			and 0 >= total_seats - used_seats
 		</if>
 		</where>
 		ORDER BY a.exam_start_time ASC 
