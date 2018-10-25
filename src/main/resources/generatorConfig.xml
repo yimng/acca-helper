@@ -51,7 +51,11 @@
         </javaClientGenerator>
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-        <table tableName="tbl_question_category" domainObjectName="QuestionCategory">
+        <table tableName="tbl_exam_center_question" domainObjectName="ExamCenterQuestion">
+            <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
+        <table tableName="tbl_exam_center_answer" domainObjectName="ExamCenterAnswer">
             <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
             <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
