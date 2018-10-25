@@ -11,4 +11,5 @@ import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 public interface AppOfficialExamPlaceDao extends CrudDao<AppOfficialExamPlace> {
 
 	List<SmallPlace> getExamPlace(AppOfficialExamPlace place);
+	List<SmallPlace> getExamPlaceBySeason(AppOfficialExamPlace place);
 }

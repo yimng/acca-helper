@@ -55,5 +55,18 @@
 			having count(a.exam_place_id) = ${sqlMap.idNum}
 		</if>
 	</select>
+
+	<select id="getExamPlaceBySeason" resultType="com.thinkgem.jeesite.acca.api.exam.entity.SmallPlace">
+		SELECT
+		<include refid="Columns"/>
+		FROM tbl_exam_place a
+		left join tbl_exam b on a.exam_place_id = b.exam_place_id and b.del_flag = #{DEL_FLAG_NORMAL}
+		where a.del_flag = #{DEL_FLAG_NORMAL}
+		and (b.exam_type = 2 or b.exam_type = 4)
+		and date_format(b.exam_start_time, '%Y-%m') = #{examStartTimeStr}
+		<if test="examCityId != null and examCityId != ''">
+			and b.exam_city_id = #{examCityId}
+		</if>
+	</select>
 	
 </mapper>

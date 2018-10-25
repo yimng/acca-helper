@@ -2,6 +2,8 @@ package com.thinkgem.jeesite.acca.api.exam.web;
 
 import java.util.List;
 
+import com.thinkgem.jeesite.acca.api.model.request.SeasonOffPlaceReq;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -128,6 +130,22 @@ public class AppOfficialExamController {
 		place.setExamStartTimeStr(req.getExamStartTimeStr());
 		place.setExamType(req.getExamType());
 		return new BasePageResponse<SmallPlace>(appOfficialExamPlaceService.getExamPlace(place));
+	}
+
+	@ApiOperation(value = "根据所选考试季获取考试地点列表 ", notes = "根据所选考试季获取考试地点列表")
+	@RequestMapping(value = "getOfficialExamPlaceListBySeason.do", method = RequestMethod.POST)
+	@ResponseBody
+	public BasePageResponse<SmallPlace> getOfficialExamPlaceListBySeason(@RequestBody SeasonOffPlaceReq req){
+		int respFlag = req.isCorrectParams();
+		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
+			return new BasePageResponse<SmallPlace>(respFlag);
+		}
+		AppOfficialExamPlace place = new AppOfficialExamPlace();
+
+
+		place.setExamStartTimeStr(req.getExamStartTimeStr());
+		place.setExamCityId(req.getCityId());
+		return new BasePageResponse<SmallPlace>(appOfficialExamPlaceService.getExamPlaceBySeason(place));
 	}
 	
 	@ApiOperation(value = "预约报考，生成订单 ", notes = "预约报考，生成订单")
