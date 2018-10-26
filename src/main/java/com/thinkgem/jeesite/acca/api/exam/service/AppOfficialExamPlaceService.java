@@ -21,4 +21,5 @@ public class AppOfficialExamPlaceService extends CrudService<AppOfficialExamPlac
 	public List<SmallPlace> getExamPlaceBySeason(AppOfficialExamPlace place) {
 		return dao.getExamPlaceBySeason(place);
 	}
+
 }

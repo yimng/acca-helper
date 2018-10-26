@@ -12,4 +12,5 @@ public interface AppOfficialExamPlaceDao extends CrudDao<AppOfficialExamPlace> {
 
 	List<SmallPlace> getExamPlace(AppOfficialExamPlace place);
 	List<SmallPlace> getExamPlaceBySeason(AppOfficialExamPlace place);
+
 }

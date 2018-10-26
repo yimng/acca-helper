@@ -67,6 +67,7 @@
 		<if test="examCityId != null and examCityId != ''">
 			and b.exam_city_id = #{examCityId}
 		</if>
+		group by a.exam_place_id
 	</select>
-	
+
 </mapper>

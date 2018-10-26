@@ -52,6 +52,33 @@
 		group by a.exam_course_id
 	</select>
 
+	<select id="getOfficialExamCourseDetailList" resultType="AppOfficialExamCourse">
+		select <include refid="appOfficialExamCourseColumns"/>,
+        b.exam_version_json as  examVersionJson,
+        s.exam_pre_signup as preSignup,
+        s.exam_signup as signup,
+        s.exam_post_signup as postSignup,
+        s.exam_pre_price as prePrice,
+        s.exam_normal_price as normalPrice,
+        s.exam_post_price as postPrice
+		from tbl_exam_course a
+        left join tbl_exam_course_relation b on a.exam_course_id = b.exam_course_id
+        left join tbl_exam_season s on a.exam_course_id = s.exam_course_id
+		WHERE
+		a.del_flag = '0'
+		AND (a.exam_type = 4 or a.exam_type = 6)
+        AND s.exam_season_str = #{examStartTimeStr}
+		AND EXISTS (
+		SELECT * FROM tbl_exam e
+		WHERE
+		b.exam_id = e.exam_id
+		AND e.del_flag = '0'
+		AND DATE_FORMAT(e.exam_start_time, '%Y-%m') = #{examStartTimeStr}
+        AND e.exam_city_id = #{examCityId}
+		)
+		group by a.exam_course_id
+	</select>
+
 	<!-- <select id="getOfficialExamCourseList" resultType="AppOfficialExamCourse">
 		select <include refid="appOfficialExamCourseColumns"/>,b.exam_version_json examVersionJson,c.exam_id examId,c.exam_signup_endtime examSignupEndtime
 		from tbl_exam_course a left join tbl_exam_course_relation b on a.exam_course_id = b.exam_course_id 

@@ -23,12 +23,19 @@ import java.util.List;
 public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 	
 	private static final long serialVersionUID = 1L;
+	private Long examCityId;
 	private Long examCourseId;		// exam_course_id
 	private String course;		// 科目
 	private String courseName;		// 科目名称
 	private String englishName;		// 英文名称
 	private String englishShortName;		// 英文缩写
 	private Double price;		// 报名费
+	private Date preSignup;
+	private Date signup;
+	private Date postSignup;
+	private Double prePrice;
+	private Double normalPrice;
+	private Double postPrice;
 	private Integer examType;		// 支持的考试类型：1自有考试，2官方机考，4官方笔考，如果同时支持多个，则采用位运算&ldquo;或&rdquo;进行，比如，取值为3，则支持自有考试和官方机考
 	private String examStartTimeStr;
 	
@@ -50,6 +57,7 @@ public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 	
 	public AppOfficialExamCourse(ExamStartTimeReq req){
 		this.examStartTimeStr = req.getExamStartTimeStr();
+		this.examCityId = req.getExamCityId();
 	}
 
 	@NotNull(message="exam_course_id不能为空")
@@ -182,4 +190,59 @@ public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 		return courseColor;
 	}
 
+	public Long getExamCityId() {
+		return examCityId;
+	}
+
+	public void setExamCityId(Long examCityId) {
+		this.examCityId = examCityId;
+	}
+
+	public Date getPreSignup() {
+		return preSignup;
+	}
+
+	public void setPreSignup(Date preSignup) {
+		this.preSignup = preSignup;
+	}
+
+	public Date getSignup() {
+		return signup;
+	}
+
+	public void setSignup(Date signup) {
+		this.signup = signup;
+	}
+
+	public Date getPostSignup() {
+		return postSignup;
+	}
+
+	public void setPostSignup(Date postSignup) {
+		this.postSignup = postSignup;
+	}
+
+	public Double getPrePrice() {
+		return prePrice;
+	}
+
+	public void setPrePrice(Double prePrice) {
+		this.prePrice = prePrice;
+	}
+
+	public Double getNormalPrice() {
+		return normalPrice;
+	}
+
+	public void setNormalPrice(Double normalPrice) {
+		this.normalPrice = normalPrice;
+	}
+
+	public Double getPostPrice() {
+		return postPrice;
+	}
+
+	public void setPostPrice(Double postPrice) {
+		this.postPrice = postPrice;
+	}
 }

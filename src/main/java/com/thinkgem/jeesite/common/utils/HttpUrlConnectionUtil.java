@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 import com.thinkgem.jeesite.acca.web.user.web.WebAccaUserController;
+import com.thinkgem.jeesite.common.utils.http.ZBGUtils;
 
 //import com.alibaba.fastjson.JSONArray;
 //import com.alibaba.fastjson.JSONObject;
@@ -137,13 +138,13 @@ public class HttpUrlConnectionUtil {
     
      
     
-//    public static void main(String[] args) throws Exception {  
-//    	String token = WebAccaUserController.getToken();
-//    	//String user = WebAccaUserController.getCaicuiUser(token, "15254108719");    	
+    public static void main(String[] args) throws Exception {
+    	String token = ZBGUtils.getToken();
+    	String user = ZBGUtils.getCaicuiUser(token, "15254108719");
 //    	String course = WebAccaUserController.getStudentClass(token,"15254108719");
-//    	//System.out.println(course);
-//    	//String s = getJsonString("http://api.caicui.com/api/business/order/memberOrderList?token=6494c8cc-a13e-4510-b4df-b9574dac2d46&code=15254108719&type=2");		
-//    	//System.out.println(s);
-//    			
-//	}
+    	//System.out.println(course);
+    	//String s = getJsonString("http://api.caicui.com/api/business/order/memberOrderList?token=6494c8cc-a13e-4510-b4df-b9574dac2d46&code=15254108719&type=2");
+    	//System.out.println(s);
+
+	}
 }

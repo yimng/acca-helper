@@ -40,6 +40,10 @@ public class AppOfficialExamCourseService extends CrudService<AppOfficialExamCou
 	public List<AppOfficialExamCourse> getOfficialExamCourseList(AppOfficialExamCourse appOfficialExamCourse){
 		return dao.getOfficialExamCourseList(appOfficialExamCourse);
 	}
+
+	public List<AppOfficialExamCourse> getOfficialExamCourseDetailList(AppOfficialExamCourse appOfficialExamCourse){
+		return dao.getOfficialExamCourseDetailList(appOfficialExamCourse);
+	}
 	
 	@Override
     @Transactional(readOnly = false)

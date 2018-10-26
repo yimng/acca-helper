@@ -20,5 +20,7 @@ public interface AppOfficialExamCourseDao extends CrudDao<AppOfficialExamCourse>
 	List<AppOfficialExamCourse> getOfficialExamCourseList(AppOfficialExamCourse appOfficialExamCourse);
 	
 	AppOfficialExamCourse getOfficialExamCourse(AppOfficialExamCourse appOfficialExamCourse);
+
+	List<AppOfficialExamCourse> getOfficialExamCourseDetailList(AppOfficialExamCourse appOfficialExamCourse);
 	
 }

@@ -87,7 +87,7 @@ public class AppOfficialExamController {
 		course.setExamType(ExamConstant.OFFI_EXAM_WRI);
 		return new BasePageResponse<AppOfficialExamCourse>(appOfficialExamCourseService.getOfficialExamCourseList(course));
 	}
-	
+
 	@ApiOperation(value = "获取官方考试机试科目", notes = "获取官方考试机试科目")
 	@RequestMapping(value = "getOfficialExamCourseList.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -99,6 +99,18 @@ public class AppOfficialExamController {
 		AppOfficialExamCourse course = new AppOfficialExamCourse(req);
 		course.setExamType(ExamConstant.OFFI_EXAM_MAC);
 		return new BasePageResponse<AppOfficialExamCourse>(appOfficialExamCourseService.getOfficialExamCourseList(course));
+	}
+
+	@ApiOperation(value = "获取官方考试笔记/机试科目细节", notes = "获取官方考试笔记/机试科目细节")
+	@RequestMapping(value = "getOfficialExamCourseDetailList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public BasePageResponse<AppOfficialExamCourse> getOfficialExamCourseDetailList(@RequestBody ExamStartTimeReq req){
+		int respFlag = req.isCorrectParams();
+		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
+			return new BasePageResponse<>(respFlag);
+		}
+		AppOfficialExamCourse course = new AppOfficialExamCourse(req);
+		return new BasePageResponse<>(appOfficialExamCourseService.getOfficialExamCourseDetailList(course));
 	}
 	
 	@ApiOperation(value = "根据所选科目对应的考试获取考试地点列表 ", notes = "根据所选科目对应的考试获取考试地点列表")
