@@ -104,6 +104,15 @@ public class AppAccaUserController extends BaseController {
 		
 		return resp;
 	}
+
+	@ApiOperation(value = "验证手机验证码", notes = "验证手机验证码")
+	@RequestMapping(value = "verifySmsVcode.do",method=RequestMethod.POST)
+	public @ResponseBody BaseResponse verifySmsVcode(@RequestBody LoginReq req) {
+		if (req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS) {
+			return new BaseObjResponse<AppAccaUser>(req.isCorrectParams());
+		}
+		return appAccaUserService.verifySmsVcode(req.getPhone(), req.getSmsVcode(), req.getDeviceId());
+	}
 	
 	@ApiOperation(value = "app登陆",  notes = "app登陆")
 	@RequestMapping(value = "login.do",method=RequestMethod.POST)

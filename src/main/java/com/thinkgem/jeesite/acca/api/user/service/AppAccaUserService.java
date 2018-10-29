@@ -145,6 +145,14 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
         logger.info("accaUser:{}",accaUser);
         return new BaseObjResponse<AppAccaUser>(accaUser);
     }
+
+    public BaseObjResponse<Boolean> verifySmsVcode(String phone, String smsVcode, String deviceId) {
+		if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
+			logger.info("login，验证码错误：{},{}", phone,smsVcode);
+			return new BaseObjResponse<Boolean>(RespConstants.SMS_VCODE_INCORRECT);
+		}
+		return new BaseObjResponse<>(true);
+	}
 	
 	@Transactional(readOnly = false)
 	public BaseObjResponse<AppAccaUser> fastlogin(String phone, String smsVcode,String deviceId) {
@@ -211,7 +219,10 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
             // 密码是否正确
             if (!checkPassword(accaUser, password)) {
                 logger.info("login，密码错误：{},{}", phone, password);
-                return new BaseObjResponse<AppAccaUser>(RespConstants.SMS_VCODE_INCORRECT);
+                return new BaseObjResponse<AppAccaUser>(RespConstants.USER_WRONG_PASS);
+            }
+            if (StringUtils.isEmpty(caicuiUser)) {
+                ZBGUtils.registerZBG(token, phone, password);
             }
             accaUser.setLoginDate(new Date());
             accaUser.setDeviceId(deviceId);
@@ -222,7 +233,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
         } else if (StringUtils.isNotEmpty(caicuiUser)) {
             boolean loginzbg = ZBGUtils.loginzbg(token, phone, password);
             if (!loginzbg) {
-                return new BaseObjResponse<>(RespConstants.SMS_VCODE_INCORRECT);
+                return new BaseObjResponse<>(RespConstants.USER_WRONG_PASS);
             }
             accaUser = new AppAccaUser();
             accaUser.setCreateDate(new Date());

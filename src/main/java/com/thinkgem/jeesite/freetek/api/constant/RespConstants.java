@@ -17,6 +17,7 @@ public class RespConstants {
 	public static final int USER_RREEZED = 00102; //账户被冻结
 	public static final int USER_MUSTAPP = 00103; //必须为注册用户
 	public static final int USER_EXIST = 00104;   //用户已存在
+	public static final int USER_WRONG_PASS = 00105;   //密码错误
 	// 用户正在被邀请
 	public static final int USER_WAS_INVITING = 00105;
 	// 优惠券已被抢完
@@ -54,6 +55,7 @@ public class RespConstants {
 		respMap.put(USER_RREEZED, "账号被冻结");
 		respMap.put(USER_MUSTAPP, "本活动限ACCA小助手注册用户参加，请先下载ACCA小助手并注册用户后再参加本活动！");
 		respMap.put(USER_EXIST, "用户已存在");
+		respMap.put(USER_WRONG_PASS,"用户名密码错误");
 		respMap.put(USER_WAS_INVITING, "用户已被邀请");
 		respMap.put(COUPON_NOT_AVAILABLE, "下手太慢优惠券已被抢完");
 		

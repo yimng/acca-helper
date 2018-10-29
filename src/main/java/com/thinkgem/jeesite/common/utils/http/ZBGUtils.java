@@ -3,15 +3,18 @@ package com.thinkgem.jeesite.common.utils.http;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thinkgem.jeesite.common.utils.HttpUrlConnectionUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class ZBGUtils {
+//    private static String domain = "https://apidev.zbgedu.com";
+    private static String domain = "http://10.10.20.16:6005";
 
     public static String getToken(){
-        String url="http://api.caicui.com/api/zbids/app/gettoken/v1.0/";
+        String url=domain + "/api/edu/zbids/app/gettoken/";
         String requestMethod="POST";
         Map<String, String> params= new HashMap<String, String>();
         params.put("appType","accahelperserver");
@@ -24,6 +27,7 @@ public class ZBGUtils {
     }
 
     public static String getCaicuiUser(String token,String code){
+//        String url=domain + "/api/edu/zbids/member/detail/";
         String url="http://api.caicui.com/api/zbids/member/detail/v1.0";
         String requestMethod="GET";
         Map<String, String> params= new HashMap<String, String>();
@@ -47,7 +51,7 @@ public class ZBGUtils {
     }
 
     public static boolean loginzbg(String token, String phone, String password) {
-        String url = "http://api.caicui.com/api/edu/zbids/member/login";
+        String url = domain +  "/api/edu/zbids/member/login";
         String reqeustMethod = "POST";
         Map<String, String> params = new HashMap<>();
         params.put("token", token);
@@ -67,12 +71,14 @@ public class ZBGUtils {
     }
 
     public static String registerZBG(String token, String phone, String password) {
-        String url = "http://api.zbgedu.com/api/edu/zbids/member/fastreg";
+        String url = domain + "/api/edu/zbids/member/fastreg";
         String requestMethod = "POST";
         Map<String, String> params = new HashMap<>();
         params.put("token", token);
         params.put("phone", phone);
-        params.put("password", password);
+        if (StringUtils.isNotEmpty(password)) {
+            params.put("password", password);
+        }
         String memberId = "";
         try {
             String s = HttpUrlConnectionUtil.httpRequestToString(url, requestMethod, params);
@@ -88,7 +94,7 @@ public class ZBGUtils {
     }
 
     public static String getStudentClass(String token,String phone){
-        String url="http://api.caicui.com/api/business/order/memberOrderList";
+        String url= domain + "/api/business/order/memberOrderList";
         String requestMethod="POST";
         String userid=getCaicuiUser(token,phone);
         if(userid==null|| "".equals(userid)){
