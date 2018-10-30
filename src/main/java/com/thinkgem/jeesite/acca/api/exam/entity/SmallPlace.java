@@ -14,6 +14,8 @@ public class SmallPlace implements Serializable {
 	
 	private String examPlaceSn;
 
+	private String examCityId;
+
 	public Long getExamPlaceId() {
 		return examPlaceId;
 	}
@@ -46,4 +48,11 @@ public class SmallPlace implements Serializable {
 		this.examPlaceSn = examPlaceSn;
 	}
 
+	public String getExamCityId() {
+		return examCityId;
+	}
+
+	public void setExamCityId(String examCityId) {
+		this.examCityId = examCityId;
+	}
 }

@@ -38,6 +38,7 @@ public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 	private Double postPrice;
 	private Integer examType;		// 支持的考试类型：1自有考试，2官方机考，4官方笔考，如果同时支持多个，则采用位运算&ldquo;或&rdquo;进行，比如，取值为3，则支持自有考试和官方机考
 	private String examStartTimeStr;
+	private String examTime;
 	
 	private String examVersionJson;
 	private Long examId;
@@ -244,5 +245,13 @@ public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 
 	public void setPostPrice(Double postPrice) {
 		this.postPrice = postPrice;
+	}
+
+	public String getExamTime() {
+		return examTime;
+	}
+
+	public void setExamTime(String examTime) {
+		this.examTime = examTime;
 	}
 }

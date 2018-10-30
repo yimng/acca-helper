@@ -6,6 +6,7 @@
 		a.exam_place_id AS "examPlaceId",
 		a.exam_place_name AS "examPlaceName",
 		a.exam_place_sn AS "examPlaceSn",
+		a.exam_city_id AS "examCityId",
 		a.exam_detail_address AS "examDetailAddress"
 	</sql>
 	
