@@ -112,6 +112,9 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
         criteria.andLessThan("beginTime", new Date());
         criteria.andGreaterThan("endTime", new Date());
         List<Activity> activities = activityMapper.selectByExample(example);
+        if (activities.size() == 0) {
+            return new ArrayList<>();
+        }
         Map<Long, Activity> actMap = new HashMap<>();
         for (Activity act : activities) {
             actMap.put(act.getActivityId(), act);
