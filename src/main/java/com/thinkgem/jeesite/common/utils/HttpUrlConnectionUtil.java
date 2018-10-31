@@ -139,8 +139,8 @@ public class HttpUrlConnectionUtil {
      
     
     public static void main(String[] args) throws Exception {
-    	String token = ZBGUtils.getToken();
-    	String user = ZBGUtils.getCaicuiUser(token, "15254108719");
+//    	String token = ZBGUtils.getToken();
+//    	String user = ZBGUtils.getCaicuiUser(token, "13581787565");
 //    	String course = WebAccaUserController.getStudentClass(token,"15254108719");
     	//System.out.println(course);
     	//String s = getJsonString("http://api.caicui.com/api/business/order/memberOrderList?token=6494c8cc-a13e-4510-b4df-b9574dac2d46&code=15254108719&type=2");

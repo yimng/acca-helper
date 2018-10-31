@@ -145,7 +145,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
         logger.info("accaUser:{}",accaUser);
         return new BaseObjResponse<AppAccaUser>(accaUser);
     }
-
+	@Transactional(readOnly = false)
     public BaseObjResponse<Boolean> verifySmsVcode(String phone, String smsVcode, String deviceId) {
 		if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
 			logger.info("login，验证码错误：{},{}", phone,smsVcode);
