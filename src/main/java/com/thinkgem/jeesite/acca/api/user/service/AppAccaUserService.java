@@ -389,9 +389,18 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 
 	@Transactional(readOnly = false)
     public BaseObjResponse<AppAccaUser> updateUserPhone(UpdateUserPhoneReq req) {
-	    AppAccaUser accaUser = new AppAccaUser();
-	    accaUser.setAccaUserId(req.getAppUserId());
-	    accaUser.setPhone(req.getPhone());
+		String phone = req.getPhone();
+		String smsVcode = req.getSmsvcode();
+		if (!appSmsVcodeService.checkSmsVcode(phone, smsVcode)) {
+			logger.info("login，验证码错误：{},{}", phone, smsVcode);
+			return new BaseObjResponse<>(RespConstants.SMS_VCODE_INCORRECT);
+		}
+		AppAccaUser accaUser = getAccaUserByPhone(phone);
+		if (accaUser != null) {
+			return new BaseObjResponse<>(RespConstants.USER_EXIST);
+		}
+		accaUser = req.getAppUser();
+	    accaUser.setPhone(phone);
 	    accaUser.setUpdateDate(new Date());
 	    dao.update(accaUser);
 

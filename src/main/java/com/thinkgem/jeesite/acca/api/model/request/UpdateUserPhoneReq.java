@@ -12,6 +12,9 @@ public class UpdateUserPhoneReq extends BaseRequest {
     @ApiModelProperty(value = "phone",required=true)
     private String phone;
 
+    @ApiModelProperty(value = "smsVcode", required = true)
+    private String smsvcode;
+
 
     public String getPhone() {
         return phone;
@@ -19,5 +22,13 @@ public class UpdateUserPhoneReq extends BaseRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getSmsvcode() {
+        return smsvcode;
+    }
+
+    public void setSmsvcode(String smsvcode) {
+        this.smsvcode = smsvcode;
     }
 }
