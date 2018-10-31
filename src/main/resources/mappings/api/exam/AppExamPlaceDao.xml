@@ -49,7 +49,21 @@
     		</collection>
     	</collection>
     </resultMap>
-    
+	<sql id="appSmallExamPlaceColumns">
+		a.exam_place_id AS "examPlaceId",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.exam_city_id AS "examCityId",
+		a.exam_city_name AS "examCityName",
+		a.exam_detail_address AS "examDetailAddress",
+		a.exam_place_name AS "examPlaceName",
+		a.exam_place_sn AS "examPlaceSn",
+		a.exam_place_contant_name AS "examPlaceContantName",
+		a.exam_place_contant_phone AS "examPlaceContantPhone"
+	</sql>
     
 	<sql id="appExamPlaceColumns">
 		a.exam_place_id AS "examPlaceId",
@@ -133,6 +147,18 @@
 		AND appExam.del_flag = 0 
 		AND appExam.exam_signup_endtime>now() 
 		ORDER BY appExam.exam_start_time ASC , examCourseList.exam_course_id ASC 
+	</select>
+
+	<select id="getExamCenterList" resultType="com.thinkgem.jeesite.acca.api.exam.entity.AppSmallExamPlace">
+		SELECT
+			<include refid="appSmallExamPlaceColumns"/>
+		FROM tbl_exam_place a
+		<where>
+			a.del_flag = 0
+			<if test="cityId != null and cityId != ''" >
+				AND a.exam_city_id = #{cityId}
+			</if>
+		</where>
 	</select>
 	
 	

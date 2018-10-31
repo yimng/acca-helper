@@ -1,5 +1,6 @@
 package com.thinkgem.jeesite.acca.api.user.web;
 
+import com.thinkgem.jeesite.acca.api.exam.entity.AppExam;
 import com.thinkgem.jeesite.acca.api.model.request.*;
 import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto;
 import com.thinkgem.jeesite.acca.api.user.service.AppQuestionService;
@@ -66,6 +67,17 @@ public class AppQuestionController extends BaseController {
     public @ResponseBody
     BaseObjResponse<Question> praiseQuestion(@RequestBody PraiseQuestionReq req) {
         return appQuestionService.praiseQuestion(req.getQuestionId(), req.getPraise());
+    }
+
+    @ApiOperation(value = "考点查询", httpMethod = "POST", notes = "考点查询")
+    @RequestMapping(value = "getExamCenterList.do", method = RequestMethod.POST)
+    public @ResponseBody
+    BasePageResponse getExamCenter(@RequestBody ExamCenterReq req) {
+        int respCode = req.isCorrectParams();
+        if(respCode!=RespConstants.GLOBAL_SUCCESS){
+            return new BasePageResponse<AppExam>(respCode);
+        }
+        return examCenterQuestionService.getExamCenterList(req, req.getPage().getStartIndex(), req.getPage().getPageSize());
     }
 
     @ApiOperation(value = "机考中心问题提问", httpMethod = "POST", notes = "机考中心问题提问")

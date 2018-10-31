@@ -1,11 +1,16 @@
 package com.thinkgem.jeesite.acca.web.feedback.service;
 
 import com.github.pagehelper.PageHelper;
+import com.thinkgem.jeesite.acca.api.exam.dao.AppExamPlaceDao;
+import com.thinkgem.jeesite.acca.api.exam.entity.AppSmallExamPlace;
+import com.thinkgem.jeesite.acca.api.model.request.ExamCenterReq;
 import com.thinkgem.jeesite.acca.web.feedback.dao.ExamCenterQuestionMapper;
 import com.thinkgem.jeesite.acca.web.feedback.entity.ExamCenterQuestion;
 import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.service.MyService;
+import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -20,6 +25,8 @@ import static com.thinkgem.jeesite.common.persistence.BaseEntity.DEL_FLAG_NORMAL
 public class ExamCenterQuestionService extends MyService<ExamCenterQuestionMapper, ExamCenterQuestion> {
     @Autowired
     private ExamCenterAnswerService answerService;
+    @Autowired
+    private AppExamPlaceDao placeDao;
     @Override
     public List<ExamCenterQuestion> findList(ExamCenterQuestion entity) {
         return null;
@@ -40,6 +47,12 @@ public class ExamCenterQuestionService extends MyService<ExamCenterQuestionMappe
 
         List<ExamCenterQuestion> examCenterQuestions = dao.selectByExample(example);
         return new PageInfo<>(examCenterQuestions);
+    }
+
+    public BasePageResponse<AppSmallExamPlace> getExamCenterList(ExamCenterReq  req, int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo, pageSize);
+        List<AppSmallExamPlace> examCenterList = placeDao.getExamCenterList(req.getExamCityId());
+        return new BasePageResponse<>(examCenterList);
     }
 
     @Override

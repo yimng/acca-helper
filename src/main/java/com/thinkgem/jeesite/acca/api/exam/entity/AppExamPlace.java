@@ -3,18 +3,14 @@
  */
 package com.thinkgem.jeesite.acca.api.exam.entity;
 
-import io.swagger.annotations.ApiModelProperty;
-
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 import com.thinkgem.jeesite.freetek.file.entity.FileInfo;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * AppExamPlaceEntity
