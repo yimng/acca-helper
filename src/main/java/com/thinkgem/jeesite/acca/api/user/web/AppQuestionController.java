@@ -69,7 +69,7 @@ public class AppQuestionController extends BaseController {
         return appQuestionService.praiseQuestion(req.getQuestionId(), req.getPraise());
     }
 
-    @ApiOperation(value = "考点查询", httpMethod = "POST", notes = "考点查询")
+    @ApiOperation(value = "电话咨询", httpMethod = "POST", notes = "电话咨询")
     @RequestMapping(value = "getExamCenterList.do", method = RequestMethod.POST)
     public @ResponseBody
     BasePageResponse getExamCenter(@RequestBody ExamCenterReq req) {
