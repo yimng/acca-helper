@@ -33,29 +33,29 @@ public class AppQuestionController extends BaseController {
     @Autowired
     private ExamCenterQuestionService examCenterQuestionService;
 
-    @ApiOperation(value = "取得问题详细信息", httpMethod = "GET", notes = "取得问题详细信息")
-    @RequestMapping(value = "getQuestionDetail.do", method = RequestMethod.GET)
+    @ApiOperation(value = "取得问题详细信息", httpMethod = "POST", notes = "取得问题详细信息")
+    @RequestMapping(value = "getQuestionDetail.do", method = RequestMethod.POST)
     public @ResponseBody
     BaseObjResponse<Question> questionDetail(@RequestBody GetQuestionDetailReq req) {
         return appQuestionService.getDetail(req.getQuestionId());
     }
 
-    @ApiOperation(value = "根据问题分类获得问题列表", httpMethod = "GET", notes = "根据问题分类获得问题列表")
-    @RequestMapping(value = "getQuestionsByCategory.do", method = RequestMethod.GET)
+    @ApiOperation(value = "根据问题分类获得问题列表", httpMethod = "POST", notes = "根据问题分类获得问题列表")
+    @RequestMapping(value = "getQuestionsByCategory.do", method = RequestMethod.POST)
     public @ResponseBody
     BasePageResponse<Question> getQuestionsByCategory(@RequestBody GetCategoryQuestion req) {
         return appQuestionService.getQuestionsByCategory(req.getPage().getStartIndex(), req.getPage().getPageSize(),req.getCatergoryId());
     }
 
-    @ApiOperation(value = "获取热点问题列表", httpMethod = "GET", notes = "获取热点问题列表")
-    @RequestMapping(value = "getHotQuestions.do", method = RequestMethod.GET)
+    @ApiOperation(value = "获取热点问题列表", httpMethod = "POST", notes = "获取热点问题列表")
+    @RequestMapping(value = "getHotQuestions.do", method = RequestMethod.POST)
     public @ResponseBody
     BasePageResponse<Question> getHotQuestions(@RequestBody BasePageRequest req) {
         return appQuestionService.getHotQuestions(req.getPage().getStartIndex(), req.getPage().getPageSize(),true);
     }
 
-    @ApiOperation(value = "搜索问题列表", httpMethod = "GET", notes = "搜索问题列表")
-    @RequestMapping(value = "searchQuestions.do", method = RequestMethod.GET)
+    @ApiOperation(value = "搜索问题列表", httpMethod = "POST", notes = "搜索问题列表")
+    @RequestMapping(value = "searchQuestions.do", method = RequestMethod.POST)
     public @ResponseBody
     BasePageResponse<Question> searchQuestions(@RequestBody SearchQuestionReq req) {
         return appQuestionService.searchQuestions(req.getPage().getStartIndex(), req.getPage().getPageSize(),req.getTitle());

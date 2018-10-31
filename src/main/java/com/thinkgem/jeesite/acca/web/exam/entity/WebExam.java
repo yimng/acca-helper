@@ -9,7 +9,6 @@ import com.thinkgem.jeesite.common.persistence.DataEntity;
 import com.thinkgem.jeesite.freetek.util.TimeUtils;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;

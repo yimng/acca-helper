@@ -1,27 +1,6 @@
 package com.thinkgem.jeesite.acca.api.exam.web;
 
-import java.util.List;
-
-import com.thinkgem.jeesite.acca.api.model.request.SeasonOffPlaceReq;
-import com.thinkgem.jeesite.common.utils.StringUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.thinkgem.jeesite.acca.api.exam.entity.AppOfficialExam;
-import com.thinkgem.jeesite.acca.api.exam.entity.AppOfficialExamCourse;
-import com.thinkgem.jeesite.acca.api.exam.entity.AppOfficialExamMonth;
-import com.thinkgem.jeesite.acca.api.exam.entity.AppOfficialExamPlace;
-import com.thinkgem.jeesite.acca.api.exam.entity.AppOfficialOrder;
-import com.thinkgem.jeesite.acca.api.exam.entity.Appointment;
-import com.thinkgem.jeesite.acca.api.exam.entity.SmallCourseInfo;
-import com.thinkgem.jeesite.acca.api.exam.entity.SmallPlace;
+import com.thinkgem.jeesite.acca.api.exam.entity.*;
 import com.thinkgem.jeesite.acca.api.exam.service.AppOfficialExamCourseService;
 import com.thinkgem.jeesite.acca.api.exam.service.AppOfficialExamPlaceService;
 import com.thinkgem.jeesite.acca.api.exam.service.AppOfficialExamService;
@@ -30,6 +9,7 @@ import com.thinkgem.jeesite.acca.api.exam.util.ExamConstant;
 import com.thinkgem.jeesite.acca.api.model.request.AppOfficialOrderReq;
 import com.thinkgem.jeesite.acca.api.model.request.ExamStartTimeReq;
 import com.thinkgem.jeesite.acca.api.model.request.OffPlaceReq;
+import com.thinkgem.jeesite.acca.api.model.request.SeasonOffPlaceReq;
 import com.thinkgem.jeesite.acca.api.model.response.OrderInfoResponse;
 import com.thinkgem.jeesite.acca.api.order.entity.SmallOrder;
 import com.thinkgem.jeesite.acca.api.order.service.AppOffiOrderService;
@@ -37,6 +17,16 @@ import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 官方考试Controller

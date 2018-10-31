@@ -115,7 +115,7 @@
 		DELETE FROM tbl_exam_self_cart 
 		WHERE acca_user_id = #{accaUserId}
         <if test="placeId != null and placeId != ''">
-            AND a.exam_place_id = #{placeId}
+            AND exam_place_id = #{placeId}
         </if>
 	</delete>
 	

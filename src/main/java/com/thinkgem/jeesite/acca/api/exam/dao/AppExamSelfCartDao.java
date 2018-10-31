@@ -8,6 +8,7 @@ import java.util.List;
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfCart;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * AppExamSelfCartDAO接口
@@ -18,8 +19,8 @@ import com.thinkgem.jeesite.acca.api.exam.entity.AppExamSelfCart;
 public interface AppExamSelfCartDao extends CrudDao<AppExamSelfCart> {
 	public List<AppExamSelfCart> getByUserId(Long accaUserId);
 
-	public List<AppExamSelfCart> getByUserIdAndPlaceId(Long accaUserId, Long placeId);
+	public List<AppExamSelfCart> getByUserIdAndPlaceId(@Param("accaUserId") Long accaUserId, @Param("placeId") Long placeId);
 	
 	
-	public void deleteByUserId(Long accaUserId, Long examPlaceId);
+	public void deleteByUserId(@Param("accaUserId") Long accaUserId, @Param("placeId") Long examPlaceId);
 }
