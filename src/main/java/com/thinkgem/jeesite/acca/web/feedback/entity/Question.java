@@ -2,9 +2,9 @@ package com.thinkgem.jeesite.acca.web.feedback.entity;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
 @Data
 @Table(name = "tbl_question")
 public class Question implements Serializable {
@@ -24,7 +24,7 @@ public class Question implements Serializable {
     private Byte catergoryId;
 
     /**
-     * 是否热门
+     * 是否热门 0:热门 1:非热门
      */
     private Boolean hot;
 
@@ -54,6 +54,9 @@ public class Question implements Serializable {
      * 问题回答
      */
     private String answer;
+
+    @Column(name = "del_flag")
+    private String delFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -108,18 +111,18 @@ public class Question implements Serializable {
     }
 
     /**
-     * 获取是否热门
+     * 获取是否热门 0:热门 1:非热门
      *
-     * @return hot - 是否热门
+     * @return hot - 是否热门 0:热门 1:非热门
      */
     public Boolean getHot() {
         return hot;
     }
 
     /**
-     * 设置是否热门
+     * 设置是否热门 0:热门 1:非热门
      *
-     * @param hot 是否热门
+     * @param hot 是否热门 0:热门 1:非热门
      */
     public void setHot(Boolean hot) {
         this.hot = hot;
@@ -215,6 +218,20 @@ public class Question implements Serializable {
         this.answer = answer;
     }
 
+    /**
+     * @return del_flag
+     */
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    /**
+     * @param delFlag
+     */
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
+    }
+
     @Transient
     private Date start;
     @Transient
@@ -229,5 +246,4 @@ public class Question implements Serializable {
     private int praised;
     @Transient
     private int disPraised;
-
 }

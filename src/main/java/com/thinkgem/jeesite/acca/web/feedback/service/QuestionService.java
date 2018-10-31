@@ -48,6 +48,7 @@ public class QuestionService extends MyService<QuestionMapper, Question> {
         } else {
             entity.setPublisher(user.getId());
             entity.setPublishTime(new Date());
+            entity.setDelFlag("0");
             mapper.insert(entity);
         }
     }
