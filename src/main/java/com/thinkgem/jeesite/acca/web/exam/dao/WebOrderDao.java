@@ -22,5 +22,7 @@ public interface WebOrderDao extends CrudDao<WebOrder> {
 	/* 释放考试座位，自动减1 */
 	void subUsedSeats(Long examId);
 
+	List<WebOrder> findExpireOrder(WebOrder order);
+
 
 }

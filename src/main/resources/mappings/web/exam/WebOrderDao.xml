@@ -159,8 +159,21 @@
 			and a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 	</select>
-	
-	
+
+	<select id="findExpireOrder" resultType="WebOrder">
+		SELECT DISTINCT
+		<include refid="appOfficialOrderColumns"/>
+		FROM tbl_order a
+		<include refid="appOfficialOrderJoins"/>
+		LEFT JOIN tbl_exam_signup AS signup ON a.order_id = signup.order_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			and (
+			(a.order_status = 10 and #{expireDate} > a.create_date)
+			or (a.order_status = 35 and #{expireDate} > a.check_time)
+			)
+		</where>
+	</select>
 	
 	
 	
@@ -372,7 +385,7 @@
 		<if test="checkPersonName != null and checkPersonName != ''">
 			,check_person_name = #{checkPersonName}
 		</if>
-		<if test="checkTime != null and checkTime != ''">
+		<if test="checkTime != null">
 			,check_time = #{checkTime}
 		</if>
 		where order_id = #{orderId}

@@ -43,7 +43,7 @@
 		});
 
 		function showDesc(val){
-			if (val == 0){
+			if (val == 0 || val == 2){
 				$(".reasonDesc").show();
 				$('html, body').animate({scrollTop: $(document).height()}, 'slow');
 			} else {

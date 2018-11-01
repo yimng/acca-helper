@@ -69,7 +69,7 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 	}
 	
 	/**
-	 * 修改报考订单状态，审核通过或者不通过
+	 * 修改报考订单状态，审核通过或者需要补传信息或者不通过
 	 * @param order
      */
 	@Transactional(readOnly = false)
@@ -106,6 +106,10 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 			//审核不通过,推送消息
 			msgSysService.savePushToPersonal("考试报名未通过审核","抱歉，您的报考申请未通过审核，快去查看原因并重新提交报考申请吧。", wo.getAccaUserId());
 			SmsUtils.sendSms2Vcode(wo.getPhone(),"您好，您的考试报名申请未通过审核，快去小助手【考点】首页，右上【考试管理】查看原因并重新提交报考申请吧。");
+		} else if (wo.getOrderStatus() == Constants.OrderStatus.checkSupplement) {
+			//需补传信息,推送消息
+			msgSysService.savePushToPersonal("考试报名需要补传信息","抱歉，您的报考申请需要补传信息，快去查看原因并重新提交报考申请吧。", wo.getAccaUserId());
+			SmsUtils.sendSms2Vcode(wo.getPhone(),"您好，您的考试报名申请需要补传信息，请于4小时内去小助手【考点】首页，右上【考试管理】查看原因并重新提交报考申请吧。");
 		} else if (wo.getOrderStatus() == Constants.OrderStatus.checkSuccess){
             publishCoupon(wo);
             String courseNames = "";
@@ -341,8 +345,11 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 		for(WebOrder wo : list){
 			//超过四个小时未支付,添加消息推送提醒
 			Long userId = wo.getAccaUserId();
-			String title = "考试席位已自动取消";
-			String content = "同学您好，您预约的考试席位由于4小时内未收到您的支付凭证提交信息，预约考试席位被自动取消，如需预约考试请重新提交。";
+            String title = "考试席位已自动取消";
+            String content = "同学您好，您预约的考试席位由于4小时内未收到您的支付凭证提交信息，预约考试席位被自动取消，如需预约考试请重新提交。";
+			if (wo.getOrderStatus() == Constants.OrderStatus.checkSupplement) {
+			    content = "同学您好，您预约的考试席位由于4小时内未收到您的补传信息，预约考试席位被自动取消，如需预约考试请重新提交。";
+            }
 			msgSysService.savePushToPersonal(title,content,userId);
 			//取消订单,修改相关表的状态
 			List<WebOrder> orders = dao.findOrders(wo);
@@ -388,6 +395,10 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 		logger.info("orderCancelTips end!!!!!!!");
 	}
 
+	public List<WebOrder> getExpireOrder(WebOrder order) {
+	    return dao.findExpireOrder(order);
+
+    }
 	public static void main(String[] args) {
 		Date expireDate = TimeUtils.beforeMinute(new Date(), 240);
 		System.out.println(expireDate);

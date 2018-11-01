@@ -39,8 +39,7 @@ public class CheckOrderTask {
 		Date expireDate = TimeUtils.beforeMinute(new Date(), -240);
 		WebOrder wo = new WebOrder();
 		wo.setExpireDate(expireDate);
-		wo.setOrderStatus(Constants.OrderStatus.unpay);
-		List<WebOrder> orders = orderService.findList(wo);
+		List<WebOrder> orders = orderService.getExpireOrder(wo);
 		orderService.updExpireOrders(orders);
 	}
 
