@@ -284,6 +284,12 @@
 						<div class="controls"><label class="lbl" style="width: 120px;height: 120px"><span style="width: 100px;height: 100px">${webOrder.amount}元</span></label></div>
 					</div>
 				</div>
+                <div style="float: left;width: 40%;">
+                    <div class="control-group">
+                        <label class="control-label">付款账户名称:</label>
+                        <div class="controls"><label class="lbl" style="width: 120px;height: 120px"><span style="width: 100px;height: 100px">${webOrder.payerAccountName}</span></label></div>
+                    </div>
+                </div>
 				<div style="float: left;width: 60%;">
 					<div class="control-group">
 						<label class="control-label">支付凭证:</label>
