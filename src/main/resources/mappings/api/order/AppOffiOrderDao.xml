@@ -47,9 +47,18 @@
 	</resultMap>
 
     <select id="getOrderListByStatis" resultMap="orderInfoResult">
-    	select a.order_id orderId,a.amount amount,
-    	b.exam_signup_id examSignupId,b.exam_course examCourse,b.exam_type examType,b.price price,b.exam_version_json examVersionJson,
-    	b.exam_signup_status examSignupStatus,b.exam_start_time examStartTime,b.exam_end_time examEndTime,b.exam_detail_address examDetailAddress
+    	select
+		a.order_id orderId,
+		a.amount amount,
+    	b.exam_signup_id examSignupId,
+		b.exam_course examCourse,
+		b.exam_type examType,
+		b.price price,
+		b.exam_version_json examVersionJson,
+    	b.exam_signup_status examSignupStatus,
+		b.exam_start_time examStartTime,
+		b.exam_end_time examEndTime,
+		b.exam_detail_address examDetailAddress
     	from 
     	(
 		select * from tbl_order a1  	

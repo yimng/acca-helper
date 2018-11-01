@@ -250,7 +250,7 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
     	entity.setOrderId(orderId);
     	entity.setOrderPayImgId(orderPayImageId);
     	entity.setPayerAccountName(payerAccountName);
-    	entity.setOrderStatus(20);
+    	entity.setOrderStatus(Constants.OrderStatus.uncheckd);
     	entity.setUpdateDate(new Date());
     	dao.update(entity);
 		

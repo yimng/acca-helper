@@ -14,7 +14,7 @@ public class GetOrderListByStatisReq extends BaseRequest {
 	@ApiModelProperty(value = "acca学员id")
 	private Long accaUserId;
 	
-	@ApiModelProperty(value = "订单状态")
+	@ApiModelProperty(value = "订单状态: 10: 待支付 20: 待审核 30: 审核通过 35: 补传信息 40: 审核失败 50: 已取消 60: 已删除")
 	private Integer orderStatus;
 	
 	@ApiModelProperty(value = "分页参数",required=true)
