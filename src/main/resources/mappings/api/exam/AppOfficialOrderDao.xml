@@ -23,6 +23,7 @@
 		a.order_status AS "orderStatus",
 		a.amount AS "amount",
 		a.order_pay_img_id AS "orderPayImgId",
+		a.payer_account_name AS "payerAccountName",
 		a.check_person_id AS "checkPersonId",
 		a.check_person_name AS "checkPersonName",
 		a.check_time AS "checkTime",
@@ -111,6 +112,7 @@
 			order_status,
 			amount,
 			order_pay_img_id,
+			payer_account_name,
 			check_person_id,
 			check_person_name,
 			check_time,
@@ -138,6 +140,7 @@
 			#{orderStatus},
 			#{amount},
 			#{orderPayImgId},
+			#{payerAccountName},
 			#{checkPersonId},
 			#{checkPersonName},
 			#{checkTime},
@@ -188,6 +191,9 @@
 			</if>
 			<if test="examSignupTime != null and examSignupTime != ''">
 				,exam_signup_time = #{examSignupTime}
+			</if>
+			<if test="payerAccountName != null and payerAccountName != ''">
+				,payer_account_name = #{payerAccountName}
 			</if>
 			<if test="orderStatus != null and orderStatus != 0">
 				,order_status = #{orderStatus}

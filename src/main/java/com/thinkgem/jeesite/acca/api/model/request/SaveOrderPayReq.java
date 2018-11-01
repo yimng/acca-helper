@@ -15,6 +15,8 @@ public class SaveOrderPayReq extends BaseRequest {
 	private Long orderId;
 	@ApiModelProperty(value = "支付截图id",required=true)
 	private Long orderPayImgId;
+	@ApiModelProperty(value = "付款人账户名称")
+	private String payerAccountName;
 	
 	
 	@Override
@@ -54,4 +56,11 @@ public class SaveOrderPayReq extends BaseRequest {
 		this.orderPayImgId = orderPayImgId;
 	}
 
+	public String getPayerAccountName() {
+		return payerAccountName;
+	}
+
+	public void setPayerAccountName(String payerAccountName) {
+		this.payerAccountName = payerAccountName;
+	}
 }

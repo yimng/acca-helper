@@ -237,7 +237,7 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
     }
 
     @Transactional(readOnly = false)
-	public BaseResponse saveOrderPay(Long orderId, Long orderPayImageId,AppAccaUser appUser) {
+	public BaseResponse saveOrderPay(Long orderId, Long orderPayImageId, String payerAccountName, AppAccaUser appUser) {
 		
     	AppOfficialOrder order = this.get(new AppOfficialOrder(orderId));
     	logger.info("order:"+order);
@@ -249,6 +249,7 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
     	AppOfficialOrder entity = new AppOfficialOrder();
     	entity.setOrderId(orderId);
     	entity.setOrderPayImgId(orderPayImageId);
+    	entity.setPayerAccountName(payerAccountName);
     	entity.setOrderStatus(20);
     	entity.setUpdateDate(new Date());
     	dao.update(entity);

@@ -129,7 +129,7 @@ public class AppOffiOrderController extends BaseController {
 			return new BaseResponse(respCode);
 		}
 		
-		return orderService.saveOrderPay(req.getOrderId(),req.getOrderPayImgId(),req.getAppUser());
+		return orderService.saveOrderPay(req.getOrderId(),req.getOrderPayImgId(), req.getPayerAccountName(), req.getAppUser());
 	}
 
 	@ApiOperation(value = "待支付状态,保存学习规划", notes = "待支付状态,保存学习规划")

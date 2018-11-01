@@ -42,6 +42,7 @@ public class WebOrder extends DataEntity<WebOrder> {
 	private Integer orderStatus;		// 状态：10待支付，20待审核，30审核通过，40审核不通过，50已取消
 	private String amount;		// 报名费用
 	private Long orderPayImgId;		// 支付截图
+	private String payerAccountName; //付款账户名称
 	private String checkPersonId;		// 审核人id
 	private String checkPersonName;		// 审核人名称
 	private Date checkTime;		// 审核时间
@@ -423,5 +424,12 @@ public class WebOrder extends DataEntity<WebOrder> {
 	public void setOrg(String org) {
 		this.org = org;
 	}
-	
+
+	public String getPayerAccountName() {
+		return payerAccountName;
+	}
+
+	public void setPayerAccountName(String payerAccountName) {
+		this.payerAccountName = payerAccountName;
+	}
 }
