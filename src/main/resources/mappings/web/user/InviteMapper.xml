@@ -43,4 +43,19 @@
     LEFT JOIN tbl_coupon c ON uc.coupon_id = c.id
     GROUP BY uc.user_id
   </select>
+  <select id="findInviteRewardByPerson" resultType="Integer">
+    SELECT SUM(c.price)
+    FROM tbl_user_coupon uc
+    LEFT JOIN tbl_acca_user u ON uc.user_id = u.acca_user_id
+    LEFT JOIN tbl_coupon c ON uc.coupon_id = c.id
+    WHERE uc.user_id = #{userId}
+  </select>
+  <select id="findSuccessInviteNumByPerson" resultType="integer">
+    SELECT
+      COUNT(1)
+    FROM
+      tbl_invite
+    WHERE inviter_phone = #{inviterPhone}
+      AND success_time IS NOT NULL
+  </select>
 </mapper>

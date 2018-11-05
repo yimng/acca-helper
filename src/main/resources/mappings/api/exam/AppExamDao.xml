@@ -130,10 +130,6 @@
 		<if test="hasSeat != null and hasSeat == true">
 			and total_seats - used_seats > 0
 		</if>
-
-		<if test="hasSeat != null and hasSeat == false">
-			and 0 >= total_seats - used_seats
-		</if>
 		</where>
 		ORDER BY a.exam_start_time ASC 
 	</select>
