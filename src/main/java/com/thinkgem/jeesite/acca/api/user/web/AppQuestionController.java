@@ -6,13 +6,12 @@ import com.thinkgem.jeesite.acca.api.model.response.article.AppArticleCollectDto
 import com.thinkgem.jeesite.acca.api.user.service.AppQuestionService;
 import com.thinkgem.jeesite.acca.web.feedback.entity.ExamCenterQuestion;
 import com.thinkgem.jeesite.acca.web.feedback.entity.Question;
+import com.thinkgem.jeesite.acca.web.feedback.entity.QuestionCategory;
 import com.thinkgem.jeesite.acca.web.feedback.service.ExamCenterQuestionService;
+import com.thinkgem.jeesite.acca.web.feedback.service.QuestionCategoryService;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
-import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
-import com.thinkgem.jeesite.freetek.api.model.BasePageRequest;
-import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
-import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
+import com.thinkgem.jeesite.freetek.api.model.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 
 @Api(value = "${apiPath}/question", description = "问题模块")
 @Controller
@@ -33,6 +33,9 @@ public class AppQuestionController extends BaseController {
 
     @Autowired
     private ExamCenterQuestionService examCenterQuestionService;
+
+    @Autowired
+    private QuestionCategoryService questionCategoryService;
 
     @ApiOperation(value = "取得问题详细信息", httpMethod = "POST", notes = "取得问题详细信息")
     @RequestMapping(value = "getQuestionDetail.do", method = RequestMethod.POST)
@@ -78,6 +81,18 @@ public class AppQuestionController extends BaseController {
             return new BasePageResponse<AppExam>(respCode);
         }
         return examCenterQuestionService.getExamCenterList(req, req.getPage().getStartIndex(), req.getPage().getPageSize());
+    }
+
+    @ApiOperation(value = "问题分类列表", httpMethod = "POST", notes = "问题分类列表")
+    @RequestMapping(value = "getQuestionCategory.do", method = RequestMethod.POST)
+    public @ResponseBody
+    BaseObjResponse getQuestionCategory(@RequestBody BaseRequest req) {
+        int resp = req.isCorrectParams();
+        if (resp!=RespConstants.GLOBAL_SUCCESS) {
+            return new BaseObjResponse(resp);
+        }
+        List<QuestionCategory> list = questionCategoryService.findAllList();
+        return new BaseObjResponse(list);
     }
 
     @ApiOperation(value = "机考中心问题提问", httpMethod = "POST", notes = "机考中心问题提问")
