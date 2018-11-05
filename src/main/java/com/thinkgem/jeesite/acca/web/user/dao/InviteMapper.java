@@ -15,4 +15,6 @@ import java.util.List;
 public interface InviteMapper extends MyMapper<Invite> {
     List<InviteRank> findInviteRank(@Param("start") String start, @Param("end") String end, @Param("sort") String sort);
     List<InviteReward> findInviteRewards();
+    int findInviteRewardByPerson(String userId);
+    int findSuccessInviteNumByPerson(String inviterPhone);
 }

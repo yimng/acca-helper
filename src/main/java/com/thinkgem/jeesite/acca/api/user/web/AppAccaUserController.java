@@ -275,6 +275,7 @@ public class AppAccaUserController extends BaseController {
 	}
 	@ApiOperation(value = "发送邀请人被邀请人手机号和代金券信息", notes = "发送邀请人被邀请人手机号和代金券信息")
 	@RequestMapping(value = "invite.do", method = RequestMethod.POST)
+	@CrossOrigin
 	public @ResponseBody BaseResponse invite(@RequestBody InviteReq req) {
 
         // 验证手机号码
@@ -306,6 +307,7 @@ public class AppAccaUserController extends BaseController {
 
 	@ApiOperation(value = "根据邀请状态获得邀请列表", notes = "根据邀请状态获得邀请列表")
     @RequestMapping(value = "getInvitesByStatus.do", method = RequestMethod.POST)
+	@CrossOrigin
 	public @ResponseBody BasePageResponse<Invite> getInvitesByStatus(@RequestBody InviteStatusReq req) {
 		int resp = req.isCorrectParams();
 		if (resp != RespConstants.GLOBAL_SUCCESS) {
@@ -319,6 +321,7 @@ public class AppAccaUserController extends BaseController {
 	}
 	@ApiOperation(value = "获得邀请排名", notes = "获得邀请排名")
     @RequestMapping(value = "getInviteRewardsRank.do", method = RequestMethod.POST)
+	@CrossOrigin
 	public @ResponseBody BasePageResponse<InviteReward> getInviteRewardsRank(@RequestBody BasePageRequest req) {
         int resp = req.isCorrectParams();
         if (resp != RespConstants.GLOBAL_SUCCESS) {
