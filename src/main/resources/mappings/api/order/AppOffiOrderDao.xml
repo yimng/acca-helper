@@ -11,6 +11,7 @@
 			<result column="examType" property="examType" />
 			<result column="examStartTime" property="examStartTime" />
 			<result column="examEndTime" property="examEndTime" />
+			<result column="examPlaceName" property="examPlaceName" />
 			<result column="examDetailAddress" property="examDetailAddress" />
 			<result column="price" property="price" />
 			<result column="examVersionJson" property="examVersionJson" />
@@ -58,6 +59,7 @@
     	b.exam_signup_status examSignupStatus,
 		b.exam_start_time examStartTime,
 		b.exam_end_time examEndTime,
+		b.exam_place_name examPlaceName,
 		b.exam_detail_address examDetailAddress
     	from 
     	(

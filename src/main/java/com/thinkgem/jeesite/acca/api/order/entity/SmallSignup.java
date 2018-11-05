@@ -28,7 +28,9 @@ public class SmallSignup implements Serializable {
 	private Date examStartTime;
 	
 	private Date examEndTime;
-	
+
+	private String examPlaceName;
+
 	private String examDetailAddress;
 	
 	@JsonSerialize(using = CustomDoubleSerialize.class)
@@ -169,5 +171,13 @@ public class SmallSignup implements Serializable {
 
 	public void setExamId(Long examId) {
 		this.examId = examId;
+	}
+
+	public String getExamPlaceName() {
+		return examPlaceName;
+	}
+
+	public void setExamPlaceName(String examPlaceName) {
+		this.examPlaceName = examPlaceName;
 	}
 }
