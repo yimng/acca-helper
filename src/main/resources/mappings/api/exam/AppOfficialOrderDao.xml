@@ -189,7 +189,7 @@
 			<if test="accaRegisterPassword != null and accaRegisterPassword != ''">
 				,acca_register_password = #{accaRegisterPassword}
 			</if>
-			<if test="examSignupTime != null and examSignupTime != ''">
+			<if test="examSignupTime != null">
 				,exam_signup_time = #{examSignupTime}
 			</if>
 			<if test="payerAccountName != null and payerAccountName != ''">
@@ -210,7 +210,7 @@
 			<if test="checkPersonName != null and checkPersonName != ''">
 				,check_person_name = #{checkPersonName}
 			</if>
-			<if test="checkTime != null and checkTime != ''">
+			<if test="checkTime != null">
 				,check_time = #{checkTime}
 			</if>
 			<if test="checkReason != null and checkReason != ''">
