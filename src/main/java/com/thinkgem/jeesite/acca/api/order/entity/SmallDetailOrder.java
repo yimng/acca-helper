@@ -12,7 +12,9 @@ public class SmallDetailOrder implements Serializable {
 	private static final long serialVersionUID = -6592224619157733260L;
 	
 	private Long orderId;
-	
+
+
+	private Long whiteImageId;
 	private String cardImgUrl;    //身份证图片路径
 	
 	@JsonSerialize(using = CustomDoubleSerialize.class)
@@ -31,7 +33,8 @@ public class SmallDetailOrder implements Serializable {
 	private String registerPhone;
 	
 	private String accaRegisterPassword;
-	
+
+	private Long payImageId;
 	private String payImgUrl;      //支付凭证图片路径
 	
 	private String checkReason;
@@ -150,5 +153,21 @@ public class SmallDetailOrder implements Serializable {
 
 	public void setOrg(String org) {
 		this.org = org;
+	}
+
+	public Long getWhiteImageId() {
+		return whiteImageId;
+	}
+
+	public void setWhiteImageId(Long whiteImageId) {
+		this.whiteImageId = whiteImageId;
+	}
+
+	public Long getPayImageId() {
+		return payImageId;
+	}
+
+	public void setPayImageId(Long payImageId) {
+		this.payImageId = payImageId;
 	}
 }

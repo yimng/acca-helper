@@ -48,7 +48,9 @@ public class InviteService {
         if (invite.getInviteEnd() != null) {
             criteria.andLessThan("inviteTime", invite.getInviteEnd());
         }
-        if (Constants.InviteStatus.inviting.equals(status)) { //正在邀请中
+
+        //正在邀请中
+        if (Constants.InviteStatus.inviting.equals(status)) {
             criteria.andLessThan("inviteTime", new Date());
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
@@ -57,10 +59,12 @@ public class InviteService {
             criteria.andGreaterThan("inviteTime", start);
             criteria.andIsNull("successTime");
         }
-        if (Constants.InviteStatus.success.equals(status)) { //邀请成功
+        //邀请成功
+        if (Constants.InviteStatus.success.equals(status)) {
             criteria.andIsNotNull("successTime");
         }
-        if (Constants.InviteStatus.failure.equals(status)) { //邀请失败
+        //邀请失败
+        if (Constants.InviteStatus.failure.equals(status)) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.DATE, -3);
