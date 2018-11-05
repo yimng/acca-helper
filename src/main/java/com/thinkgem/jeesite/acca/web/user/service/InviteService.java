@@ -1,7 +1,9 @@
 package com.thinkgem.jeesite.acca.web.user.service;
 
 import com.github.pagehelper.PageHelper;
+import com.sun.tools.internal.jxc.ap.Const;
 import com.thinkgem.jeesite.acca.api.model.request.InviteReq;
+import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.acca.web.user.dao.InviteMapper;
 import com.thinkgem.jeesite.acca.web.user.entity.Invite;
 import com.thinkgem.jeesite.acca.web.user.entity.InviteRank;
@@ -46,7 +48,7 @@ public class InviteService {
         if (invite.getInviteEnd() != null) {
             criteria.andLessThan("inviteTime", invite.getInviteEnd());
         }
-        if ("0".equals(status)) { //正在邀请中
+        if (Constants.InviteStatus.inviting.equals(status)) { //正在邀请中
             criteria.andLessThan("inviteTime", new Date());
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
@@ -55,10 +57,10 @@ public class InviteService {
             criteria.andGreaterThan("inviteTime", start);
             criteria.andIsNull("successTime");
         }
-        if ("1".equals(status)) { //邀请成功
+        if (Constants.InviteStatus.success.equals(status)) { //邀请成功
             criteria.andIsNotNull("successTime");
         }
-        if ("2".equals(status)) { //邀请失败
+        if (Constants.InviteStatus.failure.equals(status)) { //邀请失败
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.DATE, -3);

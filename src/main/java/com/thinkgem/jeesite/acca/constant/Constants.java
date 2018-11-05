@@ -78,6 +78,13 @@ public class Constants extends PublicConstants {
 		public static int delete=60;//以删除
 		//public static int change=70;//调整延期
 	}
+
+	public static class InviteStatus {
+		public static String inviting = "0";
+		public static String success = "1";
+		public static String failure = "2";
+
+	}
 	
 	public static class DeviceAuthStatus{
 		public static int unauth=1;//未授权
