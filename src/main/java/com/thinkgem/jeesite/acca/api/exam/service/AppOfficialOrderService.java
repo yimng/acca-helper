@@ -263,6 +263,7 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
 		return new BaseResponse(RespConstants.GLOBAL_SUCCESS);
 	}
 
+    @Transactional(readOnly = false)
 	public BaseResponse resaveOrder(ReSaveOrderReq req) {
         AppOfficialOrder order = this.get(new AppOfficialOrder(req.getOrderId()));
         if (order.getOrderStatus() != Constants.OrderStatus.checkFail) {
