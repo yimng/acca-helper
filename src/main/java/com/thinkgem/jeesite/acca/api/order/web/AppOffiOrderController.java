@@ -132,6 +132,18 @@ public class AppOffiOrderController extends BaseController {
 		return orderService.saveOrderPay(req.getOrderId(),req.getOrderPayImgId(), req.getPayerAccountName(), req.getAppUser());
 	}
 
+	@ApiOperation(value = "重新上传报考信息", notes = "重新上传报考信息")
+	@RequestMapping(value = "resaveOrder.do" ,method=RequestMethod.POST)
+	public @ResponseBody BaseResponse resaveOrder(@RequestBody ReSaveOrderReq req) {
+
+		int respCode = req.isCorrectParams();
+		if(respCode!=RespConstants.GLOBAL_SUCCESS){
+			return new BaseResponse(respCode);
+		}
+
+		return orderService.resaveOrder(req);
+	}
+
 	@ApiOperation(value = "待支付状态,保存学习规划", notes = "待支付状态,保存学习规划")
 	@RequestMapping(value = "saveLearningPlan.do" ,method=RequestMethod.POST)
 	public @ResponseBody BaseResponse saveLearningPlan(@RequestBody SaveLearningPlanReq req) {

@@ -8,6 +8,7 @@ package com.thinkgem.jeesite.acca.api.exam.service;
 import com.thinkgem.jeesite.acca.api.exam.dao.*;
 import com.thinkgem.jeesite.acca.api.exam.entity.*;
 import com.thinkgem.jeesite.acca.api.model.request.AppOfficialOrderReq;
+import com.thinkgem.jeesite.acca.api.model.request.ReSaveOrderReq;
 import com.thinkgem.jeesite.acca.api.model.response.OrderInfoResponse;
 import com.thinkgem.jeesite.acca.api.order.dao.AppOffiOrderDao;
 import com.thinkgem.jeesite.acca.api.order.entity.SmallDetailOrder;
@@ -261,4 +262,21 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
 		
 		return new BaseResponse(RespConstants.GLOBAL_SUCCESS);
 	}
+
+	public BaseResponse resaveOrder(ReSaveOrderReq req) {
+        AppOfficialOrder order = this.get(new AppOfficialOrder(req.getOrderId()));
+        if (order.getOrderStatus() != Constants.OrderStatus.checkFail) {
+            return new BaseResponse(RespConstants.GLOBAL_PARAM_ERROR);
+        }
+        order.setOrderPayImgId(req.getOrderPayImgId());
+        order.setRegisterWhiteColorImgId(req.getRegisterWhiteColorImgId());
+        order.setRegisterName(req.getRegisterName());
+        order.setAccaRegisterName(req.getAccaRegisterName());
+        order.setRegisterPhone(req.getRegisterPhone());
+        order.setRegisterEmail(req.getRegisterEmail());
+        order.setRegisterCardNumber(req.getRegisterCardNumber());
+        dao.update(order);
+        appExamSignupDao.updateStatusByOrderId(req.getOrderId(), Constants.OrderStatus.uncheckd);
+        return new BaseResponse(RespConstants.GLOBAL_SUCCESS);
+    }
 }
