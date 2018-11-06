@@ -69,7 +69,7 @@ public class AppQuestionController extends BaseController {
     @RequestMapping(value = "praiseQuestion.do", method = RequestMethod.POST)
     public @ResponseBody
     BaseObjResponse<Question> praiseQuestion(@RequestBody PraiseQuestionReq req) {
-        return appQuestionService.praiseQuestion(req.getQuestionId(), req.getPraise());
+        return appQuestionService.praiseQuestion(req.getQuestionId(), req.getAppUserId(), req.getPraise());
     }
 
     @ApiOperation(value = "电话咨询", httpMethod = "POST", notes = "电话咨询")
@@ -94,6 +94,9 @@ public class AppQuestionController extends BaseController {
         List<QuestionCategory> list = questionCategoryService.findAllList();
         return new BaseObjResponse(list);
     }
+
+
+
 
     @ApiOperation(value = "机考中心问题提问", httpMethod = "POST", notes = "机考中心问题提问")
     @RequestMapping(value = "saveacquestions.do", method = RequestMethod.POST)

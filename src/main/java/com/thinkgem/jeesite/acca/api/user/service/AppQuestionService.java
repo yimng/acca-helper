@@ -50,11 +50,13 @@ public class AppQuestionService {
         return new BasePageResponse<>(list);
     }
 
-    public BaseObjResponse<Question> praiseQuestion(Long questionId, Short praise) {
+    @Transactional(readOnly = false)
+    public BaseObjResponse<Question> praiseQuestion(Long questionId, Long accaUserId, Short praise) {
         QuestionPraise questionPraise =  new QuestionPraise();
-        questionPraise.setId(questionId);
+        questionPraise.setQuestionId(questionId);
+        questionPraise.setAccaUserId(accaUserId);
         questionPraise.setPraiseFlag(praise);
-        questionPraiseMapper.updateByPrimaryKeySelective(questionPraise);
+        questionPraiseMapper.insert(questionPraise);
         Question detail = questionMapper.getDetail(questionId);
         return new BaseObjResponse<>(detail);
     }
