@@ -438,6 +438,9 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 		feedback.setContent(req.getContent());
 		feedback.setCreateDate(new Date());
 		feedback.setUpdateDate(new Date());
+		feedback.setType(req.getType());
+		feedback.setCategoryId(req.getCategoryId());
+		feedback.setImgId(req.getImgId());
 //		Long accaUserId=req.getAccaUserId();
 //		if(accaUserId!=null&&accaUserId>0L){
 //			feedback.setAcca_user_id(accaUserId);

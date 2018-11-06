@@ -10,7 +10,10 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.content AS "content",
-		a.phone AS "phone"
+		a.phone AS "phone",
+		a.type AS "type",
+		a.fb_img_id AS "imgId",
+		a.fb_category_id AS "categoryId"
 	</sql>
 	
 	<sql id="appFeedbackJoins">
@@ -66,13 +69,19 @@
 			create_date,
 			update_date,
 			content,
-			phone
+			phone,
+			type,
+			fb_category_id,
+			fb_img_id
 		) VALUES (
 			#{delFlag},
 			#{createDate},
 			#{updateDate},
 			#{content},
-			#{phone}
+			#{phone},
+			#{type}，
+			#{categoryId},
+			#{imgId}
 		)
 	</insert>
 	

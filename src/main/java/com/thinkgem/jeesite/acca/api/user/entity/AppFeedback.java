@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.acca.api.user.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
@@ -19,6 +20,10 @@ public class AppFeedback extends DataEntity<AppFeedback> {
 	private String phone;		// 联系方式
 	private Long acca_user_id;
 	private AppAccaUser appAccaUser;
+	private String type;
+	private Byte categoryId;
+	private Long imgId;
+
 	public AppFeedback() {
 		super();
 	}
@@ -60,5 +65,28 @@ public class AppFeedback extends DataEntity<AppFeedback> {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Byte getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Byte categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public Long getImgId() {
+		return imgId;
+	}
+
+	public void setImgId(Long imgId) {
+		this.imgId = imgId;
+	}
 }
