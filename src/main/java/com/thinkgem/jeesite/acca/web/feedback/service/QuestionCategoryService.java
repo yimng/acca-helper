@@ -6,10 +6,13 @@ import com.thinkgem.jeesite.acca.web.feedback.entity.QuestionCategory;
 import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.common.service.MyService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@MyBatisDao
+@Service
+@Transactional(readOnly = true)
 public class QuestionCategoryService extends MyService<QuestionCategoryMapper, QuestionCategory> {
     @Override
     public List<QuestionCategory> findList(QuestionCategory entity) {
@@ -24,8 +27,13 @@ public class QuestionCategoryService extends MyService<QuestionCategoryMapper, Q
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(QuestionCategory entity) {
-
+        if (entity.getId() != null) {
+            dao.updateByPrimaryKeySelective(entity);
+        } else {
+            dao.insert(entity);
+        }
     }
 
     public List<QuestionCategory> findAllList() {

@@ -18,7 +18,10 @@
     </script>
 </head>
 <body>
-
+<ul class="nav nav-tabs">
+    <li class="active"><a href="${ctx}${ctx}/web/question/">问题列表</a></li>
+    <shiro:hasPermission name="web:question:edit"><li><a href="${ctx}/web/questioncategory">问题分类</a></li></shiro:hasPermission>
+</ul>
 <form:form id="searchForm" modelAttribute="question" action="${ctx}/web/question/" method="post"
            class="breadcrumb form-search">
     <input id="type" name="type" type="hidden" value="1"/>

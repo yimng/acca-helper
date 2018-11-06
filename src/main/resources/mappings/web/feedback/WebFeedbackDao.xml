@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.thinkgem.jeesite.acca.web.feedback.dao.WebFeedbackDao">
-    
+
 	<sql id="webFeedbackColumns">
 		a.feedback_id AS "feedbackId",
 		a.del_flag AS "delFlag",
@@ -10,32 +10,39 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.content AS "content",
-		a.phone AS "phone"
+		a.phone AS "phone",
+		a.type AS "type",
+		a.fb_img_id AS "imgId",
+		a.fb_category_id AS "categoryId",
+		cat.name AS "category",
+		<include refid="FileMapper.image" />
 	</sql>
-	
+
 	<sql id="webFeedbackJoins">
+		left join tbl_attachment_file image on a.fb_img_id = image.file_id
+		left join tbl_fb_category cat on a.fb_category_id = cat.id
 	</sql>
-    
+
 	<select id="get" resultType="WebFeedback">
-		SELECT 
-			<include refid="webFeedbackColumns"/>
+		SELECT
+		<include refid="webFeedbackColumns"/>
 		FROM tbl_feedback a
 		<include refid="webFeedbackJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
 	<select id="findList" resultType="WebFeedback">
-		SELECT 
-			<include refid="webFeedbackColumns"/>
+		SELECT
+		<include refid="webFeedbackColumns"/>
 		FROM tbl_feedback a
 		<include refid="webFeedbackJoins"/>
 		<where>
 			a.del_flag = 0
 			<if test="content != null and content != ''">
-				AND a.content LIKE 
-					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+				AND a.content LIKE
+				<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
 			</if>
 		</where>
 		<choose>
@@ -47,15 +54,15 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="WebFeedback">
-		SELECT 
-			<include refid="webFeedbackColumns"/>
+		SELECT
+		<include refid="webFeedbackColumns"/>
 		FROM tbl_feedback a
 		<include refid="webFeedbackJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
-		</where>		
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -65,7 +72,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO tbl_feedback(
 			feedback_id,
@@ -87,7 +94,7 @@
 			#{phone}
 		)
 	</insert>
-	
+
 	<update id="update">
 		UPDATE tbl_feedback SET 	
 			feedback_id = #{feedbackId},
@@ -97,11 +104,11 @@
 			phone = #{phone}
 		WHERE id = #{id}
 	</update>
-	
+
 	<update id="delete">
 		UPDATE tbl_feedback SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	
+
 </mapper>
