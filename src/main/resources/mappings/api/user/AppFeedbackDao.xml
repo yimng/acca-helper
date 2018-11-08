@@ -79,7 +79,7 @@
 			#{updateDate},
 			#{content},
 			#{phone},
-			#{type}，
+			#{type},
 			#{categoryId},
 			#{imgId}
 		)
