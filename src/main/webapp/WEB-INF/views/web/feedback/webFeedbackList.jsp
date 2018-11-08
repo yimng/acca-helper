@@ -37,11 +37,11 @@
 	<thead>
 	<tr>
 		<th>意见</th>
-		<th>图片</th>
-		<th width="15%">手机号</th>
+		<th width="15%">图片</th>
+		<th width="7%">手机号</th>
 		<th>类型</th>
-		<th>分类</th>
-		<th width="15%">时间</th>
+		<th width="5%">分类</th>
+		<th width="10%">时间</th>
 		<%-- <shiro:hasPermission name="user:webFeedback:edit"><th>操作</th></shiro:hasPermission> --%>
 	</tr>
 	</thead>
