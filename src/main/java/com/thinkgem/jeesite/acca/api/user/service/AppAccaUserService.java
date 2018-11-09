@@ -125,7 +125,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
         accaUser = new AppAccaUser();
         accaUser.setCreateDate(new Date());
         accaUser.setPhone(phone);
-        accaUser.setPassword(password);
+        accaUser.setPassword(SystemService.entryptPassword(password));
         String nickname = "ACCA学员"+phone.substring(phone.length()-4);
         accaUser.setNickname(nickname);
         accaUser.setHeadId(0L);
@@ -263,7 +263,10 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 
     private boolean checkPassword(AppAccaUser accaUser, String password) {
 	    String str = accaUser.getPassword();
-	    return SystemService.validatePassword(password, str);
+	    if (StringUtils.isNotEmpty(str)) {
+            return SystemService.validatePassword(password, str);
+        }
+        return false;
     }
 
     public void publishCoupon(String phone) {
