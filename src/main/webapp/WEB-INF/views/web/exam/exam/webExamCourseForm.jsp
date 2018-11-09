@@ -79,9 +79,10 @@
 		<form:hidden path="examType"/>
 		<sys:message content="${message}"/>		
 		<div class="control-group">
-			<label class="control-label">科目</label>
+			<label class="control-label">科目<font color="red">*</font></label>
 			<div class="controls">
-				${webExamCourse.course}
+				<%--${webExamCourse.course}--%>
+				<form:input path="course" htmlEscape="false" maxlength="64" class="input-xlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
