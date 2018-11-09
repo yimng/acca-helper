@@ -14,6 +14,7 @@ import com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon;
 import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
+import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
 import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
@@ -26,7 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 考试订单controller
@@ -156,13 +160,24 @@ public class AppOffiOrderController extends BaseController {
 
 	@ApiOperation(value = "根据用户id获得代金券", notes = "根据用户id获得代金券")
 	@RequestMapping(value = "getCouponList.do" ,method=RequestMethod.POST)
-	public @ResponseBody BasePageResponse<SmallCoupon> getCouponList(@RequestBody BaseRequest req) {
+	public @ResponseBody
+	BaseObjResponse<Map<String, List>> getCouponList(@RequestBody BaseRequest req) {
 		int respFlag = req.isCorrectParams();
 		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
-			return new BasePageResponse<SmallCoupon>(respFlag);
+			return new BaseObjResponse<>(respFlag);
 		}
 		List<SmallCoupon> couponListByUserId = userCouponService.getCouponListByUserId(req.getAppUserId());
-		return new BasePageResponse<>(couponListByUserId);
+		Map<String, List> map = new HashMap<String, List>();
+		map.put("canUse", new ArrayList<SmallCoupon>());
+		map.put("canNotUse", new ArrayList<SmallCoupon>());
+		for (SmallCoupon c : couponListByUserId) {
+			if (c.getCanUse()) {
+				map.get("canUse").add(c);
+			} else {
+				map.get("canNotUse").add(c);
+			}
+		}
+		return new BaseObjResponse<>(map);
 	}
 	
 }
