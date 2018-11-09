@@ -293,7 +293,7 @@ public class AppArticleController extends BaseController {
 
 	@ApiOperation(value = "提交用户认证", notes = "提交用户认证")
 	@RequestMapping(value = "submitAuthen.do", method = RequestMethod.POST)
-	public @ResponseBody String submitAuthen(AppAccaUser req) {
+	public @ResponseBody String submitAuthen(@RequestBody AppAccaUser req) {
 		/*
 		 * if(req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS){ return new
 		 * BasePageResponse<AppArticle> (req.isCorrectParams()); }
