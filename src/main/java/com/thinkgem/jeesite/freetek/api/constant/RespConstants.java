@@ -17,11 +17,12 @@ public class RespConstants {
 	public static final int USER_RREEZED = 00102; //账户被冻结
 	public static final int USER_MUSTAPP = 00103; //必须为注册用户
 	public static final int USER_EXIST = 00104;   //用户已存在
-	public static final int USER_WRONG_PASS = 00105;   //密码错误
+
 	// 用户正在被邀请
 	public static final int USER_WAS_INVITING = 00105;
 	// 优惠券已被抢完
 	public static final int COUPON_NOT_AVAILABLE = 00106;
+	public static final int USER_WRONG_PASS = 00107;   //密码错误
 	/**
 	 * 短信验证码
 	 */

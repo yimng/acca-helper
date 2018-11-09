@@ -146,7 +146,9 @@ public class AppArticleService  extends BaseService{
 	}
 	
 	public BasePageResponse<AppArticle> getArticleListByTitleAndCategory(GetArticleListByTitleAndCategoryReq req) {
-		
+		if (StringUtils.isEmpty(req.getTitle())) {
+			return new BasePageResponse<>();
+		}
 		AppArticle article = new AppArticle();
 		article.setArticleCategoryId(req.getArticleCategoryId());
 		article.setTitle(req.getTitle());
