@@ -5,6 +5,7 @@ import com.thinkgem.jeesite.acca.web.feedback.dao.QuestionMapper;
 import com.thinkgem.jeesite.acca.web.feedback.dao.QuestionPraiseMapper;
 import com.thinkgem.jeesite.acca.web.feedback.entity.Question;
 import com.thinkgem.jeesite.acca.web.feedback.entity.QuestionPraise;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class AppQuestionService {
     public BasePageResponse<Question> searchQuestions(int pageNo, int pageSize, String title) {
         Question question = new Question();
         question.setTitle(title);
+        if (StringUtils.isEmpty(title)) {
+            return new BasePageResponse<>();
+        }
         PageHelper.startPage(pageNo, pageSize);
         List<Question> list = questionMapper.findList(question);
         return new BasePageResponse<>(list);
