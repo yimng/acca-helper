@@ -10,5 +10,5 @@ import java.util.List;
 @MyBatisDao
 public interface UserCouponMapper extends MyMapper<UserCoupon> {
 
-    public List<SmallCoupon> getCouponsByUserId(Long accaUserId);
+    List<SmallCoupon> getCouponsByUserId(Long accaUserId);
 }

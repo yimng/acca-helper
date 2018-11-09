@@ -12,10 +12,18 @@
   </resultMap>
 
   <select id="getCouponsByUserId" resultType="com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon">
-    SELECT tbl_coupon.id as id, tbl_coupon.price, tbl_coupon.validity_start as validityStart, tbl_coupon.validity_end as validityEnd, description
-    from tbl_user_coupon
-    left join tbl_coupon on tbl_user_coupon.coupon_id = tbl_coupon.id
-    where tbl_user_coupon.del_flag = 0 and tbl_user_coupon.user_id = #{accaUserId}
+    SELECT
+      tbl_coupon.id as id,
+      tbl_coupon.price,
+      tbl_coupon.validity_start as validityStart,
+      tbl_coupon.validity_end as validityEnd,
+      description
+    from
+      tbl_user_coupon
+      left join tbl_coupon
+        on tbl_user_coupon.coupon_id = tbl_coupon.id
+    where tbl_user_coupon.del_flag = 0
+      and tbl_user_coupon.user_id = #{accaUserId}
   </select>
 
 </mapper>
