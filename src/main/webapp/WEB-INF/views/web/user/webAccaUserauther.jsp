@@ -112,7 +112,10 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<form:hidden path="iszbg" />
-		<ul class="ul-form">	
+		<ul class="ul-form">
+			<li><label>姓名：</label>
+				<form:input path="registerName" htmlEscape="false" maxlength="20" class="input-medium"/>
+			</li>
 			<li><label>手机号：</label>
 				<form:input path="phone" htmlEscape="false" maxlength="20" class="input-medium"/>
 			</li>

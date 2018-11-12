@@ -164,6 +164,12 @@
 			<if test="type != null and type != 0">
 				AND a.type=#{type}
 			</if>
+			<if test="registerName != null and registerName != ''">
+				AND a.register_name LIKE
+				<if test="dbName == 'oracle'">'%'||#{registerName}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{registerName}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{registerName},'%')</if>
+			</if>
 			<if test="phone != null and phone != ''">
 				AND a.phone LIKE 
 					<if test="dbName == 'oracle'">'%'||#{phone}||'%'</if>
