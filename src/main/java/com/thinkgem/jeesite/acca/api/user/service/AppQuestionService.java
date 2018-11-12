@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.thinkgem.jeesite.freetek.api.constant.RespConstants.GLOBAL_SUCCESS;
+
 @Service
 @Transactional(readOnly = true)
 public class AppQuestionService {
@@ -45,9 +47,11 @@ public class AppQuestionService {
 
     public BasePageResponse<Question> searchQuestions(int pageNo, int pageSize, String title) {
         Question question = new Question();
-        question.setTitle(title);
         if (StringUtils.isEmpty(title)) {
-            return new BasePageResponse<>();
+            return new BasePageResponse<>(GLOBAL_SUCCESS);
+        }
+        if (!"all".equals(title)){
+            question.setTitle(title);
         }
         PageHelper.startPage(pageNo, pageSize);
         List<Question> list = questionMapper.findList(question);

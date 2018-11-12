@@ -62,7 +62,7 @@ public class WebOrderController extends BaseController {
 	@RequiresPermissions("web:order:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(WebOrder webOrder, HttpServletRequest request, HttpServletResponse response, Model model) {
-		if(!Constants.ORDER_STATUS_TYPES.keySet().contains(webOrder.getOrderStatus())){
+			if(!Constants.ORDER_STATUS_TYPES.keySet().contains(webOrder.getOrderStatus())){
 			webOrder.setOrderStatus(Constants.OrderStatus.uncheckd);
 		}
 		//获取登录用户的信息
