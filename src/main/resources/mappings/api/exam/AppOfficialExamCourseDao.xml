@@ -72,7 +72,7 @@
         AND s.exam_season_str = #{examStartTimeStr}
 		AND e.del_flag = '0'
 		AND DATE_FORMAT(e.exam_start_time, '%Y-%m') = #{examStartTimeStr}
-		AND e.exam_city_id = #{examCityId}
+		AND e.exam_place_id = #{examPlaceId}
 	</select>
 
 	<!-- <select id="getOfficialExamCourseList" resultType="AppOfficialExamCourse">

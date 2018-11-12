@@ -15,8 +15,8 @@ public class ExamStartTimeReq extends BaseRequest {
 	@ApiModelProperty(value = "考试开始时间字符串")
 	private String examStartTimeStr;
 
-	@ApiModelProperty(value = "考试城市ID")
-	private Long examCityId;
+	@ApiModelProperty(value = "考点ID")
+	private String examPlaceId;
 
 	public String getExamStartTimeStr() {
 		return examStartTimeStr;
@@ -26,12 +26,12 @@ public class ExamStartTimeReq extends BaseRequest {
 		this.examStartTimeStr = examStartTimeStr;
 	}
 
-	public Long getExamCityId() {
-		return examCityId;
+	public String getExamPlaceId() {
+		return examPlaceId;
 	}
 
-	public void setExamCityId(Long examCityId) {
-		this.examCityId = examCityId;
+	public void setExamPlaceId(String examPlaceId) {
+		this.examPlaceId = examPlaceId;
 	}
 
 	@Override

@@ -23,7 +23,7 @@ import java.util.List;
 public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 	
 	private static final long serialVersionUID = 1L;
-	private Long examCityId;
+	private String examPlaceId;
 	private Long examCourseId;		// exam_course_id
 	private String course;		// 科目
 	private String courseName;		// 科目名称
@@ -58,7 +58,7 @@ public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 	
 	public AppOfficialExamCourse(ExamStartTimeReq req){
 		this.examStartTimeStr = req.getExamStartTimeStr();
-		this.examCityId = req.getExamCityId();
+		this.examPlaceId = req.getExamPlaceId();
 	}
 
 	@NotNull(message="exam_course_id不能为空")
@@ -191,15 +191,15 @@ public class AppOfficialExamCourse extends DataEntity<AppOfficialExamCourse> {
 		return courseColor;
 	}
 
-	public Long getExamCityId() {
-		return examCityId;
-	}
+    public String getExamPlaceId() {
+        return examPlaceId;
+    }
 
-	public void setExamCityId(Long examCityId) {
-		this.examCityId = examCityId;
-	}
+    public void setExamPlaceId(String examPlaceId) {
+        this.examPlaceId = examPlaceId;
+    }
 
-	public Date getPreSignup() {
+    public Date getPreSignup() {
 		return preSignup;
 	}
 

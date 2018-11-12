@@ -1,5 +1,6 @@
 package com.thinkgem.jeesite.acca.api.exam.web;
 
+import com.thinkgem.jeesite.acca.api.exam.dao.AppOfficialExamPlaceDao;
 import com.thinkgem.jeesite.acca.api.exam.entity.*;
 import com.thinkgem.jeesite.acca.api.exam.service.AppOfficialExamCourseService;
 import com.thinkgem.jeesite.acca.api.exam.service.AppOfficialExamPlaceService;
@@ -10,6 +11,7 @@ import com.thinkgem.jeesite.acca.api.model.request.AppOfficialOrderReq;
 import com.thinkgem.jeesite.acca.api.model.request.ExamStartTimeReq;
 import com.thinkgem.jeesite.acca.api.model.request.OffPlaceReq;
 import com.thinkgem.jeesite.acca.api.model.request.SeasonOffPlaceReq;
+import com.thinkgem.jeesite.acca.api.model.response.OffExamResponse;
 import com.thinkgem.jeesite.acca.api.model.response.OrderInfoResponse;
 import com.thinkgem.jeesite.acca.api.order.entity.SmallOrder;
 import com.thinkgem.jeesite.acca.api.order.service.AppOffiOrderService;
@@ -53,6 +55,8 @@ public class AppOfficialExamController {
 	
 	@Autowired
 	private AppOffiOrderService appOffiOrderService;
+	@Autowired
+	private AppOfficialExamPlaceDao appOfficialExamPlaceDao;
 	
 	@ApiOperation(value = "获取考试月份", notes = "获取考试月份")
 	@RequestMapping(value = "getExamMonth.do", method = RequestMethod.POST)
@@ -94,13 +98,17 @@ public class AppOfficialExamController {
 	@ApiOperation(value = "获取官方考试笔记/机试科目细节", notes = "获取官方考试笔记/机试科目细节")
 	@RequestMapping(value = "getOfficialExamCourseDetailList.do", method = RequestMethod.POST)
 	@ResponseBody
-	public BasePageResponse<AppOfficialExamCourse> getOfficialExamCourseDetailList(@RequestBody ExamStartTimeReq req){
+	public OffExamResponse getOfficialExamCourseDetailList(@RequestBody ExamStartTimeReq req) {
 		int respFlag = req.isCorrectParams();
 		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
-			return new BasePageResponse<>(respFlag);
+			return new OffExamResponse(respFlag);
 		}
 		AppOfficialExamCourse course = new AppOfficialExamCourse(req);
-		return new BasePageResponse<>(appOfficialExamCourseService.getOfficialExamCourseDetailList(course));
+		AppOfficialExamPlace place = appOfficialExamPlaceDao.get(req.getExamPlaceId());
+		List<AppOfficialExamCourse> list = appOfficialExamCourseService.getOfficialExamCourseDetailList(course);
+		OffExamResponse response = new OffExamResponse(list, place.getLng(), place.getLat(), place.getExamPlaceContantName(), place.getExamPlaceContantPhone());
+
+		return response;
 	}
 	
 	@ApiOperation(value = "根据所选科目对应的考试获取考试地点列表 ", notes = "根据所选科目对应的考试获取考试地点列表")
