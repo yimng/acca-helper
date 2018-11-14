@@ -50,6 +50,17 @@
 					}
 				}
 			});
+            $("#checkAll").click(function() {
+                if (this.checked) {
+                    $("input[name='courseIdList']:checkbox").each(function() {
+                        $(this).attr("checked", true);
+                    })
+                } else {   //反之 取消全选
+                    $("input[name='courseIdList']:checkbox").each(function() {
+                        $(this).attr("checked", false);
+                    })
+                }
+            })
 		});
 
 		//判断是否显示url
@@ -144,6 +155,7 @@
 							checked = "checked"
 						</c:if> value="${course.examCourseId}" type="checkbox"/> ${course.course}
 					</c:forEach>
+					<input id="checkAll" type="checkbox"/> 全选
 				</div>
 			</div>
 		</div>
