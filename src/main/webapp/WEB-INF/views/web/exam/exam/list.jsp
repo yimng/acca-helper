@@ -17,15 +17,7 @@
 	</script>
 </head>
 <body>
-	<ul class="nav nav-tabs">
-		<li <c:if test="${webExam.examFlag == webExam.now}">class="active"</c:if>>
-			<a href="${ctx}/web/exam?examFlag=${webExam.now}&examType=${webExam.examType}">当前考试</a>
-		</li>
-		<li <c:if test="${webExam.examFlag == webExam.old}">class="active"</c:if>>
-			<a href="${ctx}/web/exam?examFlag=${webExam.old}&examType=${webExam.examType}">历史考试</a>
-		</li>
-		<li><a href="${ctx}/web/exam/form?examType=${webExam.examType}">添加考试</a></li>
-	</ul><br/>
+
 	<form:form id="searchForm" modelAttribute="webExam" action="${ctx}/web/exam/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
@@ -39,18 +31,28 @@
 				</form:select>
 			</li>
 			<li><label>考试时间：</label>
-					<input id="start" name="start" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="${webExam.start}"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
-					-
-					<input id="end" name="end" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
-					value="${webExam.end}"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
+				<input id="start" name="start" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="${webExam.start}"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
+				-
+				<input id="end" name="end" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
+					   value="${webExam.end}"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:true});"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
+	<ul class="nav nav-tabs">
+		<li <c:if test="${webExam.examFlag == webExam.now}">class="active"</c:if>>
+			<a href="${ctx}/web/exam?examFlag=${webExam.now}&examType=${webExam.examType}">当前考试</a>
+		</li>
+		<li <c:if test="${webExam.examFlag == webExam.old}">class="active"</c:if>>
+			<a href="${ctx}/web/exam?examFlag=${webExam.old}&examType=${webExam.examType}">历史考试</a>
+		</li>
+		<li><a href="${ctx}/web/exam/form?examType=${webExam.examType}">添加考试</a></li>
+	</ul><br/>
+
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
