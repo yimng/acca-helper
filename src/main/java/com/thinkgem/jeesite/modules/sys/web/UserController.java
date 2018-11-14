@@ -238,7 +238,8 @@ public class UserController extends BaseController {
     public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		try {
             String fileName = "用户数据导入模板.xlsx";
-    		List<User> list = Lists.newArrayList(); list.add(UserUtils.getUser());
+    		List<User> list = Lists.newArrayList();
+    		list.add(UserUtils.getUser());
     		new ExportExcel("用户数据", User.class, 2).setDataList(list).write(response, fileName).dispose();
     		return null;
 		} catch (Exception e) {

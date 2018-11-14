@@ -10,6 +10,8 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.persistence.BaseEntity;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.DateUtils;
+import com.thinkgem.jeesite.common.utils.excel.ExportExcel;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.freetek.util.TimeUtils;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -519,6 +521,52 @@ public class WebExamController extends BaseController {
 		model.addAttribute("examList", list);
 		model.addAttribute("signups", ws);
 		return "web/exam/exam/daylist";
+	}
+
+	@RequiresPermissions("web:exam:view")
+	@RequestMapping(value = "daylistexport")
+	public String daylistExport(WebExam webExam, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+		User user = UserUtils.getUser();
+		String userId = user.getId();
+		//先通过用户id查询是否有绑定考点
+		WebExamPlace place = new WebExamPlace();
+		place.setSysUserId(userId);
+		//查询考点id列表
+		List<WebExamPlace> placesList;
+		//当为自有考试的时候,去查询考点信息
+		if (webExam.getExamType() == null) {
+			webExam.setExamType(Constants.ExamType.self);
+		}
+		placesList = examPlaceService.findList(place);
+		//如果id列表不为空
+		if (placesList != null && placesList.size() > 0) {
+			webExam.getSqlMap().put("sysUserId", userId);
+		}
+		if (webExam.getExamFlag() == null) {
+			webExam.setExamFlag(Constants.ExamFlag.now);
+		}
+
+		//获取考点列表
+		List<WebExamPlace> places = examService.selectPlaceByType(webExam);
+		if (places != null && places.size() > 0) {
+			webExam.setPlaces(places);
+		}
+		if (webExam == null || webExam.getExamStartTime() == null) {
+			webExam.setExamStartTime(new Date());
+		}
+		webExam.setExamSignupStatus(30);
+
+		List<WebExam> list = examService.getDayList(webExam);
+
+
+		String fileName = "签到表" + DateUtils.getDate("yyyyMMddHHmmss") + ".xlsx";
+		try {
+			new ExportExcel("用户数据", WebExam.class).setDataList(list).write(response, fileName).dispose();
+			return null;
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导出用户失败！失败信息：" + e.getMessage());
+		}
+		return "redirect:/web/exam/exam/daylist?repage";
 	}
 	
 	//@RequiresPermissions("web:exam:del")
