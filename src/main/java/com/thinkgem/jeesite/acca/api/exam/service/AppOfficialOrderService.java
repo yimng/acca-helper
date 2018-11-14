@@ -266,7 +266,7 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
     @Transactional(readOnly = false)
 	public BaseResponse resaveOrder(ReSaveOrderReq req) {
         AppOfficialOrder order = this.get(new AppOfficialOrder(req.getOrderId()));
-        if (order.getOrderStatus() != Constants.OrderStatus.checkFail) {
+        if (order.getOrderStatus() != Constants.OrderStatus.checkFail && order.getOrderStatus() != Constants.OrderStatus.checkSupplement ) {
             return new BaseResponse(RespConstants.GLOBAL_PARAM_ERROR);
         }
         order.setOrderPayImgId(req.getOrderPayImgId());
@@ -276,6 +276,7 @@ public class AppOfficialOrderService extends CrudService<AppOfficialOrderDao, Ap
         order.setRegisterPhone(req.getRegisterPhone());
         order.setRegisterEmail(req.getRegisterEmail());
         order.setRegisterCardNumber(req.getRegisterCardNumber());
+        order.setOrderStatus(Constants.OrderStatus.uncheckd);
         dao.update(order);
         appExamSignupDao.updateStatusByOrderId(req.getOrderId(), Constants.OrderStatus.uncheckd);
         return new BaseResponse(RespConstants.GLOBAL_SUCCESS);
