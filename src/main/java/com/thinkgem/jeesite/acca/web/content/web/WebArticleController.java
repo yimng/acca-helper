@@ -20,6 +20,7 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -195,9 +196,11 @@ public class WebArticleController extends BaseController {
 		}
 		//判断文章的id是否为空,如果为空,则进行保存
 		if (webArticle.getArticleId() == null){
+			webArticle.setCreateBy(UserUtils.getUser());
 			articleService.saveArticle(webArticle,courseIdList);
 			addMessage(redirectAttributes, "保存文章成功");
 		} else {
+			webArticle.setUpdateBy(UserUtils.getUser());
 			articleService.updateArticle(webArticle,courseIdList);
 			addMessage(redirectAttributes, "修改文章成功");
 		}

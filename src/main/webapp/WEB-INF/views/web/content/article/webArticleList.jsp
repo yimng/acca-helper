@@ -48,6 +48,8 @@
 				<th>标题</th>
 				<th>所属分类</th>
 				<th>关联科目</th>
+				<th>浏览量</th>
+				<th>发布人</th>
 				<th>是否发布</th>
 				<th>创建时间</th>
 				<shiro:hasPermission name="article:webArticle:edit"><th>操作</th></shiro:hasPermission>
@@ -70,6 +72,12 @@
 				</td>
 				<td>
 					${coupon.relationCourse}
+				</td>
+				<td>
+					${coupon.viewNum}
+				</td>
+				<td>
+					${coupon.createBy.name}
 				</td>
 				<td>
 					<c:if test="${coupon.publish == 1}">
