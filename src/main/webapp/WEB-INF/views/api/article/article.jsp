@@ -19,6 +19,7 @@ body {
 	line-height: inherit;
 	max-width: 800px;
 	margin: 0 auto;
+	word-wrap: break-word;
 }
 </style>
 </head>
