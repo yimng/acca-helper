@@ -3,55 +3,36 @@
  */
 package com.thinkgem.jeesite.acca.api.article.web;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.thinkgem.jeesite.common.web.BaseController;
-import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
-import com.thinkgem.jeesite.freetek.api.model.BaseObjResponse;
-import com.thinkgem.jeesite.freetek.api.model.BasePageRequest;
-import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
-import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
-import com.thinkgem.jeesite.freetek.api.model.BaseResponse;
-import com.thinkgem.jeesite.freetek.api.model.PageApi;
 import com.thinkgem.jeesite.acca.api.article.entity.AppArticle;
 import com.thinkgem.jeesite.acca.api.article.entity.AppArticleCategory;
 import com.thinkgem.jeesite.acca.api.article.entity.AppArticleComment;
 import com.thinkgem.jeesite.acca.api.article.entity.AppAward;
 import com.thinkgem.jeesite.acca.api.article.service.AppArticleService;
-import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
-import com.thinkgem.jeesite.acca.api.user.service.AppSmsVcodeService;
 import com.thinkgem.jeesite.acca.api.model.request.GetArticleListByCategoryReq;
 import com.thinkgem.jeesite.acca.api.model.request.GetArticleListByTitleAndCategoryReq;
 import com.thinkgem.jeesite.acca.api.model.request.GetArticleListReq;
-import com.thinkgem.jeesite.acca.api.model.request.GetSmsVcodeReq;
 import com.thinkgem.jeesite.acca.api.model.request.GetTeacherInfoReq;
-import com.thinkgem.jeesite.acca.api.model.request.LoginReq;
-import com.thinkgem.jeesite.acca.api.model.request.RegisterClientReq;
-import com.thinkgem.jeesite.acca.api.model.request.SendMobileContantReq;
 import com.thinkgem.jeesite.acca.api.model.response.GetTeacherInfoResp;
 import com.thinkgem.jeesite.acca.api.model.response.SubmitAwardResp;
 import com.thinkgem.jeesite.acca.api.model.response.SubmitCommentResp;
 import com.thinkgem.jeesite.acca.api.user.entity.AppAccaUser;
+import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
+import com.thinkgem.jeesite.acca.api.user.service.AppSmsVcodeService;
 import com.thinkgem.jeesite.acca.constant.Constants;
+import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
+import com.thinkgem.jeesite.freetek.api.model.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * AppCommonController
@@ -67,7 +48,7 @@ public class AppArticleController extends BaseController {
 	@Autowired
 	private AppArticleService appArticleService;
 	@Autowired
-	private AppSmsVcodeService appSmsVcodeService;
+	private AppSmsVcodeService appSmsVcodsaeService;
 	@Autowired
 	private AppAccaUserService appAccaUserService;
 
@@ -293,7 +274,7 @@ public class AppArticleController extends BaseController {
 
 	@ApiOperation(value = "提交用户认证", notes = "提交用户认证")
 	@RequestMapping(value = "submitAuthen.do", method = RequestMethod.POST)
-	public @ResponseBody String submitAuthen(@RequestBody AppAccaUser req) {
+	public @ResponseBody String submitAuthen(AppAccaUser req) {
 		/*
 		 * if(req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS){ return new
 		 * BasePageResponse<AppArticle> (req.isCorrectParams()); }
