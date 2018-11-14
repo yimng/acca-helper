@@ -49,6 +49,7 @@ public class WebOrder extends DataEntity<WebOrder> {
 	private String checkReason;		// 审核不通过原因
 	private Integer cardType;
 	private String examTimeStr;
+	private String cityName;
 	
 	private FileInfo image;  //身份证图片
 	private FileInfo file;   //支付凭证图片
@@ -431,5 +432,13 @@ public class WebOrder extends DataEntity<WebOrder> {
 
 	public void setPayerAccountName(String payerAccountName) {
 		this.payerAccountName = payerAccountName;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 }

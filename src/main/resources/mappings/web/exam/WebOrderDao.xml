@@ -199,6 +199,13 @@
 					<if test="dbName == 'mssql'">'%'+#{registerName}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{registerName},'%')</if>
 			</if>
+			<if test="cityName != null and cityName != ''">
+				AND EXISTS (
+				select * from tbl_exam_signup s
+				where s.order_id = a.order_id
+				AND s.exam_city_name LIKE concat('%',#{cityName},'%')
+				)
+			</if>
 			<if test="expireDate != null">
 				and #{expireDate} > a.create_date 
 			</if>

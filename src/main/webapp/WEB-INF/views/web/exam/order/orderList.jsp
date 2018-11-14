@@ -46,11 +46,6 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="javascript:void(0);">报考缴费审核</a></li>
 	</ul>
-	<ul class="nav nav-tabs">
-		<c:forEach items="${webOrder.orderMaps}" var="item">
-			<li <c:if test="${webOrder.orderStatus == item.key}">class="active"</c:if>><a href="${ctx}/web/order?orderStatus=${item.key}">${item.value}</a></li>
-		</c:forEach>
-	</ul><br/>
 	<form:form id="searchForm" modelAttribute="webOrder" action="${ctx}/web/order/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
@@ -62,10 +57,18 @@
 			<li><label>学员姓名：</label>
 				<form:input path="registerName" htmlEscape="false" maxlength="11" class="input-medium"/>
 			</li>
+			<li><label>报考城市：</label>
+				<form:input path="cityName" htmlEscape="false" maxlength="11" class="input-medium"/>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
 	</form:form>
+	<ul class="nav nav-tabs">
+		<c:forEach items="${webOrder.orderMaps}" var="item">
+			<li <c:if test="${webOrder.orderStatus == item.key}">class="active"</c:if>><a href="${ctx}/web/order?orderStatus=${item.key}">${item.value}</a></li>
+		</c:forEach>
+	</ul><br/>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
