@@ -274,7 +274,7 @@ public class AppArticleController extends BaseController {
 
 	@ApiOperation(value = "提交用户认证", notes = "提交用户认证")
 	@RequestMapping(value = "submitAuthen.do", method = RequestMethod.POST)
-	public @ResponseBody String submitAuthen(AppAccaUser req) {
+	public @ResponseBody BaseResponse submitAuthen(@RequestBody AppAccaUser req) {
 		/*
 		 * if(req.isCorrectParams()!=RespConstants.GLOBAL_SUCCESS){ return new
 		 * BasePageResponse<AppArticle> (req.isCorrectParams()); }
@@ -283,7 +283,7 @@ public class AppArticleController extends BaseController {
 		req.setUpdateDate(n);
 		req.setIszbg(1);
 		System.out.print(req);
-		return appArticleService.submitAuthen(req);
+		return new BaseResponse(RespConstants.GLOBAL_SUCCESS, appArticleService.submitAuthen(req));
 	}
 
 	@ApiOperation(value = "提交评论", notes = "提交评论")
