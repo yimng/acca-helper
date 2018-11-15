@@ -111,7 +111,7 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 			msgSysService.savePushToPersonal("考试报名需要补传信息","抱歉，您的报考申请需要补传信息，快去查看原因并重新提交报考申请吧。", wo.getAccaUserId());
 			SmsUtils.sendSms2Vcode(wo.getPhone(),"您好，您的考试报名申请需要补传信息，请于4小时内去小助手【考点】首页，右上【考试管理】查看原因并重新提交报考申请吧。");
 		} else if (wo.getOrderStatus() == Constants.OrderStatus.checkSuccess){
-            publishCoupon(wo);
+            //publishCoupon(wo);
             String courseNames = "";
 			//获取报考的信息
 			List<WebSignup> signups = wo.getSignups();
@@ -157,6 +157,7 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
             UserCoupon userCoupon = new UserCoupon();
             userCoupon.setCouponId(coupon.getId());
             userCoupon.setUserId(wo.getAccaUserId());
+            userCoupon.setDelFlag("0");
             userCouponService.saveOrUpdate(userCoupon);
         }
     }

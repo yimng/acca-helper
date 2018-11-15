@@ -233,7 +233,7 @@ public class WebOrderController extends BaseController {
             oldwe.setTotalSeats(oldwe.getTotalSeats() + 1);
             examService.updateSeat(oldwe);
         } else {
-            targetwe = examService.get(oldexamId);
+            targetwe = examService.getById(oldexamId);
         }
         //修改报考信息
         if (versionStr == null) {
