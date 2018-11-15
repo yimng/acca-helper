@@ -5,6 +5,7 @@
 	<resultMap type="com.thinkgem.jeesite.acca.api.order.entity.SmallOrder" id="orderInfoResult">
 		<id column="orderId" property="orderId" />
 		<result column="amount" property="amount" />
+		<result column="orderStatus" property="orderStatus"/>
 		<collection property="signupList" ofType="com.thinkgem.jeesite.acca.api.order.entity.SmallSignup">
 			<id column="examSignupId" property="examSignupId" />
 			<result column="examCourse" property="examCourse" />
@@ -51,6 +52,7 @@
     	select
 		a.order_id orderId,
 		a.amount amount,
+		a.order_status orderStatus,
     	b.exam_signup_id examSignupId,
 		b.exam_course examCourse,
 		b.exam_type examType,

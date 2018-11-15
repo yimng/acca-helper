@@ -59,9 +59,17 @@ public class AppOffiOrderController extends BaseController {
 		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
 			return new BasePageResponse<SmallOrder>(respFlag);
 		}
+
 		AppOfficialOrder aoo = new AppOfficialOrder(req);
+
 		aoo.getSqlMap().put("idStr", String.valueOf(Constants.OrderStatus.delete));
-		return new BasePageResponse<SmallOrder>(appOffiOrderService.getOrderListByStatis(aoo));
+		List<SmallOrder> list = appOffiOrderService.getOrderListByStatis(aoo);
+		if (Constants.OrderStatus.checkFail == req.getOrderStatus()) {
+			aoo.setOrderStatus(Constants.OrderStatus.checkSupplement);
+            List<SmallOrder> list2 = appOffiOrderService.getOrderListByStatis(aoo);
+            list.addAll(list2);
+        }
+		return new BasePageResponse<SmallOrder>(list);
 	}
 	
 	@ApiOperation(value = "按照月份获取F5-P9订单信息", notes = "按照月份获取F5-P9订单信息")

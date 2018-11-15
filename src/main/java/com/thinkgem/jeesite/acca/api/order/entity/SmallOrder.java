@@ -16,6 +16,8 @@ public class SmallOrder implements Serializable {
 	private Double amount;		// 报名费用
 	
 	//private String checkReason; //拒绝理由
+
+	private Integer orderStatus;
 	
 	private List<SmallSignup> signupList;
 
@@ -43,4 +45,11 @@ public class SmallOrder implements Serializable {
 		this.signupList = signupList;
 	}
 
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 }
