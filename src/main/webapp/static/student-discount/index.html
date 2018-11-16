@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" name='viewport'/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<link rel="stylesheet" href="css/index.css" />
+	<title>如何享受学员优惠</title>
+	<script type="text/javascript">
+		!function(n){
+    	var  e=n.document,
+	   	t=e.documentElement,
+	   	i=720,
+	   	d=i/100,
+	   	o="orientationchange"in n?"orientationchange":"resize",
+	   	a=function(){
+	       var n=t.clientWidth||320;n>720&&(n=720);
+	       t.style.fontSize=n/d+"px"
+	   	};
+	   	e.addEventListener&&(n.addEventListener(o,a,!1),e.addEventListener("DOMContentLoaded",a,!1))
+		}(window);
+	</script>
+	
+</head>
+<body>
+	<div class="container">
+		<div class="banner">
+			<img src="img/banner.jpg" class="img" alt="" />
+		</div>
+		<div class="main">
+			<div class="one-step">
+				<img src="img/one-step.png" class="img" alt="" />
+				<a href="https://m.zbgedu.com/branch.html">
+					<img src="img/around-branch.png" class="around-branch" alt="" />
+				</a>
+				<a href="https://wwwa.zbgedu.com/course/accounting/acca.html">				
+					<img src="img/know-acca.png" class="know-acca" alt="" />
+				</a>
+			</div>
+			
+			
+			<div class="two-step">
+				<img src="img/two-step.png" class="img" alt="" />
+				<img src="img/contact-center.png" class="contact-exam centerX" alt="" />
+			</div>
+			
+			<div class="three-step">
+			<img src="img/three-step.png" class="img" alt="" />
+		</div>
+		</div>
+		
+		
+	</div>
+	<script src='js/jquery-3.2.1.min.js'></script>
+  <script>
+  	$(function(){
+  		$('.contact-exam').on('click',function(){
+			//console.log('9090')
+			window.location.href="next://phoneNum"
+  			
+  		})
+  	})
+  </script>
+	
+	
+</body>
+</html>

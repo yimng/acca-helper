@@ -1,0 +1,176 @@
+/* 重置浏览器默认的样式表 */
+*{
+	box-sizing: border-box;
+	margin: 0px;
+	padding: 0px;
+}
+ul,ol {
+  list-style: none
+}
+a {
+  text-decoration: none;
+  background-color: transparent
+}
+a:hover,a:active {
+  outline-width: 0;
+  text-decoration: none
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0
+}
+
+img {
+  border-style: none
+}
+img:not([src]) {
+  display: none
+}
+
+svg:not(:root) {
+  overflow: hidden
+}
+html {
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%
+}
+input,textarea,button,a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+}
+article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary {
+  display: block
+}
+audio,canvas,progress,video {
+  display: inline-block
+}
+audio:not([controls]),video:not([controls]) {
+  display: none;
+  height: 0
+}
+progress {
+  vertical-align: baseline
+}
+
+
+button,input,select,textarea {
+  outline: 0
+}
+button,input {
+  overflow: visible
+}
+button,select {
+  text-transform: none
+}
+textarea {
+  overflow: auto
+}
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0
+}
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText
+}
+
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
+  padding: 0
+}
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto
+}
+
+[type="search"] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px
+}
+
+[type="search"]::-webkit-search-cancel-button,
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none
+}
+
+::-webkit-input-placeholder {
+  color: inherit;
+  opacity: .54
+}
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit
+}
+
+.clearfix:after {
+  display: block;
+  height: 0;
+  content: "";
+  clear: both
+}
+.centerX {
+	left: 50%;
+	transform: translateX(-50%);
+	position: absolute;
+}
+
+/*页面css样式*/
+.container {
+	width: 100%;
+	max-width: 750px;
+	min-width: 320px;
+	margin: 0 auto;
+}
+.banner>.img {
+	width: 100%;
+	display: inherit;
+}
+.main {
+	background: url(../img/main-bg.jpg) repeat-y center/cover;
+	padding-bottom: 0.4rem;
+}
+.main .one-step, .two-step {
+	position: relative;
+}
+.main .one-step>.img, .two-step>.img, .three-step>.img {
+	width: 90%;
+	margin: 0 auto 0.3rem auto;
+	display: block;
+}
+.one-step .around-branch {
+	width: 34%;
+	position: absolute;
+	left: 0.96rem;
+  top: 2.94rem;
+}
+.one-step .know-acca {
+	width: 34%;
+	position: absolute;
+	left: 0.96rem;
+  bottom: 0.54rem; 
+}
+.two-step .contact-exam {
+	width: 34%;
+	bottom: 0.6rem;
+}
+
+
+
+
+
+
