@@ -19,6 +19,6 @@ import java.util.List;
 @MyBatisDao
 public interface AppExamPlaceDao extends CrudDao<AppExamPlace> {
 
-	AppExamPlace getSelfExamByExamPlaceId(Integer examPlaceId);
+	AppExamPlace getSelfExamByExamPlaceId(@Param("examPlaceId") Integer examPlaceId, @Param("iszbg") int iszbg);
 	List<AppSmallExamPlace> getExamCenterList(@Param("cityId") Integer cityId);
 }

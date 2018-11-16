@@ -95,7 +95,12 @@
 		examCourseList.course_name AS "examCourseList.courseName",
 		examCourseList.english_name AS "examCourseList.englishName",
 		examCourseList.english_short_name AS "examCourseList.englishShortName",
-		examCourseList.price AS "examCourseList.price",
+		<if test="iszbg == 3" >
+            examCourseList.student_price AS "examCourseList.price",
+        </if>
+        <if test="iszbg != 3" >
+            examCourseList.price AS "examCourseList.price",
+        </if>
 		examCourseList.exam_type AS "examCourseList.examType",
 		examCourseRelation.exam_version_json AS "examCourseList.examVersionJson"
 	</sql>

@@ -95,7 +95,7 @@ public class AppExamController extends BaseController {
 		
 		int respCode = req.isCorrectParams();
 		if(respCode!=RespConstants.GLOBAL_SUCCESS){
-			return new BasePageResponse<AppExam>(respCode);
+			return new BasePageResponse<>(respCode);
 		}
 		
 		return appExamService.getSelfExamListByCityAndTimeSpan(req.getExamCityId(),req.getStartTime(),req.getEndTime(), req.isHasSeat(), req.getAppUser());

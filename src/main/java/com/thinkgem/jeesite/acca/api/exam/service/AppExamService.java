@@ -174,16 +174,10 @@ public class AppExamService extends BaseService {
     }
 
     public BaseObjResponse<AppExamPlace> getSelfExamByExamPlaceId(Integer examPlaceId, AppAccaUser appUser) {
-        AppExamPlace examPlace = new AppExamPlace();
-
-        if (appUser.getIszbg() == 3) {
-            examPlace = appExamPlaceDao.getSelfExamByExamPlaceId(examPlaceId);
-        } else {
-            examPlace = appExamPlaceDao.getSelfExamByExamPlaceId(examPlaceId);
-        }
+        AppExamPlace examPlace = appExamPlaceDao.getSelfExamByExamPlaceId(examPlaceId, appUser.getIszbg());
         logger.info("examPlaceId:{}   ,examPlace:{}", examPlaceId, examPlace);
         if (examPlace == null) {
-            return new BaseObjResponse<AppExamPlace>(RespConstants.GLOBAL_PARAM_ERROR);
+            return new BaseObjResponse<>(RespConstants.GLOBAL_PARAM_ERROR);
         }
 
         List<AppExamSelfCart> list = appExamSelfCartDao.getByUserId(appUser.getAccaUserId());
@@ -218,7 +212,7 @@ public class AppExamService extends BaseService {
     public BasePageResponse<AppExamSelfCityTiny> getSelfExamPlaceList(AppAccaUser appUser) {
         List<AppExamSelfCityTiny> list = appExamDao.getSelfExamPlaceList();
         logger.info("getSelfExamPlaceList list:" + list);
-        return new BasePageResponse<AppExamSelfCityTiny>(list);
+        return new BasePageResponse<>(list);
     }
 
     public GetSelfExamCartResp getSelfExamCart(AppAccaUser appUser) {
