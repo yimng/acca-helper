@@ -178,12 +178,13 @@ public class AppArticleController extends BaseController {
 		return appAccaUserService.fastlogin(phone, smsVcode, "");
 	}
 
-	@ApiOperation(value = "验证用户是否存在", httpMethod = "POST", notes = "验证用户是否存在")
-	@RequestMapping(value = "chekUserExists.do", method = RequestMethod.POST)
-	public @ResponseBody BaseResponse chekUserExists(@RequestParam(value = "phone") String phone) {
+	@ApiOperation(value = "验证用户是否存在", httpMethod = "GET", notes = "验证用户是否存在")
+	@RequestMapping(value = "checkUserExists.do", method = RequestMethod.GET)
+	public @ResponseBody BaseResponse checkUserExists(@RequestParam(value = "phone") String phone) {
 		AppAccaUser accaUser = appAccaUserService.getAccaUserByPhone(phone);
 		if(accaUser!=null){
-			return new BaseResponse(RespConstants.USER_EXIST);
+			BaseResponse baseResponse = new BaseResponse(RespConstants.USER_EXIST);
+			return baseResponse;
 		} else {
 			return new BaseResponse(RespConstants.USER_NONEXIST);
 		}
