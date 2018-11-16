@@ -35,7 +35,6 @@ public class ZBGUtils {
 
     public static String getCaicuiUser(String token, String code) {
         String url=domain + "/api/edu/zbids/member/detail/";
-//        String url = "http://api.caicui.com/api/zbids/member/detail/v1.0";
         String requestMethod = "GET";
         Map<String, String> params = new HashMap<String, String>();
         params.put("code", code);//type=2 传手机

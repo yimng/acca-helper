@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thinkgem.jeesite.common.utils.http.ZBGUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -487,7 +488,7 @@ public class AppArticleService  extends BaseService{
 	}
 	
 	public String setAwardToCAicui(String phone, String string) {
-		String t=getToken();
+		String t= ZBGUtils.getToken();
 		String regActiveID = "0";
 		String regActiveType = "4";
 		String nickName = "ACCAHelper"+phone;
@@ -505,33 +506,33 @@ public class AppArticleService  extends BaseService{
 	}
 
 
-	public static String getToken(){
-		String url="http://api.caicui.com/api/zbids/app/gettoken/v1.0/";
-		String requestMethod="POST";
-		Map<String, String> params= new HashMap<String, String>();
-		params.put("appType","accahelperserver");
-		params.put("appId","accahelper");
-		params.put("appKey","33AF7273FB74052AB2B03CCFC7E97D93"); 
-		JSONObject t =(JSONObject) JSONObject.parse(HttpUrlConnectionUtil.httpRequestToString(url, requestMethod, params));
-		JSONObject v = (JSONObject) t.get("data");
-		String s=(String) v.get("token");
-		return s;
-	}
+//	public static String getToken(){
+//		String url="http://api.caicui.com/api/zbids/app/gettoken/v1.0/";
+//		String requestMethod="POST";
+//		Map<String, String> params= new HashMap<String, String>();
+//		params.put("appType","accahelperserver");
+//		params.put("appId","accahelper");
+//		params.put("appKey","33AF7273FB74052AB2B03CCFC7E97D93");
+//		JSONObject t =(JSONObject) JSONObject.parse(HttpUrlConnectionUtil.httpRequestToString(url, requestMethod, params));
+//		JSONObject v = (JSONObject) t.get("data");
+//		String s=(String) v.get("token");
+//		return s;
+//	}
 	
-	public static String getCaicuiUser(String token,String code){
-		String url="http://api.caicui.com/api/zbids/member/detail/v1.0";
-		String requestMethod="GET";
-		Map<String, String> params= new HashMap<String, String>();
-		params.put("code",code);
-		params.put("type","2");
-		params.put("token",token);		
-		String u= HttpUrlConnectionUtil.httpRequestToString(url, requestMethod, params);
-		return u;
-	}
+//	public static String getCaicuiUser(String token,String code){
+//		String url="http://api.caicui.com/api/zbids/member/detail/v1.0";
+//		String requestMethod="GET";
+//		Map<String, String> params= new HashMap<String, String>();
+//		params.put("code",code);
+//		params.put("type","2");
+//		params.put("token",token);
+//		String u= HttpUrlConnectionUtil.httpRequestToString(url, requestMethod, params);
+//		return u;
+//	}
 	
 	public static String addCaicuiUser(String token,String regActiveID,String regActiveType,String nickName,String password,String email,
 								String name,String gender,String areaPath,String address,String mobile,String identityType){
-		String url="http://api.caicui.com/api/zbids/ib/regmember/v1.0";
+		String url="http://api.zbgedu.com/api/zbids/ib/regmember/v1.0";
 		String requestMethod="POST";
 		Map<String, String> params= new HashMap<String, String>();
 		params.put("token",token);
@@ -551,7 +552,7 @@ public class AppArticleService  extends BaseService{
 	}
 	
 	public static String getUserCoupon(String phone){
-		String url="http://api.caicui.com/api/business/coupon/usercoupon";
+		String url="http://api.zbgedu.com/api/business/coupon/usercoupon";
 		String requestMethod="GET";
 		Map<String, String> params= new HashMap<String, String>();
 		params.put("code",phone);
@@ -561,7 +562,7 @@ public class AppArticleService  extends BaseService{
 	}
 	
 	public static String AddCoupon(String token,String phone,String ruleId){
-		String url="http://api.caicui.com/api/business/coupon/create/v1.0";
+		String url="http://api.zbgedu.com/api/business/coupon/create/v1.0";
 		String requestMethod="GET";
 		Map<String, String> params= new HashMap<String, String>();
 		params.put("phone",phone);
