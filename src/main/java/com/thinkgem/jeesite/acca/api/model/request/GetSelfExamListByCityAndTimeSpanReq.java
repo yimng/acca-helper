@@ -14,10 +14,10 @@ private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value = "城市id，全国：-1，其他取值表示具体的城市id", required = true)
 	private Integer examCityId;
 	
-	@ApiModelProperty(value = "筛选开始时间", required = false)
+	@ApiModelProperty(value = "筛选开始时间", required = true)
 	private Date startTime;
 	
-	@ApiModelProperty(value = "筛选结束时间", required = false)
+	@ApiModelProperty(value = "筛选结束时间", required = true)
 	private Date endTime;
 
 	@ApiModelProperty(value = "是否有考位", required = false)

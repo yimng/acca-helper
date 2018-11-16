@@ -120,13 +120,9 @@
 		<if test="examCityId != -1">
 			AND a.exam_city_id = #{examCityId}
 		</if>
-		<if test="startTime != null">
-			AND a.exam_start_time >= #{startTime}
+		<if test="startTime != null and endTime != null">
+			AND a.exam_start_time between #{startTime} and #{endTime}
 		</if>
-		<if test="endTime != null">
-			and #{endTime} >= a.exam_end_time
-		</if>
-
 		<if test="hasSeat != null and hasSeat == true">
 			and total_seats - used_seats > 0
 		</if>
