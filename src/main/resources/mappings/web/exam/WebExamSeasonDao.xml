@@ -14,6 +14,8 @@
 			<result column="prePrice" property="prePrice" />
             <result column="normalPrice" property="normalPrice" />
             <result column="postPrice" property="postPrice" />
+			<result column="examStartTime" property="examStartTime"/>
+			<result column="examEndTime" property="examEndTime"/>
 		</collection>
 	</resultMap>
     
@@ -29,7 +31,9 @@
 		b.course AS "examCourse",
 		a.exam_pre_price AS "prePrice",
 		a.exam_normal_price AS "normalPrice",
-		a.exam_post_price AS "postPrice"
+		a.exam_post_price AS "postPrice",
+		a.exam_start_time AS "examStartTime",
+		a.exam_end_time AS "examEndTime"
 	</sql>
 	
 	<sql id="webExamSeasonJoins">
@@ -83,7 +87,9 @@
 			exam_post_price,
 			exam_pre_signup,
 			exam_signup,
-			exam_post_signup
+			exam_post_signup,
+			exam_start_time,
+			exam_end_time
 		) VALUES (
 			#{examCourseId},
 			#{examVersionJson},
@@ -93,7 +99,9 @@
             #{postPrice},
             #{preSignup},
             #{signUp},
-            #{postSignup}
+            #{postSignup},
+            #{examStartTime},
+            #{examEndTime}
 		)
 	</insert>
 	

@@ -81,6 +81,8 @@ public class WebExamSeasonController extends BaseController {
 						sc.setPrePrice(season.getPrePrice());
 						sc.setNormalPrice(season.getNormalPrice());
 						sc.setPostPrice(season.getPostPrice());
+						sc.setExamStartTime(season.getExamStartTime());
+						sc.setExamEndTime(season.getExamEndTime());
 						for(WebExamVersion we : sc.getExamVersions()){
 							if(season.getVersionList() != null) {
                                 for(WebExamVersion sea : season.getVersionList()){
@@ -229,6 +231,8 @@ public class WebExamSeasonController extends BaseController {
             if (StringUtils.isNotEmpty(courseForSeason.getPostPrice())) {
                 examSeason.setPostPrice(courseForSeason.getPostPrice());
             }
+            examSeason.setExamStartTime(courseForSeason.getExamStartTime());
+            examSeason.setExamEndTime(courseForSeason.getExamEndTime());
             seasons.add(examSeason);
         }
 

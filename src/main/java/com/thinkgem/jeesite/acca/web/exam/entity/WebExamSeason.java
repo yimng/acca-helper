@@ -31,6 +31,8 @@ public class WebExamSeason extends DataEntity<WebExamSeason> {
 	private String prePrice;
 	private String normalPrice;
 	private String postPrice;
+	private Date examStartTime;
+	private Date examEndTime;
 	
 	private String oldSeasonStr;
 	
@@ -152,4 +154,20 @@ public class WebExamSeason extends DataEntity<WebExamSeason> {
     public void setPostPrice(String postPrice) {
         this.postPrice = postPrice;
     }
+
+	public Date getExamStartTime() {
+		return examStartTime;
+	}
+
+	public void setExamStartTime(Date examStartTime) {
+		this.examStartTime = examStartTime;
+	}
+
+	public Date getExamEndTime() {
+		return examEndTime;
+	}
+
+	public void setExamEndTime(Date examEndTime) {
+		this.examEndTime = examEndTime;
+	}
 }

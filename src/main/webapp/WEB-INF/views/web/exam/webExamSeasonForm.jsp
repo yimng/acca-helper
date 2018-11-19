@@ -127,7 +127,14 @@
 
 					提前报名费用<font color="red">*</font><input name="examCourselist[${v.index}].prePrice" value="${p.prePrice}" htmlEscape="false" maxlength="8" />
                     常规报名费用<font color="red">*</font><input name="examCourselist[${v.index}].normalPrice" value="${p.normalPrice}" htmlEscape="false" maxlength="8" />
-                    最迟报名费用<font color="red">*</font><input name="examCourselist[${v.index}].postPrice" value="${p.postPrice}" htmlEscape="false" maxlength="8" /> 元
+                    最迟报名费用<font color="red">*</font><input name="examCourselist[${v.index}].postPrice" value="${p.postPrice}" htmlEscape="false" maxlength="8" /> 元<br/><br/>
+					考试开始时间<input id="examStartTime" name="examCourselist[${v.index}].examStartTime" type="text" maxlength="20" class="input-medium Wdate required"
+						   value="<fmt:formatDate value="${p.examStartTime}" pattern="yyyy-MM-dd HH:mm"/>"
+						   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+					考试结束时间<input id="examEndTime" name="examCourselist[${v.index}].examEndTime" type="text" maxlength="20" class="input-medium Wdate required"
+								 value="<fmt:formatDate value="${p.examEndTime}" pattern="yyyy-MM-dd HH:mm"/>"
+								 onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm',isShowClear:true});"/>
+
                     </div>
 					<br/>
 				</c:forEach>

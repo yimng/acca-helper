@@ -13,6 +13,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +34,8 @@ public class WebExamCourseForSeason extends BaseModel{
 	private String prePrice;
 	private String normalPrice;
 	private String postPrice;
+	private Date examStartTime;
+	private Date examEndTime;
 	
 	
 	private List<WebExamVersion> versionList;	//考试版本信息
@@ -123,5 +126,21 @@ public class WebExamCourseForSeason extends BaseModel{
 
 	public void setPostPrice(String postPrice) {
 		this.postPrice = postPrice;
+	}
+
+	public Date getExamStartTime() {
+		return examStartTime;
+	}
+
+	public void setExamStartTime(Date examStartTime) {
+		this.examStartTime = examStartTime;
+	}
+
+	public Date getExamEndTime() {
+		return examEndTime;
+	}
+
+	public void setExamEndTime(Date examEndTime) {
+		this.examEndTime = examEndTime;
 	}
 }
