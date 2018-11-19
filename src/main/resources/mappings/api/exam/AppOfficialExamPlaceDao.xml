@@ -27,7 +27,8 @@
 		a.lng AS "lng",
 		a.lat AS "lat",
 		a.exam_place_contant_name AS "examPlaceContantName",
-		a.exam_place_contant_phone AS "examPlaceContantPhone"
+		a.exam_place_contant_phone AS "examPlaceContantPhone",
+		a.coursestr AS courseStr
 	</sql>
 	
 	<sql id="Joins">

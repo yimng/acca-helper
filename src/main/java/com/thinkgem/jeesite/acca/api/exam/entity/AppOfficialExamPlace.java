@@ -23,7 +23,7 @@ public class AppOfficialExamPlace extends DataEntity<AppOfficialExamPlace> {
 	
 	private String examStartTimeStr;
 
-	private String courses;
+	private String courseStr;
 	
 	public AppOfficialExamPlace(){}
 	
@@ -138,11 +138,11 @@ public class AppOfficialExamPlace extends DataEntity<AppOfficialExamPlace> {
 		this.examStartTimeStr = examStartTimeStr;
 	}
 
-	public String getCourses() {
-		return courses;
+	public String getCourseStr() {
+		return courseStr;
 	}
 
-	public void setCourses(String courses) {
-		this.courses = courses;
+	public void setCourseStr(String courseStr) {
+		this.courseStr = courseStr;
 	}
 }

@@ -43,12 +43,7 @@ public class AppOfficialExamCourseService extends CrudService<AppOfficialExamCou
     }
 
     public List<AppOfficialExamCourse> getOfficialExamCourseDetailList(String[] courses, String season) {
-        List<AppOfficialExamCourse> list = new ArrayList<>();
-        for (String s : courses) {
-            AppOfficialExamCourse appOfficialExamCourse = dao.getOfficialExamCourseDetailList(s, season);
-            list.add(appOfficialExamCourse);
-        }
-        return list;
+        return dao.getOfficialExamCourseDetailList(courses, season);
     }
 
     @Override

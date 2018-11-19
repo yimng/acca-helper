@@ -16,6 +16,7 @@ import com.thinkgem.jeesite.acca.api.model.response.OrderInfoResponse;
 import com.thinkgem.jeesite.acca.api.order.entity.SmallOrder;
 import com.thinkgem.jeesite.acca.api.order.service.AppOffiOrderService;
 import com.thinkgem.jeesite.acca.constant.Constants;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.freetek.api.constant.RespConstants;
 import com.thinkgem.jeesite.freetek.api.model.BasePageResponse;
 import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,9 +105,13 @@ public class AppOfficialExamController {
 		if (respFlag != RespConstants.GLOBAL_SUCCESS) {
 			return new OffExamResponse(respFlag);
 		}
-		AppOfficialExamCourse course = new AppOfficialExamCourse(req);
 		AppOfficialExamPlace place = appOfficialExamPlaceDao.get(req.getExamPlaceId());
-		List<AppOfficialExamCourse> list = appOfficialExamCourseService.getOfficialExamCourseDetailList(course);
+		String courseStr = place.getCourseStr();
+		if (StringUtils.isEmpty(courseStr)) {
+			return new OffExamResponse(new ArrayList<AppOfficialExamCourse>(), place.getLng(),place.getLat(), place.getExamPlaceContantName(), place.getExamPlaceContantPhone());
+		}
+		String[] courses = StringUtils.split(courseStr, ",");
+		List<AppOfficialExamCourse> list = appOfficialExamCourseService.getOfficialExamCourseDetailList(courses, req.getExamStartTimeStr());
 		OffExamResponse response = new OffExamResponse(list, place.getLng(), place.getLat(), place.getExamPlaceContantName(), place.getExamPlaceContantPhone());
 
 		return response;
