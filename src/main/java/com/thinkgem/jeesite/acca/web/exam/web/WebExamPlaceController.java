@@ -4,10 +4,12 @@
 package com.thinkgem.jeesite.acca.web.exam.web;
 
 import com.thinkgem.jeesite.acca.constant.Constants;
+import com.thinkgem.jeesite.acca.web.exam.entity.SmallCourse;
 import com.thinkgem.jeesite.acca.web.exam.entity.WebExam;
 import com.thinkgem.jeesite.acca.web.exam.entity.WebExamPlace;
 import com.thinkgem.jeesite.acca.web.exam.service.WebExamPlaceService;
 import com.thinkgem.jeesite.acca.web.exam.service.WebExamService;
+import com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.sys.entity.User;
@@ -95,6 +97,19 @@ public class WebExamPlaceController extends BaseController {
 		model.addAttribute("citys", examService.selectCitysByType(we));
 		wep.setMenuExamType(menuExamType);
 		model.addAttribute("webExamPlace", wep);
+		WebExam exam = new WebExam();
+		exam.setExamType(Constants.ExamType.officialM);
+		exam.setExamType2(Constants.ExamType.officialPen);
+		List<SmallCourse> courses = examService.selectCoursesByType(exam);
+		for (SmallCourse sc : courses) {
+			for (String courseId : wep.getCourses()) {
+				if(courseId.equals(sc.getExamCourseId().toString())) {
+					sc.setChecked(true);
+				}
+			}
+		}
+
+		model.addAttribute("courses", courses);
 		return "web/exam/place/webExamPlaceForm";
 	}
 

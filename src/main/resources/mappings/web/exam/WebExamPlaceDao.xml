@@ -20,6 +20,7 @@
 		a.lat AS "lat",
 		a.exam_place_contant_name AS "examPlaceContantName",
 		a.exam_place_contant_phone AS "examPlaceContantPhone",
+		a.coursestr AS courseStr,
 		a.sys_user_id AS "sysUserId",
 		<include refid="FileMapper.image" />
 	</sql>
@@ -121,6 +122,7 @@
 			lat,
 			exam_place_contant_name,
 			exam_place_contant_phone,
+			coursestr,
 			sys_user_id
 		) VALUES (
 			#{delFlag},
@@ -139,6 +141,7 @@
 			#{lat},
 			#{examPlaceContantName},
 			#{examPlaceContantPhone},
+			#{courseStr},
 			#{sysUserId}
 		)
 	</insert>
@@ -157,6 +160,7 @@
 			lat = #{lat},
 			exam_place_contant_name = #{examPlaceContantName},
 			exam_place_contant_phone = #{examPlaceContantPhone},
+			coursestr = #{courseStr},
 			sys_user_id = #{sysUserId}
 		WHERE exam_place_id = #{examPlaceId}
 	</update>

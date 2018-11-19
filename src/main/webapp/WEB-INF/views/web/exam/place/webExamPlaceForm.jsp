@@ -98,6 +98,14 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">关联科目<font color="red">*</font></label>
+			<div class="controls">
+				<c:forEach items="${courses}" varStatus="v" var="p">
+					<input name="courses" type="checkbox" class="examCourseId" value="${p.examCourseId}" <c:if test="${p.checked == true}">checked="checked"</c:if> />${p.course}&nbsp;
+				</c:forEach>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">经度<font color="red">*</font></label>
 			<div class="controls">
 				<form:input path="lng" htmlEscape="false" class="input-medium required"/>

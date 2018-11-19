@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.acca.web.exam.entity;
 
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.persistence.DataEntity;
+import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.freetek.file.entity.FileInfo;
 
 public class WebExamPlace extends DataEntity<WebExamPlace> {
@@ -28,6 +29,8 @@ public class WebExamPlace extends DataEntity<WebExamPlace> {
 	
 	private String examStartTimeStr;
 	private Integer menuExamType;
+	private String courseStr;
+	private String[] courses;
 
 	private String sysUserId;
 	
@@ -174,5 +177,26 @@ public class WebExamPlace extends DataEntity<WebExamPlace> {
 
 	public void setSysUserId(String sysUserId) {
 		this.sysUserId = sysUserId;
+	}
+
+    public String getCourseStr() {
+        courseStr = StringUtils.join(courses, ",");
+        return courseStr;
+    }
+
+    public void setCourseStr(String courseStr) {
+        this.courseStr = courseStr;
+    }
+
+    public String[] getCourses() {
+	    if (StringUtils.isNotEmpty(courseStr)) {
+            courses = StringUtils.split(courseStr, ",");
+            return courses;
+        }
+        return new String[0];
+	}
+
+	public void setCourses(String[] courses) {
+		this.courses = courses;
 	}
 }

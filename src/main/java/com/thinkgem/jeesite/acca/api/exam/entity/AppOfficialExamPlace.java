@@ -22,6 +22,8 @@ public class AppOfficialExamPlace extends DataEntity<AppOfficialExamPlace> {
 	private String examPlaceContantPhone;		// 联系电话
 	
 	private String examStartTimeStr;
+
+	private String courses;
 	
 	public AppOfficialExamPlace(){}
 	
@@ -134,5 +136,13 @@ public class AppOfficialExamPlace extends DataEntity<AppOfficialExamPlace> {
 
 	public void setExamStartTimeStr(String examStartTimeStr) {
 		this.examStartTimeStr = examStartTimeStr;
+	}
+
+	public String getCourses() {
+		return courses;
+	}
+
+	public void setCourses(String courses) {
+		this.courses = courses;
 	}
 }
