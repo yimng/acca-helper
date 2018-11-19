@@ -395,7 +395,7 @@
 				<div style="margin-left: 18%;display:inline-block;" class="reasonDesc">
 					<label class="control-label">不通过原因:</label>
 					<div class="controls">
-						<form:textarea path="checkReason" htmlEscape="false" rows="6" maxlength="800" class="input-xxlarge required" />
+						<form:textarea path="checkReason" htmlEscape="false" rows="6" maxlength="800" placeholder="请务必详细填写原因，以便学生按提示进行后续操作" class="input-xxlarge required" />
 						<span class="help-inline"><font color="red">*</font> </span>
 					</div>
 				</div>
