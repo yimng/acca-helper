@@ -83,22 +83,22 @@ public class RespConstants {
 	public static Map<String,String> courseColorMap = new HashMap<String, String>();
 
 	static {
-		courseColorMap.put("F1","ffaa7f");
-		courseColorMap.put("F2","ff7f7f");
-		courseColorMap.put("F3","f8668a");
-		courseColorMap.put("F4","ed80d9");
-		courseColorMap.put("F5","9780ed");
-		courseColorMap.put("F6","8ca5f8");
-		courseColorMap.put("F7","9ec4f6");
-		courseColorMap.put("F8","5bc3cc");
-		courseColorMap.put("F9","71d6b1");
-		courseColorMap.put("P1","87ec8c");
-		courseColorMap.put("P2","f8cf7f");
-		courseColorMap.put("P3","f8aa7f");
-		courseColorMap.put("P4","f58585");
-		courseColorMap.put("P5","fb6b8f");
-		courseColorMap.put("P6","fb81d4");
-		courseColorMap.put("P7","b282fb");
+		courseColorMap.put("AB","ffaa7f");
+		courseColorMap.put("MA","ff7f7f");
+		courseColorMap.put("FA","f8668a");
+		courseColorMap.put("LW","ed80d9");
+		courseColorMap.put("PM","9780ed");
+		courseColorMap.put("TX","8ca5f8");
+		courseColorMap.put("FR","9ec4f6");
+		courseColorMap.put("AA","5bc3cc");
+		courseColorMap.put("FM","71d6b1");
+		courseColorMap.put("SLB","87ec8c");
+		courseColorMap.put("SBR","f8cf7f");
+//		courseColorMap.put("P3","f8aa7f");
+		courseColorMap.put("AMF","f58585");
+		courseColorMap.put("APM","fb6b8f");
+		courseColorMap.put("ATX","fb81d4");
+		courseColorMap.put("AAA","b282fb");
 	}
 
 	/**
