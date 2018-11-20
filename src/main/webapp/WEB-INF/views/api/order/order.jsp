@@ -149,10 +149,10 @@ body {
 <p>  2：具体考试时间安排请以邮件通知为准；</p>
 <p> 3：考试须在考试开始前 30分钟到达考点，由监考老师对考生进行核查考生本人身份证、准考证；</p>
 <p> 4：考生在考试开始前 15分钟经过监考老师批准方可进入考场。逾期不得再进入考场； </p>
-<p>5：中博诚通机考中心保留因不可抗力因素（如网络问题、停电等）调整机考时间或取消考试的权利。</p>
+<p>5：中博教育机考中心保留因不可抗力因素（如网络问题、停电等）调整机考时间或取消考试的权利。</p>
 </div>
 
-<div id="imagetable" style="visibility:hidden; position: absolute; top:0;">
+<div id="imagetable" style="visibility:hidden; position: absolute; top:0;display:none;">
 <!-- <div id="imagetable" style=""> -->
 <div class="div2"  style="padding:100 50;margin:50 25;">
 <h3  class="title" align="center"><font size="16" color="#000">ACCA机考准考证</font></h3>
