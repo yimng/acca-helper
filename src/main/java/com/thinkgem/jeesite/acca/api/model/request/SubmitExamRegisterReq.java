@@ -39,7 +39,7 @@ public class SubmitExamRegisterReq extends BaseRequest {
 	@ApiModelProperty(value = "考点ID", required = true)
 	private Long examPlaceId;
 	@ApiModelProperty(value = "优惠券ID", required = false)
-	private List<Long> userCouponIds;
+	private Long userCouponId;
 	
 	
 	@Override
@@ -184,11 +184,11 @@ public class SubmitExamRegisterReq extends BaseRequest {
 		this.examPlaceId = examPlaceId;
 	}
 
-	public List<Long> getUserCouponIds() {
-		return userCouponIds;
+	public Long getUserCouponId() {
+		return userCouponId;
 	}
 
-	public void setUserCouponIds(List<Long> userCouponIds) {
-		this.userCouponIds = userCouponIds;
+	public void setUserCouponId(Long userCouponId) {
+		this.userCouponId = userCouponId;
 	}
 }

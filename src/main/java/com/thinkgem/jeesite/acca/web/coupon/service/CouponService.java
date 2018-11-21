@@ -163,6 +163,7 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
         return coupons;
     }
 
+    @Transactional(readOnly = false)
     public void publishCoupon(AppOrder order ) {
         // 把订单和优惠券关联起来，等订单审核通过后发放优惠券, 这时的优惠券状态为NEW的状态
         List<Coupon> activeList = findActiveCoupon();
@@ -180,12 +181,13 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
         }
     }
 
+    @Transactional(readOnly = false)
     public void confirmCoupon(WebOrder order) {
         WebOrder webOrder = orderDao.get(order);
         Long accaUserId = webOrder.getAccaUserId();
         if (webOrder.getOrderStatus() == Constants.OrderStatus.checkSuccess) {
             // 订单审核通过，确定发放优惠券给用户 并且如果使用了优惠券，更新优惠券的状态为使用
-            List<UserCoupon> userCoupons = userCouponService.getUserCouponByOrder(order);
+            List<UserCoupon> userCoupons = userCouponService.getUserCouponByOrder(order.getOrderId());
             for (UserCoupon userCoupon : userCoupons) {
                 if(Constants.CouponStatus.NEW.getStatus().equals(userCoupon.getCouponStatus())) {
                     userCoupon.setCouponStatus(Constants.CouponStatus.CONFIRM.getStatus());
@@ -209,7 +211,7 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
         } else if (webOrder.getOrderStatus() == Constants.OrderStatus.checkSupplement
                     || webOrder.getOrderStatus() == Constants.OrderStatus.checkFail
                     || webOrder.getOrderStatus() == Constants.OrderStatus.checkSupplement) {
-            List<UserCoupon> userCoupons = userCouponService.getUserCouponByOrder(order);
+            List<UserCoupon> userCoupons = userCouponService.getUserCouponByOrder(order.getOrderId());
             for (UserCoupon userCoupon : userCoupons) {
                 if (Constants.CouponStatus.USING.getStatus().equals(userCoupon.getCouponStatus())) {
                     //把优惠券返还给用户
@@ -226,6 +228,7 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
         SmsUtils.sendSms2Vcode(phone, "您已收到一个HELPER通用红包，金额\" +coupon.getPrice() + \"元，有效期\"+coupon.getValidityStart()+\" - \"+coupon.getValidityEnd()+\"，F1-F4机考在线预约可用！");
     }
 
+    @Transactional(readOnly = false)
     public void publishCouponForRegister(String phone) {
         //如果做活动期间被邀请，给用户分配代金券
         List<Coupon> activeList = findActiveCoupon();
@@ -287,5 +290,4 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
 
         }
     }
-
 }

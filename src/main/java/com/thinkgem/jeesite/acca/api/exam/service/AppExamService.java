@@ -514,38 +514,32 @@ public class AppExamService extends BaseService {
             }
             amount += index.getPrice();
         }
-        List<Long> userCouponIds = req.getUserCouponIds();
-        if (userCouponIds != null && userCouponIds.size() > 0) {
-            // 先计算使用的优惠券总价格
-            float couponTotalPrice = 0;
-            for (Long userCouponId : userCouponIds) {
-                UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
-                if (userCoupon != null) {
-                    Coupon coupon = couponMapper.selectByPrimaryKey(userCoupon.getCouponId());
-                    if (coupon != null) {
-                        couponTotalPrice += coupon.getPrice();
+        Long userCouponId = req.getUserCouponId();
+        if (userCouponId != null) {
+            UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
+            if (userCoupon != null) {
+                Coupon coupon = couponMapper.selectByPrimaryKey(userCoupon.getCouponId());
+                if (coupon != null) {
+                    if (coupon.getPrice() >= amount) {
+                        return new SubmitExamRegisterResp(RespConstants.COUPON_USED_MORE_THAN_ORDER);
                     }
-                }
-            }
-
-            if (couponTotalPrice >= amount) {
-                return new SubmitExamRegisterResp(RespConstants.COUPON_USED_MORE_THAN_ORDER);
-            }
-            amount -= couponTotalPrice;
-        }
-        order.setAmount(amount);
-
-        appOrderDao.insert(order);
-        // 更新优惠券状态为USING
-        if (userCouponIds != null && userCouponIds.size() > 0) {
-            for (Long userCouponId : userCouponIds) {
-                UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
-                if (userCoupon != null) {
-                    userCoupon.setOrderId(order.getOrderId());
+                    amount -= coupon.getPrice();
                     userCoupon.setCouponStatus(Constants.CouponStatus.USING.getStatus());
                     userCouponMapper.updateByPrimaryKeySelective(userCoupon);
                 }
             }
+
+        }
+        order.setAmount(amount);
+        appOrderDao.insert(order);
+
+        if (userCouponId != null) {
+            UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
+            if (userCoupon != null) {
+                userCoupon.setOrderId(order.getOrderId());
+                userCouponMapper.updateByPrimaryKeySelective(userCoupon);
+            }
+
         }
         logger.info("order:" + order);
 
