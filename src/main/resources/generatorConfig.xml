@@ -26,9 +26,9 @@
 
         <!-- 数据库连接 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/acca"
-                        userId="root"
-                        password="root">
+                        connectionURL="jdbc:mysql://123.126.152.178:3306/acca"
+                        userId="demo"
+                        password="demo.caicui.com">
         </jdbcConnection>
 
         <javaTypeResolver >
@@ -36,29 +36,26 @@
         </javaTypeResolver>
 
         <!-- 数据表对应的model层  -->
-        <javaModelGenerator targetPackage="com.thinkgem.jeesite.acca.web.feedback.entity"
+        <javaModelGenerator targetPackage="com.thinkgem.jeesite.acca.web.user.entity"
                             targetProject="src/main/java">
         </javaModelGenerator>
 
         <!-- sql mapper 映射配置文件 -->
-        <sqlMapGenerator targetPackage="mappings.web.content"  targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mappings.web.user"  targetProject="src/main/resources">
         </sqlMapGenerator>
 
         <!-- mybatis3中的mapper接口 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.thinkgem.jeesite.acca.web.feedback.dao"
+                             targetPackage="com.thinkgem.jeesite.acca.web.user.dao"
                              targetProject="src/main/java">
         </javaClientGenerator>
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-        <table tableName="tbl_exam_center_question" domainObjectName="ExamCenterQuestion">
+        <table tableName="tbl_invite" domainObjectName="Invite">
             <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
             <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
-        <table tableName="tbl_exam_center_answer" domainObjectName="ExamCenterAnswer">
-            <!--<generatedKey column="id" sqlStatement="select replace(UUID(),'-','')"/>-->
-            <generatedKey column="id" sqlStatement="JDBC"/>
-        </table>
+
 
 
     </context>

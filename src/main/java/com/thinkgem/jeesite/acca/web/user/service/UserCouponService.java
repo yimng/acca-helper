@@ -27,22 +27,25 @@ public class UserCouponService {
         }
     }
 
-    @Transactional(readOnly = false)
-    public int savebatch(List<UserCoupon> userCouponList) {
-        return userCouponMapper.insertList(userCouponList);
-    }
-
     public List<SmallCoupon> getCouponListByUserId(Long id) {
         List<SmallCoupon> couponsByUserId = userCouponMapper.getCouponsByUserId(id);
         return couponsByUserId;
     }
 
-    public List<UserCoupon> getUserCouponByOrder(WebOrder order) {
+    public List<UserCoupon> getUserCouponByOrder(Long orderId) {
         Example example = new Example(UserCoupon.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userId", order.getAccaUserId());
-        criteria.andEqualTo("orderId", order.getOrderId());
+        criteria.andEqualTo("orderId", orderId);
         criteria.andEqualTo("delFlag", BaseEntity.DEL_FLAG_NORMAL);
         return userCouponMapper.selectByExample(example);
+    }
+
+    public void deleteUserCouponByOrder(Long orderId) {
+        Example example = new Example(UserCoupon.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("orderId", orderId);
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setDelFlag(BaseEntity.DEL_FLAG_DELETE);
+        userCouponMapper.updateByExampleSelective(userCoupon, example);
     }
 }
