@@ -24,6 +24,7 @@ import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.acca.web.content.service.WebMsgSysService;
 import com.thinkgem.jeesite.acca.web.coupon.dao.CouponMapper;
 import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
+import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
 import com.thinkgem.jeesite.acca.web.user.dao.UserCouponMapper;
 import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
@@ -38,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -76,9 +76,6 @@ public class AppExamService extends BaseService {
     private AppAccaUserDao appAccaUserDao;
 
     @Autowired
-    private AppOfficialOrderService appOfficialOrderService;
-
-    @Autowired
     private AppOffiOrderService appOffiOrderService;
 
     @Autowired
@@ -95,6 +92,9 @@ public class AppExamService extends BaseService {
 
     @Autowired
     private UserCouponMapper userCouponMapper;
+
+    @Autowired
+    private CouponService couponService;
 
     @Transactional(readOnly = false)
     public GetSelfOfficialExamNameResp getSelfOfficialExamName(BaseRequest req) {
@@ -514,73 +514,86 @@ public class AppExamService extends BaseService {
             }
             amount += index.getPrice();
         }
-        if (req.getCouponId() != null) {
-            Coupon coupon = couponMapper.selectByPrimaryKey(req.getCouponId());
-            if (coupon != null) {
-                amount -= coupon.getPrice();
-                //优惠券总数减一
-                coupon.setConsumed(coupon.getConsumed() + 1);
-                couponMapper.updateByPrimaryKeySelective(coupon);
-                //删除user对应的优惠券（已使用）
-                Example example = new Example(UserCoupon.class);
-                Example.Criteria criteria = example.createCriteria();
-                criteria.andEqualTo("userId", appUser.getAccaUserId());
-                criteria.andEqualTo("couponId", req.getCouponId());
-                UserCoupon userCoupon = new UserCoupon();
-                userCoupon.setDelFlag("1");
-                userCouponMapper.updateByExampleSelective(userCoupon, example);
+        List<Long> userCouponIds = req.getUserCouponIds();
+        if (userCouponIds != null && userCouponIds.size() > 0) {
+            // 先计算使用的优惠券总价格
+            float couponTotalPrice = 0;
+            for (Long userCouponId : userCouponIds) {
+                UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
+                if (userCoupon != null) {
+                    Coupon coupon = couponMapper.selectByPrimaryKey(userCoupon.getCouponId());
+                    if (coupon != null) {
+                        couponTotalPrice += coupon.getPrice();
+                    }
+                }
             }
+
+            if (couponTotalPrice >= amount) {
+                return new SubmitExamRegisterResp(RespConstants.COUPON_USED_MORE_THAN_ORDER);
+            }
+            amount -= couponTotalPrice;
         }
         order.setAmount(amount);
 
         appOrderDao.insert(order);
+        // 更新优惠券状态为USING
+        if (userCouponIds != null && userCouponIds.size() > 0) {
+            for (Long userCouponId : userCouponIds) {
+                UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
+                if (userCoupon != null) {
+                    userCoupon.setOrderId(order.getOrderId());
+                    userCoupon.setCouponStatus(Constants.CouponStatus.USING.getStatus());
+                    userCouponMapper.updateByPrimaryKeySelective(userCoupon);
+                }
+            }
+        }
         logger.info("order:" + order);
 
         List<AppExamSignup> signupList = new ArrayList<AppExamSignup>();
 
         for (AppExamSelfCart index : list) {
-            AppExamSignup entity = new AppExamSignup();
-            entity.setCreateDate(new Date());
-            entity.setUpdateDate(new Date());
-            entity.setExamType(Constants.ExamType.self);
-            entity.setExamId(index.getExamId());
-            entity.setExamCourseId(index.getExamCourseId());
-            entity.setExamVersionJson(index.getExamVersionJson());
-            entity.setAccaUserId(appUser.getAccaUserId());
-            entity.setRegisterName(req.getRegisterName());
-            entity.setRegisterCardNumber(req.getRegisterCardNumber());
-            entity.setCardType(req.getCardType());
-            entity.setRegisterPhone(req.getRegisterPhone());
-            entity.setRegisterEmail(req.getRegisterEmail());
-            entity.setRegisterWhiteColorImgId(req.getRegisterWhiteColorImgId());
-            entity.setAccaRegisterName(req.getAccaRegisterName());
-            entity.setAccaRegisterPassword(req.getAccaRegisterPassword());
-            entity.setExamCourse(index.getCourse());
-            entity.setExamCourseName(index.getCourseName());
-            entity.setExamSignupTime(new Date());
-            entity.setExamSignupStatus(Constants.OrderStatus.unpay);
-            entity.setPrice(index.getPrice());
-            entity.setOrderId(order.getOrderId());
-            entity.setOrg(req.getOrg());
+            AppExamSignup signup = new AppExamSignup();
+            signup.setCreateDate(new Date());
+            signup.setUpdateDate(new Date());
+            signup.setExamType(Constants.ExamType.self);
+            signup.setExamId(index.getExamId());
+            signup.setExamCourseId(index.getExamCourseId());
+            signup.setExamVersionJson(index.getExamVersionJson());
+            signup.setAccaUserId(appUser.getAccaUserId());
+            signup.setRegisterName(req.getRegisterName());
+            signup.setRegisterCardNumber(req.getRegisterCardNumber());
+            signup.setCardType(req.getCardType());
+            signup.setRegisterPhone(req.getRegisterPhone());
+            signup.setRegisterEmail(req.getRegisterEmail());
+            signup.setRegisterWhiteColorImgId(req.getRegisterWhiteColorImgId());
+            signup.setAccaRegisterName(req.getAccaRegisterName());
+            signup.setAccaRegisterPassword(req.getAccaRegisterPassword());
+            signup.setExamCourse(index.getCourse());
+            signup.setExamCourseName(index.getCourseName());
+            signup.setExamSignupTime(new Date());
+            signup.setExamSignupStatus(Constants.OrderStatus.unpay);
+            signup.setPrice(index.getPrice());
+            signup.setOrderId(order.getOrderId());
+            signup.setOrg(req.getOrg());
 
-            entity.setExamCityId(index.getExamCityId());
-            entity.setExamCityName(index.getExamCityName());
-            entity.setExamStartTime(index.getExamStartTime());
-            entity.setExamEndTime(index.getExamEndTime());
-            entity.setExamSignupEndtime(index.getExamSignupEndtime());
-            entity.setExamPlaceId(index.getExamPlaceId());
-            entity.setExamPlaceName(index.getExamPlaceName());
-            entity.setExamDetailAddress(index.getExamDetailAddress());
-            entity.setExamPlaceSn(index.getExamPlaceSn());
-            entity.setExamPlaceImageId(index.getExamPlaceImageId());
-            entity.setExamPlaceContantName(index.getExamPlaceContantName());
-            entity.setExamPlaceContantPhone(index.getExamPlaceContantPhone());
+            signup.setExamCityId(index.getExamCityId());
+            signup.setExamCityName(index.getExamCityName());
+            signup.setExamStartTime(index.getExamStartTime());
+            signup.setExamEndTime(index.getExamEndTime());
+            signup.setExamSignupEndtime(index.getExamSignupEndtime());
+            signup.setExamPlaceId(index.getExamPlaceId());
+            signup.setExamPlaceName(index.getExamPlaceName());
+            signup.setExamDetailAddress(index.getExamDetailAddress());
+            signup.setExamPlaceSn(index.getExamPlaceSn());
+            signup.setExamPlaceImageId(index.getExamPlaceImageId());
+            signup.setExamPlaceContantName(index.getExamPlaceContantName());
+            signup.setExamPlaceContantPhone(index.getExamPlaceContantPhone());
 
-            entity.setEnglishName(index.getEnglishName());
-            entity.setEnglishShortName(index.getEnglishShortName());
+            signup.setEnglishName(index.getEnglishName());
+            signup.setEnglishShortName(index.getEnglishShortName());
 
 
-            signupList.add(entity);
+            signupList.add(signup);
         }
         logger.info("signupList:" + signupList);
 
@@ -596,20 +609,22 @@ public class AppExamService extends BaseService {
         appExamSelfCartDao.deleteByUserId(appUser.getAccaUserId(), req.getExamPlaceId());
 
 
-        AppAccaUser entity = new AppAccaUser();
-        entity.setAccaUserId(appUser.getAccaUserId());
-        entity.setRegisterName(req.getRegisterName());
-        entity.setRegisterCardNumber(req.getRegisterCardNumber());
-        entity.setRegisterEmail(req.getRegisterEmail());
-        entity.setRegisterPhone(req.getRegisterPhone());
-        entity.setRegisterWhiteColorImgId(req.getRegisterWhiteColorImgId());
-        entity.setCardType(req.getCardType());
-        entity.setAccaRegisterName(req.getAccaRegisterName());
-        entity.setAccaRegisterPassword(req.getAccaRegisterPassword());
-        entity.setOrg(req.getOrg());
+        AppAccaUser accaUser = new AppAccaUser();
+        accaUser.setAccaUserId(appUser.getAccaUserId());
+        accaUser.setRegisterName(req.getRegisterName());
+        accaUser.setRegisterCardNumber(req.getRegisterCardNumber());
+        accaUser.setRegisterEmail(req.getRegisterEmail());
+        accaUser.setRegisterPhone(req.getRegisterPhone());
+        accaUser.setRegisterWhiteColorImgId(req.getRegisterWhiteColorImgId());
+        accaUser.setCardType(req.getCardType());
+        accaUser.setAccaRegisterName(req.getAccaRegisterName());
+        accaUser.setAccaRegisterPassword(req.getAccaRegisterPassword());
+        accaUser.setOrg(req.getOrg());
 
-        appAccaUserDao.updateRegister(entity);
+        appAccaUserDao.updateRegister(accaUser);
 
+        // 如果有正在进行的活动，发放优惠券
+        couponService.publishCoupon(order);
 
         AppConfExamTips conf = appConfExamTipsDao.get(new AppConfExamTips("5"));
         String payConfTips = conf.getOfficialExamProcess();

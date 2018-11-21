@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.*;
+
 @Data
 @Table(name = "tbl_invite")
 public class Invite implements Serializable {
@@ -24,12 +25,6 @@ public class Invite implements Serializable {
      */
     @Column(name = "invitee_phone")
     private String inviteePhone;
-
-    /**
-     * 代金券ID
-     */
-    @Column(name = "coupon_id")
-    private Long couponId;
 
     /**
      * 邀请发出时间
@@ -96,24 +91,6 @@ public class Invite implements Serializable {
      */
     public void setInviteePhone(String inviteePhone) {
         this.inviteePhone = inviteePhone;
-    }
-
-    /**
-     * 获取代金券ID
-     *
-     * @return coupon_id - 代金券ID
-     */
-    public Long getCouponId() {
-        return couponId;
-    }
-
-    /**
-     * 设置代金券ID
-     *
-     * @param couponId 代金券ID
-     */
-    public void setCouponId(Long couponId) {
-        this.couponId = couponId;
     }
 
     /**

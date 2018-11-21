@@ -147,21 +147,6 @@ public class WebOrderService extends CrudService<WebOrderDao, WebOrder> {
 		
 	}
 
-    public void publishCoupon(WebOrder wo) {
-        //TODO 怎么得到代金券的ID
-        List<Coupon> activeList = couponService.findActiveCoupon();
-        for (Coupon coupon : activeList) {
-            if (!coupon.getFlag2()) {
-                continue;
-            }
-            UserCoupon userCoupon = new UserCoupon();
-            userCoupon.setCouponId(coupon.getId());
-            userCoupon.setUserId(wo.getAccaUserId());
-            userCoupon.setDelFlag("0");
-            userCouponService.saveOrUpdate(userCoupon);
-        }
-    }
-
     /**
 	 * 修改已经审核通过订单，延期或调整科目
 	 * @param oldorder,newolder

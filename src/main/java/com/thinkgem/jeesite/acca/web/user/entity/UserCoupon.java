@@ -15,8 +15,14 @@ public class UserCoupon implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "order_id")
+    private Long orderId;
+
     @Column(name = "coupon_id")
     private Long couponId;
+
+    @Column(name = "coupon_status")
+    private String couponStatus;
 
     private static final long serialVersionUID = 1L;
 
@@ -63,6 +69,20 @@ public class UserCoupon implements Serializable {
     }
 
     /**
+     * @return order_id
+     */
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    /**
+     * @param orderId
+     */
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    /**
      * @return coupon_id
      */
     public Long getCouponId() {
@@ -74,5 +94,19 @@ public class UserCoupon implements Serializable {
      */
     public void setCouponId(Long couponId) {
         this.couponId = couponId;
+    }
+
+    /**
+     * @return coupon_status
+     */
+    public String getCouponStatus() {
+        return couponStatus;
+    }
+
+    /**
+     * @param couponStatus
+     */
+    public void setCouponStatus(String couponStatus) {
+        this.couponStatus = couponStatus;
     }
 }

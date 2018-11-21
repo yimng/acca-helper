@@ -15,6 +15,4 @@ public class InviteReq {
     private String inviterPhone;
     @ApiModelProperty(value = "被邀请人手机号")
     private String inviteePhone;
-    @ApiModelProperty(value = "代金券ID")
-    private Long couponId;
 }

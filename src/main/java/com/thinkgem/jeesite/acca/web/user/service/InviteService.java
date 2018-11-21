@@ -8,6 +8,7 @@ import com.thinkgem.jeesite.acca.web.user.dao.InviteMapper;
 import com.thinkgem.jeesite.acca.web.user.entity.Invite;
 import com.thinkgem.jeesite.acca.web.user.entity.InviteRank;
 import com.thinkgem.jeesite.acca.web.user.entity.InviteReward;
+import com.thinkgem.jeesite.common.persistence.BaseEntity;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.utils.StringUtils;
@@ -95,38 +96,35 @@ public class InviteService {
         Invite invite = new Invite();
         invite.setInviterPhone(invitereq.getInviterPhone());
         invite.setInviteePhone(invitereq.getInviteePhone());
-        invite.setCouponId(invitereq.getCouponId());
+//        invite.setCouponId(invitereq.getCouponId());
         invite.setInviteTime(new Date());
-        invite.setDelFlag("0");
+        invite.setDelFlag(BaseEntity.DEL_FLAG_NORMAL);
         inviteMapper.insert(invite);
         BaseResponse resp = new BaseResponse(RespConstants.GLOBAL_SUCCESS);
         return resp;
     }
 
 
-    public boolean getInviteStatus(String phone) {
+    public boolean isInviting(String phone) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -3);
         Date start = cal.getTime();
         Date end = new Date();
 
-        List<Invite> appInvites = getAppInvitesByPhoneAndInviteTime(phone, start, end, null);
+        List<Invite> appInvites = getAppInvitesByPhoneAndInviteTime(phone, start, end);
         if (appInvites.size() > 0) {
             return true;
         }
         return false;
     }
 
-    public List<Invite> getAppInvitesByPhoneAndInviteTime(String phone, Date start, Date end, Long couponId) {
+    public List<Invite> getAppInvitesByPhoneAndInviteTime(String phone, Date start, Date end) {
         Example example = new Example(Invite.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("inviteePhone", phone);
-        criteria.andEqualTo("delFlag", 0);
+        criteria.andEqualTo("delFlag", BaseEntity.DEL_FLAG_NORMAL);
         criteria.andBetween("inviteTime", start, end);
-        if (couponId != null) {
-            criteria.andEqualTo("couponId", couponId);
-        }
         return inviteMapper.selectByExample(example);
     }
 

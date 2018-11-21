@@ -2,6 +2,7 @@ package com.thinkgem.jeesite.acca.web.exam.web;
 
 import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.acca.web.content.service.WebMsgSysService;
+import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
 import com.thinkgem.jeesite.acca.web.exam.entity.*;
 import com.thinkgem.jeesite.acca.web.exam.service.*;
 import com.thinkgem.jeesite.common.persistence.Page;
@@ -44,6 +45,8 @@ public class WebOrderController extends BaseController {
     private WebExamCourseService wecService;
     @Autowired
     private WebMsgSysService wms;
+    @Autowired
+    private CouponService couponService;
 
     @RequiresPermissions("web:order:view")
     @RequestMapping(value = {"list", ""})
@@ -191,6 +194,8 @@ public class WebOrderController extends BaseController {
                 webOrder.setOrderStatus(Constants.OrderStatus.checkSupplement);
             }
             orderService.updOrderStatus2(webOrder);
+            couponService.confirmCoupon(webOrder);
+
             addMessage(redirectAttributes, "操作成功！");
         }
         return "redirect:" + adminPath + "/web/order";

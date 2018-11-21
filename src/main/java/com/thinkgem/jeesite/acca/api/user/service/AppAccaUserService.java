@@ -78,13 +78,6 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
 	@Autowired
 	private CouponService couponService;
 
-	@Autowired
-    private UserCouponService userCouponService;
-
-	@Autowired
-    private InviteService inviteService;
-
-
 	@Override
 	public AppAccaUser get(String id) {
 		return super.get(id);
@@ -136,7 +129,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
         accaUser.setLoginDate(new Date());
         accaUser.setUpdateDate(new Date());
         dao.insert(accaUser);
-        publishCoupon(phone);
+        couponService.publishCouponForRegister(phone);
         if (StringUtils.isEmpty(caicuiUser)) {
             ZBGUtils.registerZBG(token, phone, password);
         }
@@ -185,7 +178,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
             accaUser.setLoginDate(new Date());
             accaUser.setUpdateDate(new Date());
             dao.insert(accaUser);
-            publishCoupon(phone);
+			couponService.publishCouponForRegister(phone);
         }else{
 			//如果存在，表示已经注册过账号
 			accaUser.setLoginDate(new Date());
@@ -248,7 +241,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
             accaUser.setLoginDate(new Date());
             accaUser.setUpdateDate(new Date());
             dao.insert(accaUser);
-            publishCoupon(phone);
+			couponService.publishCouponForRegister(phone);
             accaUser = dao.getAccaUserByPhone(phone);
             logger.info("accaUser:{}",accaUser);
             return new BaseObjResponse<AppAccaUser>(accaUser);
@@ -269,47 +262,7 @@ public class AppAccaUserService extends CrudService<AppAccaUserDao, AppAccaUser>
         return false;
     }
 
-    public void publishCoupon(String phone) {
-        //如果做活动期间被邀请，给用户分配代金券
-        List<Coupon> activeList = couponService.findActiveCoupon();
-        for(Coupon coupon : activeList) {
-            //新注册用户
-            if (coupon.getFlag1()) {
-                UserCoupon userCoupon = new UserCoupon();
-                userCoupon.setUserId(getAccaUserByPhone(phone).getAccaUserId());
-                userCoupon.setCouponId(coupon.getId());
-                userCoupon.setDelFlag("0");
-                userCouponService.saveOrUpdate(userCoupon);
-            } else if (coupon.getFlag3() || coupon.getFlag4()) { //邀请用户和被邀请用户
-                List<Invite> invites = inviteService.getAppInvitesByPhoneAndInviteTime(phone,
-                        coupon.getActivityStart(), coupon.getActivityEnd(), coupon.getId());
-                for (Invite invite : invites) {
-                	// invite failed
-                    if (invite.getInviteStatus() == 2) {
-                        continue;
-                    }
-                    invite.setSuccessTime(new Date());
-					inviteService.updateByPrimaryKeySelective(invite);
-					if (coupon.getFlag3()) {
-                        AppAccaUser inviter = getAccaUserByPhone(invite.getInviterPhone());
-                        UserCoupon inviterCoupon = new UserCoupon();
-                        inviterCoupon.setCouponId(coupon.getId());
-                        inviterCoupon.setUserId(inviter.getAccaUserId());
-                        inviterCoupon.setDelFlag("0");
-                        userCouponService.saveOrUpdate(inviterCoupon);
-                    }
-                    if (coupon.getFlag4()) {
-                        AppAccaUser invitee = getAccaUserByPhone(invite.getInviteePhone());
-                        UserCoupon inviteeCoupon = new UserCoupon();
-                        inviteeCoupon.setCouponId(coupon.getId());
-                        inviteeCoupon.setUserId(invitee.getAccaUserId());
-                        inviteeCoupon.setDelFlag("0");
-                        userCouponService.saveOrUpdate(inviteeCoupon);
-                    }
-                }
-            }
-        }
-    }
+
 
     public BaseObjResponse<AppAccaUser> getUserInfo(Long appUserId) {
 		

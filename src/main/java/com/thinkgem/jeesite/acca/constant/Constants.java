@@ -67,6 +67,22 @@ public class Constants extends PublicConstants {
 		public static int officialPen=4;//官方笔考
 		public static int officialAll = 6;//官方机考和笔考
 	}
+
+	public enum CouponStatus {
+		NEW("N"), USING("U"),CONFIRM("C"),USED("F");
+		private String status;
+		CouponStatus(String c) {
+			this.status = c;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
+		}
+	}
 	
 	public static class OrderStatus{
 		public static int unpay=10;//待支付

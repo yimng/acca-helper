@@ -8,7 +8,9 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="del_flag" jdbcType="CHAR" property="delFlag" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
+    <result column="coupon_status" jdbcType="CHAR" property="couponStatus" />
   </resultMap>
 
   <select id="getCouponsByUserId" resultType="com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon">

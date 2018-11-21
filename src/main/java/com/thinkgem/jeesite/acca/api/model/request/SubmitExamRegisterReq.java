@@ -9,6 +9,7 @@ import com.thinkgem.jeesite.freetek.api.model.BaseRequest;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +39,7 @@ public class SubmitExamRegisterReq extends BaseRequest {
 	@ApiModelProperty(value = "考点ID", required = true)
 	private Long examPlaceId;
 	@ApiModelProperty(value = "优惠券ID", required = false)
-	private Long couponId;
+	private List<Long> userCouponIds;
 	
 	
 	@Override
@@ -183,11 +184,11 @@ public class SubmitExamRegisterReq extends BaseRequest {
 		this.examPlaceId = examPlaceId;
 	}
 
-    public Long getCouponId() {
-        return couponId;
-    }
+	public List<Long> getUserCouponIds() {
+		return userCouponIds;
+	}
 
-    public void setCouponId(Long couponId) {
-        this.couponId = couponId;
-    }
+	public void setUserCouponIds(List<Long> userCouponIds) {
+		this.userCouponIds = userCouponIds;
+	}
 }

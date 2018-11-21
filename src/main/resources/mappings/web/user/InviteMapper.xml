@@ -8,7 +8,6 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="inviter_phone" jdbcType="VARCHAR" property="inviterPhone" />
     <result column="invitee_phone" jdbcType="VARCHAR" property="inviteePhone" />
-    <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
     <result column="invite_time" jdbcType="TIMESTAMP" property="inviteTime" />
     <result column="success_time" jdbcType="TIMESTAMP" property="successTime" />
     <result column="del_flag" jdbcType="CHAR" property="delFlag" />

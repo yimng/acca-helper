@@ -23,6 +23,7 @@ public class RespConstants {
 	// 优惠券已被抢完
 	public static final int COUPON_NOT_AVAILABLE = 00106;
 	public static final int USER_WRONG_PASS = 00107;   //密码错误
+	public static final int COUPON_USED_MORE_THAN_ORDER = 50001;
 	/**
 	 * 短信验证码
 	 */
@@ -59,6 +60,7 @@ public class RespConstants {
 		respMap.put(USER_WRONG_PASS,"用户名密码错误");
 		respMap.put(USER_WAS_INVITING, "用户已被邀请");
 		respMap.put(COUPON_NOT_AVAILABLE, "下手太慢优惠券已被抢完");
+		respMap.put(COUPON_USED_MORE_THAN_ORDER, "优惠券使用不能超过订单金额");
 		
 		respMap.put(SMS_VCODE_MOBILE_TYPE_ERROR, "手机号格式不正确");
 		respMap.put(SMS_VCODE_INCORRECT, "无效验证码");

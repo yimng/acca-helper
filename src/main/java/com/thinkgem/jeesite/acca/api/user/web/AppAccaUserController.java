@@ -308,7 +308,7 @@ public class AppAccaUserController extends BaseController {
         return appAccaUserService.deleteCollectBatch(req.getArticleIdList(), req.getAppUser());
     }
 
-    @ApiOperation(value = "发送邀请人被邀请人手机号和代金券信息", notes = "发送邀请人被邀请人手机号和代金券信息")
+    @ApiOperation(value = "发送邀请人被邀请人手机号", notes = "发送邀请人被邀请人手机号")
     @RequestMapping(value = "invite.do", method = RequestMethod.POST)
     @CrossOrigin
     public @ResponseBody
@@ -322,19 +322,19 @@ public class AppAccaUserController extends BaseController {
             return new BaseResponse(RespConstants.SMS_VCODE_MOBILE_TYPE_ERROR);
         }
 
-        int availableCoupons = couponService.getAvailableCouponsByCouponId(req.getCouponId());
-        if (availableCoupons <= 0) {
-            return new BaseResponse(RespConstants.COUPON_NOT_AVAILABLE);
-        }
+//        int availableCoupons = couponService.getAvailableCouponsByCouponId(req.getCouponId());
+//        if (availableCoupons <= 0) {
+//            return new BaseResponse(RespConstants.COUPON_NOT_AVAILABLE);
+//        }
         //验证被邀请人的手机号没有被注册过，并且被邀请人的手机号没有在被邀请中
         String inviteePhone = req.getInviteePhone();
         AppAccaUser invitee = appAccaUserService.getAccaUserByPhone(inviteePhone);
         if (invitee != null) {
             return new BaseResponse(RespConstants.USER_EXIST);
         }
-        boolean inviteStatus = appInviteService.getInviteStatus(inviteePhone);
+        boolean isInviting = appInviteService.isInviting(inviteePhone);
         // 被邀请人正在被邀请
-        if (inviteStatus) {
+        if (isInviting) {
             return new BaseResponse(RespConstants.USER_WAS_INVITING);
         }
         return appInviteService.invite(req);
