@@ -397,7 +397,8 @@
 	
 	<update id="updateType">
 		UPDATE tbl_acca_user SET 
-			type=#{type}
+			type=#{type},
+			phone=#{phone}
 		WHERE acca_user_id=#{accaUserId}
 	</update>
 
