@@ -9,7 +9,6 @@ import com.thinkgem.jeesite.acca.api.order.entity.SmallOrder;
 import com.thinkgem.jeesite.acca.api.order.service.AppOffiOrderService;
 import com.thinkgem.jeesite.acca.api.plan.service.AppUserLearningPlanService;
 import com.thinkgem.jeesite.acca.constant.Constants;
-import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
 import com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon;
 import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -50,6 +49,7 @@ public class AppOffiOrderController extends BaseController {
 	private AppUserLearningPlanService learningPlanService;
 	@Autowired
 	private UserCouponService userCouponService;
+
 	
 	@ApiOperation(value = "获取考试订单列表", notes = "获取考试订单列表")
 	@RequestMapping(value = "getOrderListByStatis", method = RequestMethod.POST)
@@ -111,6 +111,8 @@ public class AppOffiOrderController extends BaseController {
 			return new BaseResponse(RespConstants.GLOBAL_OTHER);
 		} else {
 			orderService.updAll(new AppOfficialOrder(req.getOrderId(), ExamConstant.SIGNUP_TYPE_WAIT_CANCEL));
+			userCouponService.deleteUserCouponByOrder(req.getOrderId());
+
 			return new BaseResponse(RespConstants.GLOBAL_SUCCESS);
 		}
 	}
@@ -179,9 +181,9 @@ public class AppOffiOrderController extends BaseController {
 		map.put("canUse", new ArrayList<SmallCoupon>());
 		map.put("canNotUse", new ArrayList<SmallCoupon>());
 		for (SmallCoupon c : couponListByUserId) {
-			if (c.getCanUse()) {
+			if (c.getValidity() && c.getStatus().equals(Constants.CouponStatus.CONFIRM.getStatus())) {
 				map.get("canUse").add(c);
-			} else {
+			} else if (!c.getValidity() || c.getStatus().equals(Constants.CouponStatus.USED)){
 				map.get("canNotUse").add(c);
 			}
 		}

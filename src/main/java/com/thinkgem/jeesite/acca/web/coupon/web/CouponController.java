@@ -3,11 +3,13 @@ package com.thinkgem.jeesite.acca.web.coupon.web;
 import com.google.common.collect.Lists;
 import com.thinkgem.jeesite.acca.api.user.entity.AppAccaUser;
 import com.thinkgem.jeesite.acca.api.user.service.AppAccaUserService;
+import com.thinkgem.jeesite.acca.constant.Constants;
 import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
 import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
 import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
 import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.config.Global;
+import com.thinkgem.jeesite.common.persistence.BaseEntity;
 import com.thinkgem.jeesite.common.persistence.PageInfo;
 import com.thinkgem.jeesite.common.web.BaseController;
 import org.apache.ibatis.annotations.Param;
@@ -141,7 +143,8 @@ public class CouponController extends BaseController {
 
                     userCoupon.setUserId(accaUser.getAccaUserId());
                     userCoupon.setCouponId(coupon.getId());
-                    userCoupon.setDelFlag("0");
+                    userCoupon.setDelFlag(BaseEntity.DEL_FLAG_NORMAL);
+                    userCoupon.setCouponStatus(Constants.CouponStatus.CONFIRM.getStatus());
                     userCoupons.add(userCoupon);
                 }
                 if (userCoupons.size() > 0) {

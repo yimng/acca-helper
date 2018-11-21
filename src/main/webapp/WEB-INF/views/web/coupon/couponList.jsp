@@ -98,10 +98,10 @@
                     已发布
                 </c:if>
                 <c:if test="${coupon.activityEnd.time < currentTime.time}">
-                    未发布
+                    已过期
                 </c:if>
                 <c:if test="${coupon.activityStart.time > currentTime.time}">
-                    已过期
+                    未发布
                 </c:if>
             </td>
             <td>

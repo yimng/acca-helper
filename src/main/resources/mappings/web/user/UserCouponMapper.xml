@@ -15,7 +15,10 @@
 
   <select id="getCouponsByUserId" resultType="com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon">
     SELECT
-      tbl_coupon.id as id,
+      tbl_user_coupon.id as userCouponId,
+      tbl_user_coupon.coupon_id as couponId,
+      tbl_user_coupon.user_id as userId,
+      tbl_user_coupon.coupon_status as status,
       tbl_coupon.price,
       tbl_coupon.validity_start as validityStart,
       tbl_coupon.validity_end as validityEnd,

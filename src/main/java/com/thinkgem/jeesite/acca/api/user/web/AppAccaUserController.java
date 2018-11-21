@@ -53,9 +53,6 @@ public class AppAccaUserController extends BaseController {
     private InviteService appInviteService;
 
     @Autowired
-    private CouponService couponService;
-
-    @Autowired
     private FbCateGoryService fbCateGoryService;
 
     @ApiOperation(value = "test验证码", httpMethod = "POST", notes = "获取短信验证码")

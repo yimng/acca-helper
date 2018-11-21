@@ -109,8 +109,9 @@
         <div class="controls assign">
             <input id="isassign" name="assign" type="checkbox"  <c:if test="${coupon.assign}">checked="checked"</c:if> />指定用户
         </div>
-        <div class="controls assign">
-            <input id="file" type="file" name="file"></input>
+        <div id="file" class="controls assign">
+            <input  type="file" name="file"/>
+            <a target="_self" href="/static/template/template.xlsx" >下载office模版</a>
         </div>
     </div>
 
