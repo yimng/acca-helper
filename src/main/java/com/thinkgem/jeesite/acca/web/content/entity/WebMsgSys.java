@@ -125,22 +125,38 @@ public class WebMsgSys extends DataEntity<WebMsgSys> {
 			String[] courseIds = examCourse.split(",");
 			for (int i = 0;i < courseIds.length;i++){
 				int courseId = Integer.parseInt(courseIds[i]);
-				if (courseId < 10){
-					courseName += "F" + courseId + "/";
+				if (courseId == 1){
+					courseName += "AB/";
+				} else if (courseId == 2){
+					courseName += "MA/";
+				} else if (courseId == 3){
+					courseName += "FA/";
+				} else if (courseId == 4){
+					courseName += "LW/";
+				} else if (courseId == 5){
+					courseName += "PM/";
+				} else if (courseId == 6){
+					courseName += "TX/";
+				} else if (courseId == 7){
+					courseName += "FR/";
+				} else if (courseId == 8){
+					courseName += "AA/";
+				} else if (courseId == 9) {
+					courseName += "FM/";
 				} else if (courseId == 10){
-					courseName += "P1/";
+					courseName += "SBL/";
 				} else if (courseId == 11){
-					courseName += "P2/";
+					courseName += "SBL/";
 				} else if (courseId == 12){
 					courseName += "P3/";
 				} else if (courseId == 13){
-					courseName += "P4/";
+					courseName += "AFM/";
 				} else if (courseId == 14){
-					courseName += "P5/";
+					courseName += "APM/";
 				} else if (courseId == 15){
-					courseName += "P6/";
+					courseName += "ATX/";
 				} else if (courseId == 16){
-					courseName += "P7/";
+					courseName += "AAA/";
 				}
 			}
 			courseName = courseName.substring(4,courseName.length() - 1);

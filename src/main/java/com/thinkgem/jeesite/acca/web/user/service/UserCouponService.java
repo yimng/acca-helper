@@ -1,5 +1,7 @@
 package com.thinkgem.jeesite.acca.web.user.service;
 
+import com.thinkgem.jeesite.acca.web.coupon.dao.CouponMapper;
+import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
 import com.thinkgem.jeesite.acca.web.exam.entity.WebOrder;
 import com.thinkgem.jeesite.acca.web.user.dao.UserCouponMapper;
 import com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon;
@@ -17,6 +19,8 @@ import java.util.List;
 public class UserCouponService {
     @Autowired
     private UserCouponMapper userCouponMapper;
+    @Autowired
+    private CouponMapper couponMapper;
 
     @Transactional(readOnly = false)
     public void saveOrUpdate(UserCoupon userCoupon) {
@@ -40,6 +44,7 @@ public class UserCouponService {
         return userCouponMapper.selectByExample(example);
     }
 
+    @Transactional(readOnly = false)
     public void deleteUserCouponByOrder(Long orderId) {
         Example example = new Example(UserCoupon.class);
         Example.Criteria criteria = example.createCriteria();
@@ -48,4 +53,18 @@ public class UserCouponService {
         userCoupon.setDelFlag(BaseEntity.DEL_FLAG_DELETE);
         userCouponMapper.updateByExampleSelective(userCoupon, example);
     }
+
+    public Float getCouponPriceByUserCouponId(Long userCouponId) {
+        UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
+        if (userCoupon == null) {
+            return 0.0f;
+        }
+
+        Coupon coupon = couponMapper.selectByPrimaryKey(userCoupon.getCouponId());
+        if (coupon == null) {
+            return 0.0f;
+        }
+        return coupon.getPrice();
+    }
+
 }

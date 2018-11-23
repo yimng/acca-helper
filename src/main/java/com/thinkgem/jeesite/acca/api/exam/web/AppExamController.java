@@ -140,14 +140,14 @@ public class AppExamController extends BaseController {
 
 	@ApiOperation(value = "F1-F4考试：已经添加购物车中的按考点分组的考试列表", notes = "已经添加购物车中的按考点分组的考试列表")
 	@RequestMapping(value = "getSelfExamCartGroupByPlace.do" ,method=RequestMethod.POST)
-	public @ResponseBody GetSelfExamCartGroupByPlaceResp getSelfExamCartGroupByPlaceId(@RequestBody BaseRequest req) {
+	public @ResponseBody GetSelfExamCartGroupByPlaceResp getSelfExamCartGroupByPlaceId(@RequestBody OrderDetailReq req) {
 
 		int respCode = req.isCorrectParams();
 		if(respCode!=RespConstants.GLOBAL_SUCCESS){
 			return new GetSelfExamCartGroupByPlaceResp(respCode);
 		}
 
-		return appExamService.getSelfExamCartByPlace(req.getAppUser());
+		return appExamService.getSelfExamCartByPlace(req.getAppUser(), req.getUserCouponId());
 	}
 	
 	@ApiOperation(value = "F1-F4考试：报名/添加考试到购物车中", notes = "F1-F4考试：报名/添加考试到购物车中")
@@ -178,6 +178,19 @@ public class AppExamController extends BaseController {
 		
 		return appExamService.delSelfExamCart(req.getSelfExamCartId(),req.getAppUser());
 	}
+
+    @ApiOperation(value = "F1-F4考试：选中一个优惠券", notes = "F1-F4考试：选中一个优惠券")
+    @RequestMapping(value = "selectCoupon.do" ,method=RequestMethod.POST)
+    public @ResponseBody BaseObjResponse<Float> selectCoupon(@RequestBody SelectCouponReq req) {
+
+        int respCode = req.isCorrectParams();
+        if(respCode!=RespConstants.GLOBAL_SUCCESS){
+            return new BaseObjResponse(respCode);
+        }
+
+        Float price = appExamService.selectCoupon(req.getExamPlaceId(), req.getUserCouponId());
+        return new BaseObjResponse<>(price);
+    }
 	
 	
 	@ApiOperation(value = "F1-F4考试：确认报名生成支付订单", notes = "F1-F4考试：确认报名生成支付订单")

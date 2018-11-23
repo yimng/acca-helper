@@ -62,6 +62,11 @@ public class CheckOrderTask {
 		webExamSelfCartService.cancelExamSelfCart();
 	}
 
+	@Scheduled(fixedDelay=180000)
+	public void cancelCoupon(){
+		webExamSelfCartService.cancelCoupon();
+	}
+
 	/**
 	 * 考试提醒,每天早上九点触发
 	 */

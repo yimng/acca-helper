@@ -69,7 +69,7 @@ public class Constants extends PublicConstants {
 	}
 
 	public enum CouponStatus {
-		NEW("N"), USING("U"),CONFIRM("C"),USED("F");
+		NEW("NEW"), USING("USING"),CONFIRM("CONFIRM"),USED("USED");
 		private String status;
 		CouponStatus(String c) {
 			this.status = c;

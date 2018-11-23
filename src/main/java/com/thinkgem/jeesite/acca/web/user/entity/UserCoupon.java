@@ -1,6 +1,7 @@
 package com.thinkgem.jeesite.acca.web.user.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.*;
 
 @Table(name = "tbl_user_coupon")
@@ -15,6 +16,9 @@ public class UserCoupon implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "exam_place_id")
+    private Long examPlaceId;
+
     @Column(name = "order_id")
     private Long orderId;
 
@@ -23,6 +27,9 @@ public class UserCoupon implements Serializable {
 
     @Column(name = "coupon_status")
     private String couponStatus;
+
+    @Column(name = "select_time")
+    private Date selectTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -69,6 +76,20 @@ public class UserCoupon implements Serializable {
     }
 
     /**
+     * @return exam_place_id
+     */
+    public Long getExamPlaceId() {
+        return examPlaceId;
+    }
+
+    /**
+     * @param examPlaceId
+     */
+    public void setExamPlaceId(Long examPlaceId) {
+        this.examPlaceId = examPlaceId;
+    }
+
+    /**
      * @return order_id
      */
     public Long getOrderId() {
@@ -108,5 +129,19 @@ public class UserCoupon implements Serializable {
      */
     public void setCouponStatus(String couponStatus) {
         this.couponStatus = couponStatus;
+    }
+
+    /**
+     * @return select_time
+     */
+    public Date getSelectTime() {
+        return selectTime;
+    }
+
+    /**
+     * @param selectTime
+     */
+    public void setSelectTime(Date selectTime) {
+        this.selectTime = selectTime;
     }
 }

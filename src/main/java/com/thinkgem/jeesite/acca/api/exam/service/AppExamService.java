@@ -27,6 +27,7 @@ import com.thinkgem.jeesite.acca.web.coupon.entity.Coupon;
 import com.thinkgem.jeesite.acca.web.coupon.service.CouponService;
 import com.thinkgem.jeesite.acca.web.user.dao.UserCouponMapper;
 import com.thinkgem.jeesite.acca.web.user.entity.UserCoupon;
+import com.thinkgem.jeesite.acca.web.user.service.UserCouponService;
 import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.service.BaseService;
 import com.thinkgem.jeesite.common.utils.StringUtils;
@@ -39,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -92,6 +94,9 @@ public class AppExamService extends BaseService {
 
     @Autowired
     private UserCouponMapper userCouponMapper;
+
+    @Autowired
+    private UserCouponService userCouponService;
 
     @Autowired
     private CouponService couponService;
@@ -231,7 +236,14 @@ public class AppExamService extends BaseService {
         return new GetSelfExamCartResp(list, totalAmount);
     }
 
-    public GetSelfExamCartGroupByPlaceResp getSelfExamCartByPlace(AppAccaUser appUser) {
+    public GetSelfExamCartGroupByPlaceResp getSelfExamCartByPlace(AppAccaUser appUser, Long userCouponId) {
+        Float couponPrice = userCouponService.getCouponPriceByUserCouponId(userCouponId);
+        UserCoupon userCoupon = userCouponMapper.selectByPrimaryKey(userCouponId);
+        Long examCenter = null;
+        if (userCoupon != null) {
+            examCenter = userCoupon.getExamPlaceId();
+        }
+
         List<AppExamSelfCart> list = appExamSelfCartDao.getByUserId(appUser.getAccaUserId());
         logger.info("getSelfExamCart list:" + list);
         double totalAmount = 0;
@@ -260,6 +272,9 @@ public class AppExamService extends BaseService {
                     cart.setPrice(cart.getStudentPrice());
                 }
                 totByPlace += cart.getPrice();
+            }
+            if (examCenter != null && examCenter.equals(placeId)) {
+                totByPlace -= couponPrice;
             }
             totalAmount += totByPlace;
             AppExamSelfCart appExamSelfCart = exams.get(0);
@@ -464,6 +479,18 @@ public class AppExamService extends BaseService {
     }
 
     @Transactional(readOnly = false)
+    public Float selectCoupon(Long examPlaceId, Long userCouponId) {
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setId(userCouponId);
+        userCoupon.setExamPlaceId(examPlaceId);
+        userCoupon.setSelectTime(new Date());
+        userCouponMapper.updateByPrimaryKeySelective(userCoupon);
+        Long id = userCouponMapper.selectByPrimaryKey(userCouponId).getCouponId();
+        Coupon coupon = couponMapper.selectByPrimaryKey(id);
+        return coupon.getPrice();
+    }
+
+    @Transactional(readOnly = false)
     public SubmitExamRegisterResp submitExamRegister(SubmitExamRegisterReq req) {
         AppAccaUser appUser = req.getAppUser();
 
@@ -601,6 +628,7 @@ public class AppExamService extends BaseService {
 
         //根据userId和placeId清空购物车
         appExamSelfCartDao.deleteByUserId(appUser.getAccaUserId(), req.getExamPlaceId());
+
 
 
         AppAccaUser accaUser = new AppAccaUser();

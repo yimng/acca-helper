@@ -19,6 +19,7 @@ public class SmallCoupon {
     private Boolean validity;
     private String validityDate;
     private String status;
+    private Long examPlaceId;
 
     public String getValidityDate() {
         return TimeUtils.DateToStr(validityEnd, TimeUtils.sdfSimple);

@@ -181,7 +181,8 @@ public class AppOffiOrderController extends BaseController {
 		map.put("canUse", new ArrayList<SmallCoupon>());
 		map.put("canNotUse", new ArrayList<SmallCoupon>());
 		for (SmallCoupon c : couponListByUserId) {
-			if (c.getValidity() && c.getStatus().equals(Constants.CouponStatus.CONFIRM.getStatus())) {
+			if (c.getValidity() && c.getStatus().equals(Constants.CouponStatus.CONFIRM.getStatus())
+                                && c.getExamPlaceId() == null) {
 				map.get("canUse").add(c);
 			} else if (!c.getValidity() || c.getStatus().equals(Constants.CouponStatus.USED)){
 				map.get("canNotUse").add(c);

@@ -8,9 +8,11 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="del_flag" jdbcType="CHAR" property="delFlag" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="exam_place_id" jdbcType="BIGINT" property="examPlaceId" />
     <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="coupon_id" jdbcType="BIGINT" property="couponId" />
     <result column="coupon_status" jdbcType="CHAR" property="couponStatus" />
+    <result column="select_time" jdbcType="TIMESTAMP" property="selectTime" />
   </resultMap>
 
   <select id="getCouponsByUserId" resultType="com.thinkgem.jeesite.acca.web.user.entity.SmallCoupon">
@@ -19,6 +21,7 @@
       tbl_user_coupon.coupon_id as couponId,
       tbl_user_coupon.user_id as userId,
       tbl_user_coupon.coupon_status as status,
+      tbl_user_coupon.exam_place_id as examPlaceId,
       tbl_coupon.price,
       tbl_coupon.validity_start as validityStart,
       tbl_coupon.validity_end as validityEnd,
@@ -30,5 +33,14 @@
     where tbl_user_coupon.del_flag = 0
       and tbl_user_coupon.user_id = #{accaUserId}
   </select>
+
+  <update id="deleteByExpireTime">
+    UPDATE
+      tbl_user_coupon
+    SET
+      select_time = NULL,
+      exam_place_id = NULL
+    WHERE #{expireTime} > select_time
+  </update>
 
 </mapper>

@@ -207,10 +207,8 @@ public class CouponService extends MyService<CouponMapper, Coupon> {
                     dao.updateByPrimaryKeySelective(coupon);
                 }
             }
-
-        } else if (webOrder.getOrderStatus() == Constants.OrderStatus.checkSupplement
-                    || webOrder.getOrderStatus() == Constants.OrderStatus.checkFail
-                    || webOrder.getOrderStatus() == Constants.OrderStatus.checkSupplement) {
+        // 订单审核不通过，优惠券要返还
+        } else if (webOrder.getOrderStatus() == Constants.OrderStatus.checkFail) {
             List<UserCoupon> userCoupons = userCouponService.getUserCouponByOrder(order.getOrderId());
             for (UserCoupon userCoupon : userCoupons) {
                 if (Constants.CouponStatus.USING.getStatus().equals(userCoupon.getCouponStatus())) {
